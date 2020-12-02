@@ -1,0 +1,17 @@
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(ggridges)
+library(viridis)
+library(rstan)
+library(drake)
+library(rfishbase)
+library(ggstance)
+library(brms)
+library(ggrepel)
+library(fishualize)
+library(rstan)
+
+options(buildtools.check = function(action) TRUE )
+

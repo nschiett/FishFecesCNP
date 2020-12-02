@@ -1,0 +1,27 @@
+---
+title: "biblio"
+author: "N.S."
+date: "12 August 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Jochum2017
+insects, three hypotheses..
+AEn ++ FoodN%
+
+## T. J. Pandian and M. P. Marian 1985
+nitrogen content explains absorption efficiency
+
+## Polunin1988
+herbivorous territorial reef-dwelling jewel damselfish Plectroglyphidodon lacrymatus (Quoy et Gaimard) was measured at Motupore Island, Papuan Coastal Lagoon, southern Papua New Guinea
+
+Dietary absorption by the fish was high: 91.7% for N (76.5% in summer), 78.4% for C (58.3% in summer), and 61.4% for P (only summer data available). Organics were absorbed in the first 25% of the gut length. P. lacrymatus ingested 15% of its body N, 24% of C, and 37% of total material daily by mass.
+
+
+
+
+
