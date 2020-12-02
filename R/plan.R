@@ -10,7 +10,7 @@ plan <- drake_plan(
   data_raw = read_csv("data/results_aecnp.csv"),
   data_ae = remove_outliers(data_raw),
   
-  stanmodel_ae = stan_model("stan/ae_normal.stan"),
+  stanmodel_ae = stan_model("stan/ae_student.stan"),
   result_ae = run_ae_models(data = data_ae, stanmodel = stanmodel_ae)
 )
 

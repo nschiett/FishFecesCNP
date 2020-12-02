@@ -3,6 +3,11 @@
 diets <- read_csv("data/extrapolation_trophic_guilds.csv") %>%
   select(species, diet = trophic_guild_predicted) 
 
+
+diets <- read_csv("data/extrapolation_trophic_guilds.csv") %>%
+  select(species, diet = trophic_guild_predicted) 
+
+
 params <- read_csv("data/params_sst_glob.csv") %>%
   filter(v_m %in% c(26, 27, 28, 29)) %>%
            group_by(Family, species, Species) %>%
@@ -20,8 +25,7 @@ moorea <- read_csv("data/moorea_uvc.csv") %>%
   ungroup() %>%
   mutate(species = gsub(" ", "_", Taxon)) %>%
   left_join(params) %>%
-  filter(!is.na(lwa_m)) %>%
-  select(-ac_m, -an_m, -ap_m)
+  filter(!is.na(lwa_m)) 
 
 tia <- moorea %>%
   filter(Site_name == "Tiahura") %>%
@@ -30,10 +34,19 @@ tia <- moorea %>%
   group_by(TransID, Year, ReefZone, diet_cat) %>%
   summarize(biomass = sum(Abundance * biomass))
 
-ggplot(tia[tia$ReefZone == "forereef",]) +
-  geom_point(aes(x = Year, y = log(biomass), color = as.character(diet_cat))) +
-  geom_smooth(aes(x = Year, y = log(biomass), color = as.character(diet_cat))) +
-  theme_bw()
+
+moo <- moorea %>%
+  #filter(Site_name == "Tiahura") %>%
+  mutate(biomass = lwa_m * Size ^ lwb_m) %>%
+  filter(biomass > 0) %>%
+  group_by(TransID, Year, ReefZone, diet_cat, Site_name) %>%
+  summarize(biomass = sum(Abundance * biomass))
+
+ggplot(moo[moo$ReefZone == "forereef",]) +
+  geom_point(aes(x = Year, y = (biomass), color = as.character(diet_cat))) +
+  geom_smooth(aes(x = Year, y = (biomass), color = as.character(diet_cat)), se = FALSE) +
+  theme_bw() +
+  facet_wrap(~Site_name, scales = "free")
   
 
 loadd(result_ae)
@@ -155,12 +168,32 @@ ggplot(summ, aes(x = Year)) +
 
 
 
+########### rls #############"
+rls <- read_csv("data/rls_french_polynesia.csv")
 
 
+rls <- rls %>%
+  filter(size_class > 0) %>%
+  group_by(survey_id, area, ecoregion, realm, site_code, site_name, latitude, longitude, survey_date, block, depth, location, diver, family, taxon, size_class) %>%
+  summarize(abundance = sum(total)) %>%
+  ungroup() %>%
+  mutate(species = gsub(" ", "_", taxon)) %>%
+  left_join(params) %>%
+  filter(!is.na(lwa_m)) %>%
+  mutate(biomass = lwa_m * size_class ^ lwb_m) %>%
+  filter(biomass > 0) %>%
+  group_by(survey_id, area, ecoregion, realm, site_code, site_name, latitude, longitude, survey_date, block, depth, location, diver, diet_cat) %>%
+  summarize(biomass = sum(abundance * biomass)) 
 
+rls <- rls %>%
+  mutate(survey_date = lubridate::dmy(survey_date))
+summary(rlstest$survey_date)
 
-
-
+ggplot(rls[rls$area == "Society Islands",]) +
+  geom_point(aes(x = site_name, y = biomass, color = as.character(diet_cat))) +
+  geom_boxplot(aes(x = site_name, y = biomass, fill = as.character(diet_cat)), alpha = 0.5) +
+  coord_flip()
+  
 
 
 

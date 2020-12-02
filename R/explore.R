@@ -159,7 +159,7 @@ p1 <-
 p1
 p2 <- 
   ggplot(subm) +
-  geom_pointrangeh(aes(x = p_a_m, xmin = p_a_lb, xmax = p_a_ub, y = species, color = location), 
+  geom_pointrangeh(aes(x = p_mu2_m, xmin = p_mu2_lb, xmax = p_mu2_ub, y = species, color = location), 
                    position=position_dodgev(0.5), alpha = 0.5) +
   theme_bw() +
   theme(strip.background = element_blank(),
