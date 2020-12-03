@@ -1,40 +1,60 @@
 
-remove_outliers <- function(data){
+#' Prune the raw data
+#'
+#' @param data raw dataframe with cnp contents of gut content and feces
+#'
+#' @return 
+#' @export
+#'
+#' @examples
+prune <- function(data){
     data <- 
       data %>%
-      group_by(species) %>%
-      mutate(outlier = 
+      dplyr::group_by(species) %>%
+      dplyr::mutate(outlier = 
                c > exp(mean(log(c), na.rm = TRUE) + (3 * sd(log(c), na.rm = TRUE))) |
                n > exp(mean(log(n), na.rm = TRUE) + (3 * sd(log(n), na.rm = TRUE))) |
                p > exp(mean(log(p), na.rm = TRUE) + (3 * sd(log(p), na.rm = TRUE)))) %>%
-      filter(outlier == FALSE | is.na(outlier)) %>%
-      select(-outlier) %>%
-      ungroup() %>%
-      group_by(species, location) %>%
-      mutate(n_c1 = sum(c > 0 & key == "AE1", na.rm = TRUE),
+      dplyr::filter(outlier == FALSE | is.na(outlier)) %>%
+      dplyr::select(-outlier) %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by(species, location) %>%
+      dplyr::mutate(n_c1 = sum(c > 0 & key == "AE1", na.rm = TRUE),
              n_c2 = sum(c > 0 & key == "AE2", na.rm = TRUE),
              n_n1 = sum(n > 0 & key == "AE1", na.rm = TRUE),
              n_n2 = sum(n > 0 & key == "AE2", na.rm = TRUE),
              n_p1 = sum(p > 0 & key == "AE1", na.rm = TRUE),
              n_p2 = sum(p > 0 & key == "AE2", na.rm = TRUE)) %>%
-      filter(n_c1 > 4, n_c2 > 4, n_n1 > 4, n_n2 > 4, n_p1 > 4, n_p2 > 4) %>%
-      mutate(species = gsub(" ", "_", species)) %>%
-      mutate(sploc = paste(species, location, sep = "__")) %>%
-      ungroup()
+      dplyr::filter(n_c1 > 4, n_c2 > 4, n_n1 > 4, n_n2 > 4, n_p1 > 4, n_p2 > 4) %>%
+      dplyr::mutate(species = gsub(" ", "_", species)) %>%
+      dplyr::mutate(sploc = paste(species, location, sep = "__")) %>%
+      dplyr::ungroup()
     data
 }
 
 
+#' Run model to get assimilation efficiency
+#'
+#' @param model The compiled stan model
+#' @param data The data containing cnp%
+#' @param element The element (C, N or P)
+#'
+#' @return 
+#' @export
+#'
+#' @examples
 ae_mod <- function(model, data, element){
   
-  x1 <- filter(data, key == "AE1") %>%
-    filter(!is.na(.data[[element]])) %>%
-    select(.data[[element]]) %>%
-    simplify()
-  x2 <- filter(data, key == "AE2") %>%
-    filter(!is.na(.data[[element]])) %>%
-    select(.data[[element]]) %>%
-    simplify()
+  x1 <- 
+    dplyr::filter(data, key == "AE1") %>%
+    dplyr::filter(!is.na(.data[[element]])) %>%
+    dplyr::select(.data[[element]]) %>%
+    purrr::simplify()
+  x2 <- 
+    dplyr::filter(data, key == "AE2") %>%
+    dplyr::filter(!is.na(.data[[element]])) %>%
+    dplyr::select(.data[[element]]) %>%
+    purrr::simplify()
   
   data <- list(
     N1 = length(x1),
@@ -43,9 +63,9 @@ ae_mod <- function(model, data, element){
     x2 = x2
   )
   
-  fit <- sampling(model, data)
+  fit <- rstan::sampling(model, data, warmup = 2000, iter = 4000)
   
-  sum <- summary(fit)$summary[c("mu1", "mu2", "a"), -c(2,9,10)]
+  sum <- rstan::summary(fit)$summary[c("mu1", "mu2", "a"), -c(2,9,10)]
   
   result <- data.frame(
     mu1_m = sum["mu1", "mean"],
@@ -74,36 +94,45 @@ ae_mod <- function(model, data, element){
   
 }
 
+#' Run ae models for all species
+#'
+#' @param data 
+#' @param stanmodel 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 run_ae_models <- function(data, stanmodel){
   
-  sploc <- select(data, species, location) %>%
+  sploc <- dplyr::select(data, species, location) %>%
     unique()
   
   c <- lapply(1:nrow(sploc), function(i){
-    sp <- simplify(sploc[i, "species"])
-    loc <- simplify(sploc[i, "location"])
+    sp <- purrr::simplify(sploc[i, "species"])
+    loc <- purrr::simplify(sploc[i, "location"])
     
-    d <- filter(data, species == sp, location == loc)
+    d <- dplyr::filter(data, species == sp, location == loc)
     
     res <- ae_mod(stanmodel, data = d, element = "c")
     
   }) %>% plyr::ldply()
   
   n <- lapply(1:nrow(sploc), function(i){
-    sp <- simplify(sploc[i, "species"])
-    loc <- simplify(sploc[i, "location"])
+    sp <- purrr::simplify(sploc[i, "species"])
+    loc <- purrr::simplify(sploc[i, "location"])
     
-    d <- filter(data, species == sp, location == loc)
+    d <- dplyr::filter(data, species == sp, location == loc)
     
     res <- ae_mod(stanmodel, data = d, element = "n")
     
   }) %>% plyr::ldply()
   
   p <- lapply(1:nrow(sploc), function(i){
-    sp <- simplify(sploc[i, "species"])
-    loc <- simplify(sploc[i, "location"])
+    sp <- purrr::simplify(sploc[i, "species"])
+    loc <- purrr::simplify(sploc[i, "location"])
     
-    d <- filter(data, species == sp, location == loc)
+    d <- dplyr::filter(data, species == sp, location == loc)
     
     res <- ae_mod(stanmodel, data = d, element = "p")
     
@@ -115,152 +144,49 @@ run_ae_models <- function(data, stanmodel){
   
 }
 
-# 
-# run_sploc_models <- function(data){
-#   
-#   ##### C #####
-# 
-#   fit_c <- brm(c/100 ~ 0 + sploc + sploc:key, data = data, 
-#                family = "beta",
-#                chains = 4, cores = 2)
-#   
-#   ##### N #####
-# 
-#   fit_n <- brm(n/100 ~ 0 + sploc + sploc:key, data = data, 
-#                chains = 4, cores = 2, family = "beta")
-#   
-#   ##### P #####
-#  
-#   fit_p <- brm(p/100 ~ 0 + sploc + sploc:key, data = data,
-#                chains = 4, cores = 2, family = "beta")
-#   
-#   return(list(fit_c, fit_n, fit_p))
-# 
-# }
-# 
-# 
-# extract_cnp <- function(list, data){
-#   
-#   newdata <- unique(select(data, species, location, sploc, key))
-#   
-#   ##### C #####
-#   pred <- cbind(newdata, fitted(list[[1]], newdata = newdata) ) 
-#   
-#   pred_m <- pred %>% pivot_wider(- c(6,7,8), names_from = key, 
-#                                  values_from = Estimate, names_prefix = "m_")
-#   pred_sd <- pred %>% pivot_wider(- c(5,7,8), names_from = key, 
-#                                   values_from = Est.Error, names_prefix = "sd_")
-#   
-#   pred_lb <- pred %>% pivot_wider(- c(5,6,8), names_from = key, 
-#                                   values_from = Q2.5, names_prefix = "lb_")
-#   pred_ub <- pred %>% pivot_wider(- c(5,6,7), names_from = key, 
-#                                   values_from = Q97.5, names_prefix = "ub_")
-#   
-#   pred_c <- left_join(pred_m, pred_sd) %>%
-#     left_join(pred_lb) %>%
-#     left_join(pred_ub) 
-#   
-#   colnames(pred_c) <-
-#     c("species", "location", "sploc", "c1_m", "c2_m", "c1_sd", "c2_sd", "c1_lb", "c2_lb", "c1_ub", "c2_ub")
-#   
-#   ##### N #####
-#   pred <- cbind(newdata, fitted(list[[2]], newdata = newdata) ) 
-#   
-#   pred_m <- pred %>% pivot_wider(- c(6,7,8), names_from = key, 
-#                                  values_from = Estimate, names_prefix = "m_")
-#   pred_sd <- pred %>% pivot_wider(- c(5,7,8), names_from = key, 
-#                                   values_from = Est.Error, names_prefix = "sd_")
-#   
-#   pred_lb <- pred %>% pivot_wider(- c(5,6,8), names_from = key, 
-#                                   values_from = Q2.5, names_prefix = "lb_")
-#   pred_ub <- pred %>% pivot_wider(- c(5,6,7), names_from = key, 
-#                                   values_from = Q97.5, names_prefix = "ub_")
-#   
-#   pred_n <- left_join(pred_m, pred_sd) %>%
-#     left_join(pred_lb) %>%
-#     left_join(pred_ub) 
-#   
-#   colnames(pred_n) <-
-#     c("species", "location", "sploc", "n1_m", "n2_m", "n1_sd", "n2_sd", "n1_lb", "n2_lb", "n1_ub", "n2_ub")
-#   
-#   ##### P #####
-#   pred <- cbind(newdata, fitted(list[[3]], newdata = newdata) ) 
-#   
-#   pred_m <- pred %>% pivot_wider(- c(6,7,8), names_from = key, 
-#                                  values_from = Estimate, names_prefix = "m_")
-#   pred_sd <- pred %>% pivot_wider(- c(5,7,8), names_from = key, 
-#                                   values_from = Est.Error, names_prefix = "sd_")
-#   
-#   pred_lb <- pred %>% pivot_wider(- c(5,6,8), names_from = key, 
-#                                   values_from = Q2.5, names_prefix = "lb_")
-#   pred_ub <- pred %>% pivot_wider(- c(5,6,7), names_from = key, 
-#                                   values_from = Q97.5, names_prefix = "ub_")
-#   
-#   pred_p <- left_join(pred_m, pred_sd) %>%
-#     left_join(pred_lb) %>%
-#     left_join(pred_ub) 
-#   
-#   colnames(pred_p) <-
-#     c("species", "location", "sploc", "p1_m", "p2_m", "p1_sd", "p2_sd", "p1_lb", "p2_lb", "p1_ub", "p2_ub")
-#   
-#   left_join(pred_c, pred_n) %>%
-#     left_join(pred_p)
-# }
-# 
-# run_ae_models <- function(data){
-#   
-#   fit_c <- brm(data = data,
-#                 formula = c2_m|se(c2_sd) ~ 0 + sploc:me(c1_m, c1_sd), chains = 4, cores = 2,
-#                 prior = prior_string("beta(2, 2)", class = "b"))
-#  
-#   fit_n <- brm(data = data,
-#                formula = n2_m|se(n2_sd) ~ 0 + sploc:me(n1_m, n1_sd), chains = 4, cores = 2,
-#                prior = prior_string("beta(2, 2)", class = "b"))
-# 
-#   fit_p <- brm(data = data,
-#                formula = p2_m|se(p2_sd) ~ 0 + sploc:me(p1_m, p1_sd), chains = 4, cores = 2,
-#                prior = prior_string("beta(2, 2)", class = "b"))
-#   
-#   return(list(fit_c, fit_n, fit_p))
-#   
-# }
-# 
-# extract_ae <- function(list){
-#   
-#   sam <- 1 - fixef(list[[1]], summary = FALSE) 
-#   
-#   ac <- data.frame(
-#     sploc = sort(unique(list[[1]]$data$sploc)),
-#     ac_m = apply(sam, 2, median),
-#     ac_sd = apply(sam, 2, sd),
-#     ac_lb = apply(sam, 2, quantile, 0.025),
-#     ac_ub = apply(sam, 2, quantile, 0.975)
-#   )
-#   
-#   sam <- 1 - fixef(list[[2]], summary = FALSE) 
-#   
-#   an <- data.frame(
-#     sploc = sort(unique(list[[2]]$data$sploc)),
-#     an_m = apply(sam, 2, median),
-#     an_sd = apply(sam, 2, sd),
-#     an_lb = apply(sam, 2, quantile, 0.025),
-#     an_ub = apply(sam, 2, quantile, 0.975)
-#   )
-#   
-#   sam <- 1 - fixef(list[[3]], summary = FALSE) 
-#   
-#   ap <- data.frame(
-#     sploc = sort(unique(list[[3]]$data$sploc)),
-#     ap_m = apply(sam, 2, median),
-#     ap_sd = apply(sam, 2, sd),
-#     ap_lb = apply(sam, 2, quantile, 0.025),
-#     ap_ub = apply(sam, 2, quantile, 0.975)
-#   )
-#   
-#   left_join(ac, an) %>%
-#     left_join(ap)
-#     
-# }
-# 
-# 
-# 
+#' Adding diet category and stable isotopes
+#'
+#' @param result_ae 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+add_traits <- function(result_ae){
+  
+  # keep only Moorea
+  result_ae <- result_ae %>%
+    dplyr::filter(location == "Moorea")
+  
+  # diet category
+  diets <- readr::read_csv("data/extrapolation_trophic_guilds.csv") %>%
+    dplyr::select(family, species, diet = trophic_guild_predicted) %>%
+    rbind(data.frame(
+      species = "Aulostomus_chinensis", family = "Aulostomidae",
+      diet = 4
+    ))
+  
+  # sia
+  sia <- read.csv("data/moorea.sia.2019.csv", sep = ";") %>%
+    dplyr::select(-1) %>%
+    dplyr::select(species = Names, dn = DN, dc = DC) %>%
+    dplyr::mutate(species = gsub("  ", " ", species)) %>%
+    dplyr::mutate(species = gsub(" ", "_", species)) %>%
+    dplyr::group_by(species) %>%
+    dplyr::filter(species %in% result_ae$species) %>%
+    tidyr::drop_na() %>%
+    dplyr::mutate(n_sia = dplyr::n()) %>%
+    dplyr::group_by(species, n_sia) %>%
+    dplyr::summarize_all(median, na.rm = TRUE) 
+  
+  # combine
+  result <- result_ae %>% 
+    dplyr::left_join(diets) %>%
+    dplyr::left_join(sia)
+  
+  result
+
+  }
+
+
+

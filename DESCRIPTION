@@ -1,0 +1,31 @@
+Package: assimilationefficiency
+Title: Assimilation Efficiency of Coral Reef Fishes
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Nina",
+           family = "Schiettekatte",
+           role = c("aut", "cre"),
+           email = "nina.schiettekatte@gmail.com",
+           comment = c(ORCID = "0000-0002-1925-3484"))
+Description: This project contains all the code needed to reproduce results. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Imports: 
+    purrr,
+    dplyr,
+    ggplot2,
+    ggridges,
+    rstan,
+    fishualize,
+    drake,
+    rfishbase,
+    ggstance,
+    brms,
+    ggrepel,
+    plyr,
+    magrittr,
+    tidyr,
+    patchwork

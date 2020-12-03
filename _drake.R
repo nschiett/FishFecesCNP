@@ -1,5 +1,6 @@
-source("R/packages.R")
-source("R/functions.R")
-source("R/plan.R")
+# Load all functions 
+devtools::load_all()
 
-config <- drake_config(plan = plan, lock_envir = FALSE)
+# get plan
+plan <- make_plan()
+config <- drake::drake_config(plan = plan, lock_envir = FALSE)

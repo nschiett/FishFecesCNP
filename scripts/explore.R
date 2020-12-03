@@ -17,9 +17,9 @@ library(patchwork)
 ggplot(result) +
   geom_point(aes(x = c_mu1_m, y = c_a_m)) +
 ggplot(result) +
-  geom_point(aes(x = n_mu1_m, y = n_a_m)) +
+  geom_point(aes(x = c_a_m, y = n_a_m)) +
 ggplot(result) +
-  geom_point(aes(x = p_mu1_m, y = p_a_m)) +
+  geom_point(aes(x = n_a_m, y = p_a_m)) +
   
 plot_layout(nrow = 3)
 
