@@ -4,10 +4,12 @@
 \alias{add_traits}
 \title{Adding diet category and stable isotopes}
 \usage{
-add_traits(result_ae)
+add_traits(result_ae, sia_species, intestine)
 }
 \arguments{
 \item{result_ae}{}
+
+\item{sia_species}{sia means on species level}
 }
 \value{
 

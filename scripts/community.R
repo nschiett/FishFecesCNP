@@ -1,5 +1,6 @@
 
-
+library(readr)
+library(tidyverse)
 diets <- read_csv("data/extrapolation_trophic_guilds.csv") %>%
   select(species, diet = trophic_guild_predicted) 
 
@@ -43,13 +44,13 @@ moo <- moorea %>%
   summarize(biomass = sum(Abundance * biomass))
 
 ggplot(moo[moo$ReefZone == "forereef",]) +
-  geom_point(aes(x = Year, y = (biomass), color = as.character(diet_cat))) +
-  geom_smooth(aes(x = Year, y = (biomass), color = as.character(diet_cat)), se = FALSE) +
+  #geom_point(aes(x = Year, y = (biomass), color = as.character(Site_name))) +
+  geom_smooth(aes(x = Year, y = (biomass), color = as.character(Site_name)), se = FALSE) +
   theme_bw() +
-  facet_wrap(~Site_name, scales = "free")
+  facet_wrap(~as.character(diet_cat), scales = "free")
   
 
-loadd(result_ae)
+loadd(result_ext)
 
 data <- result_ae %>% 
   left_join(params) %>%
@@ -195,7 +196,125 @@ ggplot(rls[rls$area == "Society Islands",]) +
   coord_flip()
   
 
+######## prediction ae ###########
+loadd(result_ext)
+devtools::load_all()
+trl <- lapply(gsub("_", " ", unique(result_ext$species)),
+              function(x){fishflux::trophic_level(x)}) %>%
+  plyr::ldply()
+
+trl <- trl %>%
+  dplyr::mutate(species = gsub(" ", "_", species)) %>%
+  dplyr::left_join(result_ext)
+
+library(ggplot2)
+
+ggplot(trl) +
+  geom_point(aes((trophic_level), c_mu1_m, color = family))
+ggplot(trl) +
+  geom_point(aes((trophic_level), n_mu1_m, color = family))
+ggplot(trl) +
+  geom_point(aes((trophic_level), p_mu1_m, color = family))
+ggplot(trl) +
+  geom_point(aes((p_mu1_m), p_a_m, color = family))
 
 
+library(brms)
+
+fit1 <- brm(
+  bf(c_a_m ~ c_mu1_m + (1|family)) +
+  bf(c_mu1_m ~ trophic_level + (1|family)), 
+  data = trl)
+fit2 <- brm(
+  bf(n_a_m ~ n_mu1_m + (1|family)) +
+    bf(n_mu1_m ~ trophic_level + (1|family)), 
+  data = trl)
+fit3 <- brm(
+  bf(p_a_m ~ p_mu1_m + (1|family)) +
+    bf(p_mu1_m ~ trophic_level + (1|family)), 
+  data = trl)
 
 
+fit2 <- brm(n_mu1_m ~ trophic_level, data = trl)
+fit3 <- brm(p_mu1_m ~ trophic_level, data = trl)
+
+fixef(fit1)
+ranef(fit1)
+fixef(fit2)
+fixef(fit3)
+marginal_effects(fit1)
+marginal_effects(fit2)
+marginal_effects(fit3)
+
+bayes_R2(fit1)
+bayes_R2(fit2)
+bayes_R2(fit3)
+
+
+plot(fitted(fit1)[,1,1], fit1$data$c_a_m)
+plot(fitted(fit2)[,1,1], fit2$data$n_a_m)
+plot(fitted(fit3)[,1,1], fit3$data$p_a_m)
+
+# predict
+moosp <- dplyr::select(moorea, species, Family) %>%
+  unique() %>%
+  dplyr::filter(Family %in% trl$family)
+
+# idea: groups of diet category
+# 1) HMD (2)
+# 2) Carnivores (4 + 7)
+# 3) Mixed Invertivores (1, 3, 5, 6)
+# 4) Planktivores (8)
+
+ggplot(result_ext) +
+  geom_boxplot(aes(x = as.character(diet2), y = p_a_m, color = family), 
+width = 0.5)
+ggplot(result_ext) +
+  geom_jitter(aes(x = as.character(diet), y = n_mu1_m, color = as.character(diet)))
+ggplot(result_ext) +
+  geom_jitter(aes(y = as.character(family), x = n_a_m, color = as.character(diet)))
+
+sum <- result_ext %>%
+  mutate(diet2 = case_when(
+    diet %in% c(1, 3, 5, 6) ~ "2_imix",
+    diet == 2 ~ "1_hmd",
+    diet %in% c(7, 4) ~ "4_carn",
+    diet == 8 ~ "3_plank"
+  )) %>%
+  group_by(family, diet2) %>%
+  summarize(ac = median(c_a_m), an = median(n_a_m), ap = median(p_a_m))
+
+priors <- prior("normal(0.5, 0.5)", lb = 0, ub = 1, class = "b")
+
+result_ext <- result_ext %>%
+  dplyr::mutate(group = paste(family, diet2, sep = "_"))
+
+fit1 <- brm(c_a_m|se(c_a_sd) ~ 0 + group + (1|species), 
+            prior = priors,
+            data = result_ext, cores = 1 )
+
+summary(fit1)
+bayes_R2(fit1)
+
+
+fit2 <- update(fit1, formula = n_a_m ~ 0 + diet2 + (1|family), result_ext, cores = 4)
+fit3 <- update(fit1, formula = p_a_m ~ 0 + diet2 + (1|family), result_ext, cores = 4)
+
+fit1e <- brm(c_a_m|se(c_a_sd) ~ 0 + diet2 + (1|family), 
+            prior = priors,
+            data = result_ext, cores = 1 )
+fit2e <- update(fit1e, formula = n_a_m|se(n_a_sd) ~ 0 + diet2 + (1|family), result_ext, cores = 4)
+fit3e <- update(fit1e, formula = p_a_m|se(p_a_sd) ~ 0 + diet2 + (1|family), result_ext, cores = 4)
+
+
+summary(fit1e)
+bayes_R2(fit3)
+
+fixef(fit3)
+fixef(fit3e)
+
+newdata <- result_ext %>%
+  dplyr::select(diet2, family) %>%
+  unique() %>%
+  dplyr::mutate(c_a_sd = 0.01)
+pred <- cbind(newdata, fitted(fit1e, newdata))

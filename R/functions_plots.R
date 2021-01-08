@@ -60,6 +60,23 @@ theme_custom <- function(){
       )
 }
 
+#' Title
+#'
+#' @param plot 
+#' @param name 
+#' @param width 
+#' @param height 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+save_plot <- function(plot, name, width = 8, height = 6){
+  
+  ggsave(plot, filename = paste0("output/plots/", name, ".png"), 
+         width = width, height = height)
+}
+
 #' fig 1
 #'
 #' @param data 
@@ -69,6 +86,7 @@ theme_custom <- function(){
 #' 
 #' @import ggplot2
 #' @import fishualize
+#' @import patchwork
 #'
 #' @examples
 make_fig1 <- function(data){
@@ -88,7 +106,7 @@ make_fig1 <- function(data){
     geom_label(aes(x = 50, y = 0.5 * 50, label = "AE = 0.5")) +
     geom_label(aes(x = 50, y = 0.7 * 50, label = "AE = 0.3")) +
     geom_label(aes(x = 50, y = 0.9 * 50, label = "AE = 0.1")) +
-    geom_point(aes(x = c_mu1_m, y = c_mu2_m, ),
+    geom_point(aes(x = c_mu1_m, y = c_mu2_m ),
                size = 4, color = "lightgrey") +
     geom_point(aes(x = c_mu1_m, y = c_mu2_m, color =  family),
                size = 4, data = data_sub) +
@@ -109,7 +127,7 @@ make_fig1 <- function(data){
     geom_label(aes(x = 13, y = 0.5 * 13, label = "AE = 0.5")) +
     geom_label(aes(x = 13, y = 0.7 * 13, label = "AE = 0.3")) +
     geom_label(aes(x = 13, y = 0.9 * 13, label = "AE = 0.1")) +
-    geom_point(aes(x = n_mu1_m, y = n_mu2_m, ),
+    geom_point(aes(x = n_mu1_m, y = n_mu2_m ),
                size = 4, color = "lightgrey") +
     geom_point(aes(x = n_mu1_m, y = n_mu2_m, color =  family),
                size = 4, data = data_sub) +
@@ -132,7 +150,7 @@ make_fig1 <- function(data){
     geom_label(aes(x = 2.3, y = 0.5 * 2.5, label = "AE = 0.5")) +
     geom_label(aes(x = 2.3, y = 0.7 * 2.5, label = "AE = 0.3")) +
     geom_label(aes(x = 2.3, y = 0.9 * 2.5, label = "AE = 0.1")) +
-    geom_point(aes(x = p_mu1_m, y = p_mu2_m, ),
+    geom_point(aes(x = p_mu1_m, y = p_mu2_m ),
                size = 4, color = "lightgrey") +
     geom_point(aes(x = p_mu1_m, y = p_mu2_m, color =  family),
                size = 4, data = data_sub) +
@@ -144,9 +162,12 @@ make_fig1 <- function(data){
     scale_color_fish_d(option = "Pseudocheilinus_tetrataenia")
   
   
-
+  plot <-
   p1 + p2 + p3 +
     plot_layout(nrow = 3)
+  
+  return(plot)
+  
 }
 
 #' Title
@@ -205,8 +226,11 @@ make_figs1 <- function(data){
     theme_custom() +
     labs(x = "Gut content P%", y = "Feces P%")
 
+  plot <-
   p1 + p2 + p3 +
     plot_layout(nrow = 3)
+  
+  return(plot)
 }
 
 
@@ -248,3 +272,45 @@ make_figs2 <- function(data){
   p1
   
 }
+
+
+#' Title
+#'
+#' @param model_ae_diet 
+#'
+#' @return
+#' @export
+#' @import ggplot2
+#' @import fishualize
+#' @import patchwork
+#'
+make_fig2 <- function(model_ae_diet) {
+
+  pred_data <- model_ae_diet[[2]]
+  data <- model_ae_diet[[1]]$data
+  
+  a <- 
+  ggplot(pred_data) +
+    geom_ribbon(aes(x = mu1_st, ymin= y_a_lb, ymax = y_a_ub, fill = element), 
+                alpha = 0.3) +
+    geom_line(aes(x = mu1_st, y = y_a_m, color = element), size = 1) +
+    geom_point(aes(x = mu1_st, y = ae, color = element), data = data) +
+    scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
+    labs(y = "Assimilation efficiency", x = "Standardised gut content %", 
+         color = "", fill = "") +
+    theme_custom() +
+    theme(legend.position = "top")
+
+  b <-
+  ggplot(pred_data) +
+    geom_ribbon(aes(x = dn, ymin= y_mu1_lb, ymax = y_mu1_ub, fill = element), 
+                alpha = 0.3) +
+    geom_line(aes(x = dn, y = y_mu1_m, color = element), size = 1) +
+    geom_point(aes(x = dn, y = mu1_st, color = element), data = data) +
+    scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
+    labs(x = "%dN", y = "Standardised gut content %") +
+    theme_custom() + theme(legend.position = "none")
+  
+  a + b + plot_layout(nrow = 2)
+  
+  }

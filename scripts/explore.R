@@ -186,7 +186,7 @@ sizes <- data_ae %>%
   summarise(size = median(sl))
 
 ############ intestines ########
-int <- read_csv("data/intestine_dataset.csv")
+int <- readr::read_csv("data/intestine_dataset.csv")
 
 tl <- lapply(gsub("_", " ",unique(result_ae$species)),
              fishflux::trophic_level) %>%
@@ -238,21 +238,25 @@ instead of one drawing, we have two drawings showing contrasting communities: a 
 A more extensive analysis showing the effect of different community compositions on egestion rates as well as poo quality We can use the RLS for this. I contacted Rick and Graham and got all the available community data for French Polynesia.
 Another option may be to look at time series of community-level egestion rates
 
+int <- readr::read_csv("data/intestine_dataset.csv")
 ints <- int %>%
-  mutate(surface_st = intestine_surface/sl,
-         length_st = intestine_length/sl) %>%
-  group_by(family, species, location) %>%
-  summarize(int_surface_st = median(surface_st),
-            int_length_st = median(surface_st)) %>% 
+  filter(location == "Moorea") %>%
+  dplyr::group_by(family, species, location) %>%
+  summarize(int_surface = mean(intestine_surface),
+            sl = mean(sl)) %>% 
   mutate(species = gsub(" ", "_", species)) %>%
-  inner_join(result_ae)
+  inner_join(result_ae) 
+
+
+ggplot(ints) +
+  geom_point(aes(x = log(sl), y = log(int_surface)))
 
 ggplot(ints) +
   geom_point(aes(y = c_mu1_m, x = int_surface_st))
 ggplot(ints) +
   geom_point(aes(y = n_mu1_m, x = int_surface_st))
 ggplot(ints) +
-  geom_point(aes(y = p_mu1_m, x = int_surface_st)) 
+  geom_point(aes(color = log(p_mu1_m), x = int_surface_st, y = p_a_m)) 
 
 ggplot(ints) +
   geom_point(aes(x = int_surface_st, y = c_a_m, color = c_mu1_m))
@@ -330,21 +334,18 @@ cop2 <- drop_na(cop, c_mu1_m) %>%
   pivot_longer(names_to = "key", values_to = "n", c(one, zero)) %>%
   uncount(n)
 
-fit_cop <- brm(key ~ p_mu2_m + (1|species), 
+fit_cop <- brm(key ~ c_mu2_m + n_mu2_m + p_mu2_m, 
                data = cop2, family = "bernoulli")
-summary(fit_cop)
 
 fit_cop2 <- update(fit_cop, formula = key ~ p_mu2_m)
+fit_cop3 <- update(fit_cop, formula = key ~ n_mu2_m)
+fit_cop4 <- update(fit_cop, formula = key ~ c_mu2_m)
+fit_cop5 <- update(fit_cop, formula = key ~ c_mu2_m + p_mu2_m)
+fit_cop6 <- update(fit_cop, formula = key ~ n_mu2_m + p_mu2_m)
+fit_cop7 <- update(fit_cop, formula = key ~ c_mu2_m + n_mu2_m)
 
-fit_cop3 <- update(fit_cop, formula = prop_eaten ~ n_mu2_m)
-fit_cop4 <- update(fit_cop, formula = prop_eaten ~ p_mu2_m)
-fit_cop5 <- update(fit_cop, formula = prop_eaten ~ c_mu2_m + p_mu2_m)
-fit_cop6 <- update(fit_cop, formula = prop_eaten ~ n_mu2_m + p_mu2_m)
+loo(fit_cop, fit_cop2, fit_cop3, fit_cop4, fit_cop5, fit_cop6, fit_cop7)
 
-loo(fit_cop, fit_cop2, fit_cop3, fit_cop4, fit_cop5, fit_cop6)
-
-fixef(fit_cop)
-marginal_effects(fit_cop2)
 
 p <- fitted(fit_cop2) 
 colnames(p) <- c("estimate__", "se", "lower__", "upper__")
@@ -385,6 +386,20 @@ sia <- read.csv("data/moorea.sia.2019.csv", sep = ";") %>%
   mutate(n = n()) %>%
   filter(n > 5) 
 
+fit <- brms::brm(DN ~ (0 + species), data = sia)
+fit2 <- update(fit, DN ~ 0 + species)
+
+summary(fit2)
+
+pred <- fitted(fit2, newdata = data.frame(species = unique(fit2$data$species)))
+
+data.frame(species = unique(fit2$data$species),
+           dn = pred[,1],
+           sn_sd = pred[,2])
+
+ggplot(aes(x = species, y = DN), data = sia) +
+  geom_boxplot()
+
 
 sia_species <- sia %>%
   group_by(species) %>%
@@ -394,8 +409,8 @@ sia_species <- sia %>%
 shapiro.test(sia_species$DN)
 shapiro.test(sia_species$DC)
 shapiro.test(sia_species$n_mu1_m)
-shapiro.test(sia_species$p_mu1_m)
-shapiro.test(sia_species$c_mu1_m)
+shapiro.test(log(sia_species$p_mu1_m))
+œœshapiro.test(sia_species$c_mu1_m)
 shapiro.test(sia_species$p_a_m)
 shapiro.test(sia_species$n_a_m)
 hist(sia_species$c_a_m)
@@ -442,6 +457,14 @@ ggplot(aes(x = DN, y = c_a_m), data = sia_species) +
   geom_point(aes(color = as.character(diet))) +
   geom_smooth(se = FALSE, color = "grey", size = 1) +
   geom_text_repel(aes(label = species, color = as.character(diet)), 
+                  data = sia_species, size = 3)  +
+  scale_x_continuous(trans = "log") +
+  scale_y_continuous(trans = "log")
+
+ggplot(aes(x = DN, y = c_a_m), data = sia_species) +
+  geom_point(aes(color = c_mu1_m)) +
+  geom_smooth(se = FALSE, color = "grey", size = 1) +
+  geom_text_repel(aes(label = species, color = c_mu1_m), 
                   data = sia_species, size = 3)  +
   scale_x_continuous(trans = "log") +
   scale_y_continuous(trans = "log")
