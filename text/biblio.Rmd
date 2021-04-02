@@ -8,10 +8,24 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Ezzat2019
+These  findings  provide  evidence  that  fish  fecesmay be important vectors of bacteria to coral surfacesand  create  novel  coral  microbiomes.  We  found  thatPorites  lobataexposed  to  either  Ctenochaetus  stria-tusfish  feces  or  wounding  (mimicking  corallivory)induced  a  rapid  shift  in  coral  bacterial  assemblagesthat   coincided   with   blooms   of   opportunists   andpotential coral pathogens, with some also present inC.  striatusfeces.  We  suggest  that  fish  feces  couldpotentially  act  as  a  vector  and/or  promote  shifts  incoral-associated    microbial    communities    throughfecal pellet deposition.
+
+## Grupstra2020
+### Fish predation on corals promotes the dispersal of coral symbionts
+Predators drive top-down effects that shape prey communities, but the role of predators in dispersing prey microbiomes is rarely examined. We tested whether coral-eating (corallivorous) fish disperse the single-celled dinoflagellate symbionts (family Symbiodiniaceae) of their prey. Our findings demonstrate that: (1) coral-eating fish egest feces containing live Symbiodiniaceae at densities up to seven orders of magnitude higher than other environmental reservoirs such as sediments and water; (2) Symbiodiniaceae communities in the feces of most corallivores are compositionally similar to those in corals; (3) some obligate corallivore species release over 100 million Symbiodiniaceae cells per 100 m2 per day; and (4) after being egested, corallivore feces often come in direct contact with coral colonies (potential hosts for Symbiodiniaceae). These findings suggest that fish predators can play an important role in symbiont acquisition by corals; such predators may have a previously unrecognized, indirect positive effect on prey health.
+
+## Crossman2005
+### Surgeonfish feces increase microbial opportunismin reef-building corals
+important resource ash contents and some ae's
+The  macronutrient  assimilation  efficiencies  of  spe-cies are presented in Table 3. For some species, nega-tive  assimilation  efficiencies  were  found.  This  wasparticularly  evident  in  the  detritivorous  acanthuridsAcanthurus  olivaceus  and Ctenochaetus  striatus,  forwhich  negative  assimilation  values  were  very  large.These species contain a gizzard like stomach in whichthey retain inorganic material for grinding dietary foodparticles  (Horn  1989).  It  is  likely  that  this  materialcaused  a  substantial  underestimation  of  diet  quality,thus  generating  the  large  negative  assimilation  effi-ciencies. Therefore, these results were excluded from further analysis. Of the remaining species, 5 had negative assimilation values in 1 or more individuals; resultsfor  these  species,  including  and  excluding  negativevalues  are  presented  in  Table  3.  As  it  was  unclear  ifthese  values  were  real  or  artefacts,  negative  valueswere retained in subsequent analyses so as not to  biasthe data set
+
+Our results sug-gest that fish feces may represent a novel route of transmission of microbes and/or facilitate theenrichment of potentially opportunistic and pathogenic bacteria within reef-building corals. Fur-ther,  interactions  with  other  common  stressors  such  as  corallivory  might  worsen  these  impacts,increasing dysbiosis and ultimately affecting coral health.
 
 ## Jochum2017
 insects, three hypotheses..
-AEn ++ FoodN%
+AEn ++ FoodN%      
+Compensatory feeding
 
 ## T. J. Pandian and M. P. Marian 1985
 nitrogen content explains absorption efficiency
@@ -21,7 +35,104 @@ herbivorous territorial reef-dwelling jewel damselfish Plectroglyphidodon lacrym
 
 Dietary absorption by the fish was high: 91.7% for N (76.5% in summer), 78.4% for C (58.3% in summer), and 61.4% for P (only summer data available). Organics were absorbed in the first 25% of the gut length. P. lacrymatus ingested 15% of its body N, 24% of C, and 37% of total material daily by mass.
 
+## Cruz-rivera2000
+Mesograzers, marine amphipods  
+Compensatory feeding is the answer to lower diet quality      
 
 
+## Hillebrand2014
+Here, we propose to link the two fields of research on ES and BEF relationships and highlight a number of potential avenues for further research. First, we cast a stoichiometric view on drivers of biodiversity change. Second, we address the stoichiometric underpinning of biodiversity–productivity relationships. Third, we discuss potential interactions between stoichiometry and diversity in a food web context.
+
+## Halvorson2017ecology
+We conducted a laboratory experiment to investigateeffects of detrital quantity and quality on growth andunderlying stoichiometric regulation of detritivorous caddisfly larvae (Pycnopsyche lepida).
+Higher P assimilation with higher P content diets
+No effect C content diet on AE C
+growth increased simultaneously with quantity and quality,indicating co-limitation across the resource gradients.
+C assimilation approx. 18%
+
+## Halvorson2019
+* We found that across multiple freshwater animal species, particulate N and P fluxes in the form of egesta exceed DIN and DIP excretion fluxes. Due to a general lack of data, it is commonly assumed that excretion is the dominant nutrient release flux by aquatic animals. Indeed, many studies have empirically shown excretion to be important at ecosystem levels (e.g. Atkinson2014; XXX).   
+* egestion may be an important overlooked pathway. egestion is a major flux measured from animals in freshwater settings.
+* While the contributions of egesta to ecosystem nutrient fluxes remain poorly studied in comparison to excretion, it is generally assumed that egesta are not as important, as egesta are often considered low-N and P, recalcitrant, and not as bioavailable as dissolved excreta (atkinson2016)
+
+## Evans-White2017
+* Our meta-analysis of feeding studies supports broad N and P growth limitation among both herbivorous and detritivorous freshwater invertebrates.
+* different bottom–up effects of nutrients on consumption in green versus brown food webs, given benthic detritivores and herbivores exhibit different compensatory feeding with increased resource nutrient content
+While herbivores may up-regulate consumption on low-nutrient resources, perhaps to increase intake of limiting nutrients,  detritivores up-regulate consumption on high-nutrient resources.
+## Liess2014
+snail grazers have low ae for nutrients and exhibit compensatory feeding   
+grazers with low nutrient assimilation efficiencies and high nutrient demands can assimilate sufficient nutrients via high ingestion rates.   
+egestion higher than excretion     
+
+## Halvorson2017: Long-term stoichiometry and fates highlight animal egestion as nutrient repackaging, not recycling, in aquatic ecosystems
+* lower N : P egesta tended to exhibit greater uptake of dissolved inorganic N, suggesting P enrichment of egesta drove stronger dissolved N demand by decomposer microbes.
+* Shredder egesta exhibit stable nutrient contents long term and, counter to assumptions thatthey are negligible or minor net sources, can be strong, extended sinks of dissolved inorganicnutrients.
+* Future studies should consider contrasts between animal nutrient fluxes as excretion,which facilitates nutrient recycling via mineralization, vs. egestion, which slows nutrient recy-cling via organic nutrient repackaging and can create sinks of dissolved nutrients.
+* High N:P --> nitrogen source, low N:P -> nitrogen sink  
+* !!! detrivourous poo -> nitrogen sink?   
+
+**some text**
+definitely paragraph about decomposing bacteria.
+Feces that enter the detritus pool are subject to bacterial decomposition. Here, the N:P ratio's determine whether these feces serve as sources or sinks of inorganic N or P. For example, in freshwater systems lower N:P egesta exhibit an uptake of dissolved inorganic N, suggesting a stronger dissolved N demand by decomposer microbes. Both the composition and ratio's of N and P in feces, and per consequence their fate remains poorly studied in many aquatic ecosytems.    
+
+## Clissold2010   
+* The gastrointestinal tract as a nutrient-balancing organ     
+*  The first stage at which such post-ingestive rebalancing might occur is within the gastrointestinal tract (GIT), by differential release ofdigestive enzymes—releasing less of those enzymes for nutrients present in excess while maintaining orboosting levels of enzymes for nutrients in deficit. Here, we use an insect herbivore, the locust, to show for the first time that such compensatory responses occur within the GIT.
+* Compensation ae of limiting nutrients
+* an insect herbivore
+
+## Kibria1997
+* remineralisation of N and P from fish feces depends on temperature and ph.
+
+## Sauchyn2009
+feces sea urchin degradation
+C:N of marine bacterial assemblages ranges from 5 to 7 (Fukuda 1998)
+
+## Frankenberg1967
+coprophagy of marine animals
+
+## Godwin2015
+Very flexible CNP contents in heterotrophic bacteria
+
+## Geesey1984
+feces of chromis in California rocky reefs. high flux of phosphorus in shelters, higher P content in feces than food, likely due to bacteria, diff absoption of elements..
+
+## Zimmer2002
+The present study provides evidence for nutrient release from the feces of phytophagous insects into the soil through the feeding activity of coprophagous soil animals.     
+
+## Sauchyn2009
+in the Northwest Atlantic, sea urchins Strongylocentrotus droebachiensis consume large amounts of kelp biomass
+ the physical, chemical, and microbial degradation of urchin feces
+urchin fecal production plays an important role in local nutrient cycling and energy flow via the microbial food web.
+As the feces were further degraded there was a relative increase in organic carbon, nitrogen, lipid, and available energy content, and a decrease in the C:N ratio, suggesting that degraded urchin feces are an important food source for suspension- and deposit-feeding invertebrates.
+
+## Turner 2002 (review)
+ It now appears that mainly large fecal pel-lets  of  macrozooplankton  and  fish  are  involved  in  the  sedimentary  flux.  Smaller  fecal  pellets  ofmicrozooplankton  and  small  mesozooplankton  are  mostly  recycled  or  repackaged  in  the  watercolumn  by  microbial  decomposition  and  coprophagy,  contributing  more  to  processes  in  the  watercolumn than flux to the benthos.
+
+## LeMezo2021: fecal iron pump
+* Here, we compile observations to show that the Fe to carbon (C) ratio (Fe:C) of fecal pellets of variousmarine animals is consistently enriched compared to their food, often by more than an order of magnitu
+* this fecal iron pump provides an important source of Fe to marine animals via coprophagy,particularly in the mesopelagic, given that fecal matter Fe:C can be many-fold higher than the Fe:C of local phy-toplankton
+
+## Animal‐mediated organic matter transformation: Aquatic insects as a source of microbially bioavailable organic nutrients and energy
+Thomas B. Parr
+
+## Lang2017: Temperature and consumer type dependencies of energy flows in natural communities
+* We used newly compiled datasets on respiration rates and assimilation efficiencies to assess how temperature affects the energy use (respiration rates) and the efficiency of energy gain (assimilation efficiency) for different consumer types.Animal‐mediated organic matter transformation: Aquatic insects as a source of microbially bioavailable organic nutrients and energy
+Thomas B. Parr
+* Our analysis revealed a generally positive temperature dependence of assimilation efficiencies across consumer types thus implying a net energy gain with warming. The temperature scaling of respiration rates did not differ between consumer types.
+* detritivores and herbivores have the potential to increase their biomasses under warming as their maintenance feeding rates increase less strongly than their realized feeding rates. For carnivores, however, we found a stronger increase of their maintenance feeding rates compared to their realized feeding rates, which should lead to decreased population sizes under warming.
+
+## Sazima2003: The cetacean offal connection: feces and vomits of spinner dolphins as a food source for reef fishes
+twelve fish species in seven families were recorded feeding on dolphin offal. The black durgon (Melichthys niger) was the most ubiquitous waste-eater, and its group size was positively and significantly correlated with dolphin group size. The durgons recognized the postures a dolphin adopts prior to defecating or vomiting, and began to converge to an individual shortly before it actually voided.
+
+## Czamanski2011
+* Aquacultured ﬁsh feces were found to be P-rich, because of a lower
+P assimilation efﬁciency(0.6, but large variability), compared to C or N assimilation (lower variability, over 0.8)
+efﬁciencies.
+* contains table Elemental stoichiometric ratios of various marine pelagic invertebrates
 
 
+# Diet notes    
+We used Parravicini et al. and adapted it     
+Myripristis reassigned to planktivore see Craig2007    
+Split hmd to algivore, detrivore and ??? (choat and klements)

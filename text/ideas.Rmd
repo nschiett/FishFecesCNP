@@ -1,0 +1,314 @@
+---
+title: "Ideas"
+author: "N.S."
+date: "13 January 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+result_ext <-drake::readd(result_ext)
+```
+
+If we focus on ratio's of inabsorption coefficients, we can indeed get rid of the marker term, but we can't do the same for the assimilation efficiency ratio's. However, we can get the linear relationship as follows:
+$$
+\frac{ai_c}{ai_n} = \frac{W_cD_n}{D_cW_n} \\
+\frac{(1-ae_c)}{(1-ae_n)} = \frac{W_cD_n}{D_cW_n} \\
+ae_n = 1 - \frac{D_c W_n}{W_c D_n} + \frac{D_c W_n}{W_c D_n} ae_c
+$$
+with $ai_c$ = inabsorption of C, $ai_n$ = inabsorption of N, $ae_c$ absorption efficiency of C, $ae_n$ absorption efficiency of N, $W_c$ = C content in feces, $W_n$ N content in feces, $D_c$ = C content in diet, $D_n$ = N content in diet.      
+
+An example: 
+```{r, echo = TRUE}
+Dc <- 39
+Wc <- 30.5
+Dn <- 12
+Wn <- 7.2
+
+a <- 1-((Dc*Wn)/(Wc*Dn))
+b <- ((Dc*Wn)/(Wc*Dn))
+
+  
+ggplot() +
+  geom_abline(intercept = a, slope = b) +
+  geom_abline(slope = 1, color = "red") +
+  xlim(0,1) + ylim(0,1) +
+  labs(x = expression(ae[c]), y = expression(ae[n]))
+```
+
+If the slope of this relationship (black line) is lower than 1, it means that $ae_n$ > $ae_c$.
+In a similar way, we can quantify the relationship between $ae_c$ and $ae_p$.
+<br>
+Below, we can see how this looks like for all species (n = 51) in our dataset.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+dat <- result_ext %>%
+  mutate(
+    a1 = 1-((c_mu1_m * n_mu2_m)/(c_mu2_m*n_mu1_m)),
+    b1 = (c_mu1_m * n_mu2_m)/(c_mu2_m*n_mu1_m),
+    a2 = 1-((c_mu1_m * p_mu2_m)/(c_mu2_m*p_mu1_m)),
+    b2 = (c_mu1_m * p_mu2_m)/(c_mu2_m*p_mu1_m),
+    a3 = 1-((n_mu1_m * p_mu2_m)/(n_mu2_m*p_mu1_m)),
+    b3 = (n_mu1_m * p_mu2_m)/(n_mu2_m*p_mu1_m)) %>%
+  dplyr::mutate(diet2 = dplyr::case_when(
+      diet %in% c(1, 3, 5, 6) ~ "2_imix",
+      diet == 2 ~ "1_hmd",
+      diet %in% c(7, 4) ~ "4_carn",
+      diet == 8 ~ "3_plank"
+    )) 
+
+
+
+ggplot(dat) +
+  geom_abline(slope = 1, color = "black", size = 2) +
+  geom_abline(aes(intercept = a1, slope = b1, color = diet2)) +
+  xlim(0,1) + ylim(0,1) +
+  labs(x = expression(ae[c]), y = expression(ae[n]), color = "diet") +
+  theme_bw()
+
+ggplot(dat) +
+  geom_abline(slope = 1, color = "black", size = 2) +
+  geom_abline(aes(intercept = a2, slope = b2, color = diet2)) +
+  xlim(0,1) + ylim(0,1) +
+  labs(x = expression(ae[c]), y = expression(ae[p]), color = "diet") +
+  theme_bw()
+
+
+ggplot(dat) +
+  geom_point(aes(x = b1, y = b2, color = as.character(diet))) +
+  geom_abline(slope = 1) + 
+  geom_hline(yintercept = 1) + 
+  geom_vline(xintercept = 1) +
+  geom_text(aes(x = 1.2, y = 1.5, label = "ae_c > ae_n > ae_p")) +
+  geom_text(aes(x = 1.4, y = 1.2, label = "ae_c > ae_p > ae_n")) +
+  geom_text(aes(x = 1.4, y = 0.6, label = "ae_p > ae_c > ae_n")) +
+  geom_text(aes(x = 0.8, y = 0.5, label = "ae_p > ae_n > ae_c")) +
+  geom_text(aes(x = 0.6, y = 0.8, label = "ae_n > ae_p > ae_c")) +
+  geom_text(aes(x = 0.6, y = 1.5, label = "ae_n > ae_c > ae_p")) +
+  xlim(0.4, 1.6) + ylim(0.4, 1.6) +
+  theme_bw() +
+  labs(x = "slope ae_n ~ ae_c", y = "slope ae_p ~ ae_c", color = "diet")
+```
+
+```{r, include = FALSE}
+  
+  # load parameters
+params <- readr::read_csv("../data/params_sst_glob.csv") %>%
+  dplyr::filter(v_m %in% c(26, 27, 28, 29)) %>%
+  dplyr::group_by(Family, species, Species) %>%
+  dplyr::summarize_all(mean) %>%
+  dplyr::mutate(ac_m = 0.8, an_m = 0.8, ap_m = 0.8) %>%
+  dplyr::filter(species %in% result_ext$species) %>%
+  dplyr::select(-Dc_m, -Dc_sd, -Dn_m, -Dn_sd, -Dp_m, -Dp_sd)
+
+
+D_sp <- result_ext %>%
+    dplyr::select(species, Dc_m = c_mu1_m, Dc_sd = c_mu1_sd, 
+                  Dn_m = n_mu1_m, Dn_sd = n_mu1_sd, 
+                  Dp_m = p_mu1_m, Dp_sd = p_mu1_sd)
+  
+
+lengths <- drake::readd(data_raw) %>%
+  dplyr::filter(location == "Moorea", 
+                species %in% gsub("_", " ", result_ext$species)) %>%
+  mutate(species = gsub(" ","_", species)) %>%
+  group_by(species) %>%
+  summarize(size = round(median(tl))) %>%
+  left_join(params) %>%
+  left_join(D_sp) %>%
+  drop_na(Qc_m)
+
+  
+  cnp_out <- function(x){
+    
+    d <- data[x,]
+    size <- purrr::simplify(d$size)
+    p <- d %>%
+      dplyr::select(k_m, Qc_m ,Qn_m, Qp_m, Qc_sd ,Qn_sd, Qp_sd, Dc_m, Dn_m, Dp_m, Dc_sd, Dn_sd, Dp_sd, alpha_m, f0_m,          
+             theta_m, lwa_m,  lwb_m, r_m, h_m,  v_m, linf_m,        
+             F0nz_m, F0pz_m, ac_m, an_m, ap_m) %>% 
+      purrr::simplify() %>% as.list()
+    
+    fit <- fishflux::cnp_model_mcmc(TL = size, param = p)
+    
+    out <- fishflux::extract(fit, c("Ic", "In", "Ip", "Sc","Sn", "Sp", "Fn", "Fp", "Wc", "Wn", "Wp")) %>%
+      dplyr::select(
+        Ic = Ic_median,
+        In = In_median,
+        Ip = Ip_median,
+        Sc = Sc_median,
+        Sn = Sn_median,
+        Sp = Sp_median,
+        Fn = Fn_median,
+        Fp = Fp_median,
+        Wc = Wc_median,
+        Wn = Wn_median,
+        Wp = Wp_median)
+    
+    l <- fishflux::limitation(fit, plot = FALSE)
+    
+    out <- out %>% 
+      dplyr::mutate(lim = (l[which.max(l$prop_lim), "nutrient"]),
+                    plim_c = (l[l$nutrient == "c", "prop_lim"]),
+                    plim_n = (l[l$nutrient == "n", "prop_lim"]),
+                    plim_p = (l[l$nutrient == "p", "prop_lim"]))
+    
+    out
+  }
+
+  
+  data <- lengths
+  
+  # in pieces to avoid crash
+  results <- lapply(1:nrow(data), cnp_out) %>%
+    dplyr::bind_rows() 
+ 
+  result <- cbind(dplyr::select(data, species, size), results)
+  
+  dat <- dplyr::left_join(dat, result)
+  
+  ggplot(dat) +
+    geom_point(aes(x = b1, y = b2, color = plim_n)) +
+    geom_abline(slope = 1) + 
+    geom_hline(yintercept = 1) + 
+    geom_vline(xintercept = 1) +
+    geom_text(aes(x = 1.2, y = 1.5, label = "ae_c > ae_n > ae_p")) +
+    geom_text(aes(x = 1.4, y = 1.2, label = "ae_c > ae_p > ae_n")) +
+    geom_text(aes(x = 1.4, y = 0.6, label = "ae_p > ae_c > ae_n")) +
+    geom_text(aes(x = 0.8, y = 0.5, label = "ae_p > ae_n > ae_c")) +
+    geom_text(aes(x = 0.6, y = 0.8, label = "ae_n > ae_p > ae_c")) +
+    geom_text(aes(x = 0.6, y = 1.5, label = "ae_n > ae_c > ae_p")) +
+    xlim(0.4, 1.6) + ylim(0.4, 1.6) +
+    theme_bw() +
+    labs(x = "slope ae_n ~ ae_c", y = "slope ae_p ~ ae_c", color = "N limitation") +
+    fishualize::scale_color_fish(option = "Trimma_lantana")
+  
+  ggplot(dat) +
+    geom_point(aes(x = b1, y = b2, color = plim_p)) +
+    geom_abline(slope = 1) + 
+    geom_hline(yintercept = 1) + 
+    geom_vline(xintercept = 1) +
+    geom_text(aes(x = 1.2, y = 1.5, label = "ae_c > ae_n > ae_p")) +
+    geom_text(aes(x = 1.4, y = 1.2, label = "ae_c > ae_p > ae_n")) +
+    geom_text(aes(x = 1.4, y = 0.6, label = "ae_p > ae_c > ae_n")) +
+    geom_text(aes(x = 0.8, y = 0.5, label = "ae_p > ae_n > ae_c")) +
+    geom_text(aes(x = 0.6, y = 0.8, label = "ae_n > ae_p > ae_c")) +
+    geom_text(aes(x = 0.6, y = 1.5, label = "ae_n > ae_c > ae_p")) +
+    xlim(0.4, 1.6) + ylim(0.4, 1.6) +
+    theme_bw() +
+    labs(x = "slope ae_n ~ ae_c", y = "slope ae_p ~ ae_c", color = "P limitation") +
+    fishualize::scale_color_fish(option = "Trimma_lantana")
+  
+  
+
+```
+We can hypothesize that the assimilation efficiency is positively correlated with the probability of limitation by a certain element. We can get the limiting element with fishflux.     
+If the assimilation of N or P is higher, relative to the assimilation of C, when they are more likely to be the limiting element for a certain species, we expect that there is a negative relationship between for example the probability of N limitation and the slope of "ae_n ~ ae_c" ($slope = \frac{D_c W_n}{W_c D_n}$).
+As we can see in the two figures below, there is little evidence that this is the case. I tested it to be certain by fitting zero-one-inflated beta models, but find insignifficant effects of the slopes on the probability of limitation. 
+```{r}
+  ggplot(dat) +
+    geom_point(aes(x = b1, y = plim_n)) +
+    labs(x = "slope ae_n ~ ae_c", y = "Probability N limitation")
+  
+  ggplot(dat) +
+    geom_point(aes(x = b2, y = plim_p)) +
+    labs(x = "slope ae_p ~ ae_c", y = "Probability P limitation")
+  
+
+
+```
+
+```{r, eval = FALSE, include = FALSE}
+  
+  fit1 <- brms::brm(plim_n ~ b1, data = dat, family = "zero_one_inflated_beta")
+
+# fit 1
+#           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept    -0.58      0.83    -2.23     1.03 1.00     4997     2871
+# b1           -0.45      1.06    -2.50     1.66 1.00     4954     2928
+
+  fit2 <- brms::brm(plim_p ~ b2, data = dat, family = "zero_one_inflated_beta")
+  
+# fit2
+#             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept    -2.27      1.34    -4.97     0.27 1.00     4833     2945
+# b2            1.34      1.46    -1.47     4.31 1.00     4805     2789
+
+```
+
+## Pairwise comparisons feces and food contents
+In the below plots, blue tiles signify that the diet nutrient content of species (y-axis) is lower than the feces nutrient content of species (x-axis)
+
+```{r, fig.width = 10, fig.height = 10, echo=FALSE, message = FALSE}
+oc <- outer(result_ext$c_mu2_m, result_ext$c_mu1_m, "-") 
+colnames(oc) <-  result_ext$species
+rownames(oc) <-  result_ext$species
+oc <- as.data.frame(oc) %>%
+  mutate(sp_feces = result_ext$species) %>%
+  pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+  left_join(select(result_ext, sp_diet = species, c_mu1_m)) %>%
+  mutate(sp_feces = fct_reorder(sp_feces, - c_mu1_m),
+         sp_diet = fct_reorder(sp_diet, - c_mu1_m))
+library(forcats)
+ggplot(oc) +
+  geom_raster(aes(x = sp_feces, 
+                y = sp_diet, 
+                fill = value)) +
+  scale_fill_gradient2(midpoint = 0) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Wc - Dc", x = "species (defecator)", y = "species (consumer)")
+
+on <- outer(result_ext$n_mu2_m, result_ext$n_mu1_m, "-") 
+colnames(on) <-  result_ext$species
+rownames(on) <-  result_ext$species
+on <- as.data.frame(on) %>%
+  mutate(sp_feces = result_ext$species) %>%
+  pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+  left_join(select(result_ext, sp_diet = species, n_mu1_m)) %>%
+  mutate(sp_feces = fct_reorder(sp_feces, - n_mu1_m),
+         sp_diet = fct_reorder(sp_diet, - n_mu1_m))
+ggplot(on) +
+  geom_raster(aes(x = sp_feces, 
+                y = sp_diet, 
+                fill = value)) +
+  scale_fill_gradient2(midpoint = 0) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Wn - Dn", x = "species (defecator)", y = "species (consumer)")
+
+op <- outer(result_ext$p_mu2_m, result_ext$p_mu1_m, "-") 
+colnames(op) <-  result_ext$species
+rownames(op) <-  result_ext$species
+op <- as.data.frame(op) %>%
+  mutate(sp_feces = result_ext$species) %>%
+  pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+  left_join(select(result_ext, sp_diet = species, p_mu1_m)) %>%
+  mutate(sp_feces = fct_reorder(sp_feces, - p_mu1_m),
+         sp_diet = fct_reorder(sp_diet, - p_mu1_m))
+ggplot(op) +
+  geom_raster(aes(x = sp_feces, 
+                y = sp_diet, 
+                fill = value)) +
+  scale_fill_gradient2(midpoint = 0) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Wp - Dp", x = "species (defecator)", y = "species (consumer)")
+```
+
+
+```{r}
+data <- result_ext %>% 
+  dplyr::mutate(D_np = n_mu1_m/p_mu1_m, W_np = n_mu2_m/p_mu2_m) %>%
+  pivot_longer(cols = c(D_np, W_np))
+  
+ggplot(data) +
+  geom_boxplot(aes(x = species, y = value, color = name)) +
+  coord_flip()
+
+library(ggrepel)
+ggplot(data) +
+  geom_point(aes(x = D_np, y = W_np, color = log(n_mu2_m)), size = 3) +
+  geom_abline(slope = 1) +
+  geom_text_repel(aes(x = D_np, y = W_np, label = species), data = data)
+```
+
+

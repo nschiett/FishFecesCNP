@@ -1,6 +1,10 @@
 standard <- function(x){
   (x - mean(x))/sd(x)
 }
+
+inv_logit <- function(x){
+  exp(x)/(1+exp(x))
+}
 #' Prune the raw data
 #'
 #' @param data raw dataframe with cnp contents of gut content and feces
@@ -30,7 +34,8 @@ prune <- function(data){
       dplyr::filter(n_c1 > 3, n_c2 > 3, n_n1 > 3, n_n2 > 3, n_p1 > 3, n_p2 > 3) %>%
       dplyr::mutate(species = gsub(" ", "_", species)) %>%
       dplyr::mutate(sploc = paste(species, location, sep = "__")) %>%
-      dplyr::ungroup()
+      dplyr::ungroup() %>%
+      dplyr::select(-family)
     data
 }
 
@@ -96,6 +101,69 @@ ae_mod <- function(model, data, element){
   
 }
 
+#' Run model to get averages cnp diet and feces
+#'
+#' @param model The compiled stan model
+#' @param data The data containing cnp%
+#' @param element The element (C, N or P)
+#'
+#' @return 
+#' @export
+#'
+#' @examples
+cnp_mod <- function(model, data){
+  
+  x1 <- 
+    dplyr::filter(data, key == "AE1") %>%
+    dplyr::select(c, n, p) %>%
+    dplyr::filter(c>0, n>0, p>0) %>%
+    as.matrix()
+  x2 <- 
+    dplyr::filter(data, key == "AE2") %>%
+    dplyr::select(c, n, p) %>%
+    dplyr::filter(c>0, n>0, p>0) %>%
+    as.matrix()
+  
+  ar <- unique(data$ash_ratio)
+  
+  data <- list(
+    N1 = nrow(x1),
+    N2 = nrow(x2),
+    c1 = x1[,1], 
+    c2 = x2[,1],
+    n1 = x1[,2], 
+    n2 = x2[,2],
+    p1 = x1[,3], 
+    p2 = x2[,3],
+    ar = ar
+  )
+  
+  fit <- rstan::sampling(model, data, warmup = 2000, iter = 4000)
+  
+  rstan::summary(fit)$summary[c("Dc", "Wc", 
+                                       "Dn", "Wn",
+                                       "Dp", "Wp",
+                                       "Dcn", "Dcp", "Dnp",
+                                       "Wcn", "Wcp", "Wnp",
+                                       "Acn", "Acp", 
+                                       "Rc", "Rn", "Rp", 
+                                "ac", "an", "ap"), -c(2,9,10)] %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("var") %>%
+    dplyr::rename(lqn = `2.5%`,
+           uqn = `97.5%`,
+           lqr = `25%`,
+           uqr = `75%`,
+           median = `50%`) %>%
+    tidyr::pivot_longer(cols = 2:8) %>%
+    dplyr::mutate(name = paste(var, name, sep = "_")) %>%
+    dplyr::select(-var) %>%
+    tidyr::pivot_wider(names_from = name, values_from = value)
+  
+  
+  
+}
+
 #' Run ae models for all species
 #'
 #' @param data 
@@ -108,7 +176,8 @@ ae_mod <- function(model, data, element){
 run_ae_models <- function(data, stanmodel){
   
   sploc <- dplyr::select(data, species, location) %>%
-    unique()
+    unique() %>%
+    dplyr::filter(location == "Moorea")
   
   c <- lapply(1:nrow(sploc), function(i){
     sp <- purrr::simplify(sploc[i, "species"])
@@ -146,6 +215,84 @@ run_ae_models <- function(data, stanmodel){
   
 }
 
+
+#' Run cnp models for all species
+#'
+#' @param data 
+#' @param stanmodel 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+run_cnp_models <- function(data, stanmodel, ash){
+  
+  sploc <- dplyr::select(data, species, location) %>%
+    dplyr::filter(location == "Moorea") %>%
+    #remove outlier species manually
+    dplyr::filter(!species == "Chaetodon_quadrimaculatus") %>%
+    unique()
+  
+  res <- lapply(1:nrow(sploc), function(i){
+    sp <- purrr::simplify(sploc[i, "species"])
+    loc <- purrr::simplify(sploc[i, "location"])
+    
+    d <- dplyr::filter(data, species == sp, location == loc) %>%
+      dplyr::left_join(ash)
+    
+    print(sp)
+    print(loc)
+    
+    res <- cnp_mod(stanmodel, data = d)
+
+    
+  }) %>% plyr::ldply()
+  
+  cbind(sploc, res)
+  
+  
+}
+
+#' Import ash content ratios 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_ash <- function(diets){
+  read_csv("output/data/ash_species_estimate.csv")
+}
+
+#' load trophic guilds
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_diets <- function(){
+  readr::read_csv("data/extrapolation_trophic_guilds.csv") %>%
+    dplyr::select(family, species, diet = trophic_guild_predicted) %>%
+    rbind(data.frame(
+      species = "Aulostomus_chinensis", family = "Aulostomidae",
+      diet = 4
+    )) %>%
+    dplyr::mutate(diet2 = dplyr::case_when(
+      diet %in% c(1, 5, 6) ~ "3_imix",
+      diet == 3 ~ "4_cor",
+      diet == 2 ~ "2_herb",
+      diet %in% c(7, 4) ~ "6_carn",
+      diet == 8 ~ "5_plank"
+    )) %>%
+    dplyr::mutate(diet2 = dplyr::case_when(
+      species %in% c("Acanthurus_olivaceus", 
+                     "Ctenochaetus_striatus", 
+                     "Chlorurus_spilurus",
+                     "Acanthurus_pyroferus") ~ "1_detr",
+      species == "Cheilinus_chlorurus" ~ "3_imix",
+      TRUE ~ diet2
+    ))
+}
+
 #' Adding diet category and stable isotopes
 #'
 #' @param result_ae 
@@ -154,35 +301,53 @@ run_ae_models <- function(data, stanmodel){
 #' @return
 #' @export
 #'
-add_traits <- function(result_ae, sia_species, intestine){
+add_traits <- function(result, sia_species, intestine, diets){
   
   # keep only Moorea
-  result_ae <- result_ae %>%
-    dplyr::filter(location == "Moorea") %>%
-    #remove outlier species manually
-    dplyr::filter(!species == "Chaetodon_quadrimaculatus")
+  result <- result %>%
+     dplyr::filter(location == "Moorea") %>%
+     #remove outlier species manually
+     dplyr::filter(!species == "Chaetodon_quadrimaculatus")
   
   # diet category
-  diets <- readr::read_csv("data/extrapolation_trophic_guilds.csv") %>%
-    dplyr::select(family, species, diet = trophic_guild_predicted) %>%
-    rbind(data.frame(
-      species = "Aulostomus_chinensis", family = "Aulostomidae",
-      diet = 4
-    ))
+
   
   
   # combine
-  result <- result_ae %>% 
+  result %>% 
     dplyr::left_join(diets) %>%
     dplyr::left_join(sia_species) %>%
     dplyr::left_join(intestine)
-  
-  result
-
   }
 
+#' calculate assimilation efficiency
+#'
+#' @param ash 
+#' @param result_ext 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_ae <- function(ash, result_ext){
+  dplyr::left_join(result_ext, ash) %>%
+    dplyr::mutate(ac_m = 1 - (Rc_mean*ash_ratio),
+           ac_median = 1 - (Rc_median*ash_ratio),
+           ac_sd = 1 - (Rc_sd*ash_ratio),
+           ac_lqn = 1 - (Rc_lqn*ash_ratio),
+           ac_uqn = 1 - (Rc_uqn*ash_ratio),
+           an_m = 1 - (Rn_mean*ash_ratio),
+           an_median = 1 - (Rn_median*ash_ratio),
+           an_sd = 1 - (Rn_sd*ash_ratio),
+           an_lqn = 1 - (Rn_lqn*ash_ratio),
+           an_uqn = 1 - (Rn_uqn*ash_ratio),
+           ap_m = 1 - (Rp_mean*ash_ratio),
+           ap_median = 1 - (Rp_median*ash_ratio),
+           ap_sd = 1 - (Rp_sd*ash_ratio),
+           ap_lqn = 1 - (Rp_lqn*ash_ratio),
+           ap_uqn = 1 - (Rp_uqn*ash_ratio)) 
+}
 
-##### sia #####
 #' import sia data and model species means
 #'
 #' @return
@@ -233,47 +398,52 @@ get_intestine_residuals <- function(){
 fit_diet_models <- function(result_ext){
   
     long1 <- result_ext %>%
-      dplyr::mutate(c = standard(c_mu1_m),
-                    n = standard(n_mu1_m),
-                    p = standard(p_mu1_m)
+      dplyr::filter(ac_mean>0, an_mean>0, ap_mean>0) %>%
+      dplyr::mutate(c = standard(Dc_mean),
+                    n = standard(Dn_mean),
+                    p = standard(Dp_mean)
       ) %>%
       tidyr::pivot_longer(cols = c(c, n, p), 
                           names_to = "element", values_to = "mu1_st") %>%
       dplyr::select(species, element, mu1_st, dn, family, diet, int_surface_res)
     
     long2 <- result_ext %>%
-      dplyr::mutate(c = c_a_m,
-             n = n_a_m,
-             p = p_a_m
+      dplyr::mutate(c = ac_mean,
+             n = an_mean,
+             p = ap_mean
       ) %>%
       tidyr::pivot_longer(cols = c(c, n, p), 
                           names_to = "element", values_to = "ae") %>%
-      dplyr::select(species, element, ae)
+      dplyr::select(species, element, ae, diet2)
     
-    long <- dplyr::left_join(long1, long2)
+    long3 <- result_ext %>%
+      dplyr::mutate(c = ac_sd,
+                    n = an_sd,
+                    p = ap_sd
+      ) %>%
+      tidyr::pivot_longer(cols = c(c, n, p), 
+                          names_to = "element", values_to = "ae_sd") %>%
+      dplyr::select(species, element, ae_sd)
     
-    eqn <- brms::bf(ae ~ 0 + element + element:mu1_st, family = "student") +
-      brms::bf(mu1_st ~  0 + element*dn, 
-               family = "student") +
-      brms::set_rescor(FALSE)
     
-    fit <- brms::brm(eqn, data = long)
+    long <- dplyr::left_join(long1, long2) %>%
+      dplyr::left_join(long3)
     
-    newdata <- tidyr::expand_grid(mu1_st = seq(min(long$mu1_st), max(long$mu1_st), 0.2), 
-                           element = c("c", "n", "p"),
-                           dn = seq(min(long$dn, na.rm = TRUE), max(long$dn, na.rm = TRUE), 0.2))
+    fit <- brms::brm(ae ~ 0 + element + element:mu1_st, data = long,
+                     family = "beta")
+    
+    
+    newdata <- tidyr::expand_grid(mu1_st = seq(min(long$mu1_st), 
+                                               max(long$mu1_st), 0.2), 
+                           element = c("c", "n", "p"))
     
     pred <- fitted(fit, newdata)
     
     pred_data <- newdata %>%
-      dplyr::mutate(y_a_m = pred[,1,1],
-             y_a_sd = pred[,2,1],
-             y_a_lb = pred[,3,1],
-             y_a_ub = pred[,4,1],
-             y_mu1_m = pred[,1,2],
-             y_mu1_sd = pred[,2,2],
-             y_mu1_lb = pred[,3,2],
-             y_mu1_ub = pred[,4,2])
+      dplyr::mutate(y_a_m = pred[,1],
+             y_a_sd = pred[,2],
+             y_a_lb = pred[,3],
+             y_a_ub = pred[,4])
     
     
     return(list(fit = fit, pred = pred_data))
@@ -297,31 +467,62 @@ test_copr_models <- function(result_ext){
   
   # coprophage models
 
-  fit_copr1 <- brm(coprophage ~ c_mu1_m + n_mu1_m + p_mu1_m,
+  fit_copr1 <- brm(coprophage ~ Dc_median + Dn_median + Dp_median,
                   data = cop, family = "bernoulli")
-  fit_copr2 <- update(fit_copr1, formula = coprophage ~ c_mu1_m)
-  fit_copr3 <- update(fit_copr1, formula = coprophage ~ n_mu1_m)
-  fit_copr4 <- update(fit_copr1, formula = coprophage ~ p_mu1_m)
+  fit_copr2 <- update(fit_copr1, formula = coprophage ~ Dc_median)
+  fit_copr3 <- update(fit_copr1, formula = coprophage ~ Dn_median)
+  fit_copr4 <- update(fit_copr1, formula = coprophage ~ Dp_median)
+  fit_copr5 <- update(fit_copr1, formula = coprophage ~ Dp_median + Dn_median)
+  fit_copr6 <- update(fit_copr1, formula = coprophage ~ Dc_median + Dn_median)
+  fit_copr7 <- update(fit_copr1, formula = coprophage ~  diet2, newdata = cop)
   
   loo_values <- loo(fit_copr1, fit_copr2, fit_copr3, fit_copr4)
   
   ##### being coprophage
   
-  cop2 <- drop_na(cop, c_mu1_m) %>%
-    mutate(one = round(prop_eaten * n_feces)) %>%
-    mutate(zero = n_feces - one) %>%
-    pivot_longer(names_to = "key", values_to = "n", c(one, zero)) %>%
-    uncount(n)
-
+  cop2 <- tidyr::drop_na(cop, Dp_median) %>%
+    dplyr::mutate(one = round(prop_eaten * n_feces)) %>%
+    dplyr::mutate(zero = n_feces - one) %>%
+    tidyr::pivot_longer(names_to = "key", values_to = "n", c(one, zero)) %>%
+    tidyr::uncount(n) %>%
+    dplyr::mutate(key2 = dplyr::case_when(key == "one" ~ 1,
+                                          key == "zero" ~ 0))
   
-  fit_cop1 <- brm(key ~ p_mu1_m + (1|species), 
+
+  ggplot(cop2) +
+    geom_boxplot(aes(x = as.character(key2), y = Wn_median))
+  
+  
+  ggplot(result_ext) +
+    geom_point(aes(x = (Wp_median), y = (Wn_median)))
+  
+  ggplot(result_ext) +
+    geom_point(aes(x = log(Dc_median), y = log(Dn_median)))
+  ggplot(result_ext) +
+    geom_point(aes(x = log(Dc_median), y = log(Dp_median)))
+  ggplot(result_ext) +
+    geom_point(aes(x = log(Dp_median), y = log(Dn_median)))
+  
+  ggplot(result_ext) +
+    geom_point(aes(x = (Wc_median), y = (Wn_median)))
+  ggplot(result_ext) +
+    geom_point(aes(x = (Wc_median), y = (Wp_median)))
+  
+  fit_cop1 <- brm(key ~ Wp_median + (1|species), 
                  data = cop2, family = "bernoulli")
-  fit_cop2 <- update(fit_cop, formula = key ~ n_mu1_m + (1|species))
-  fit_cop3 <- update(fit_cop, formula = key ~ c_mu1_m + (1|species))
-
-  loo(fit_cop1, fit_cop2, fit_cop3)
+  fit_cop2 <- update(fit_cop1, formula = key ~ Wn_median + (1|species), newdata = cop2)
+  fit_cop3 <- update(fit_cop1, formula = key ~ Wc_median + (1|species), newdata = cop2)
+  fit_cop4 <- update(fit_cop1, formula = key2 ~ Wn_median , newdata = cop2)
+  fit_cop5 <- update(fit_cop4, formula = key2 ~ Wp_median , newdata = cop2)
+  fit_cop6 <- update(fit_cop4, formula = key2 ~ Wp_median + Wn_median , newdata = cop2)
   
-  summary(fit_cop3)
+  loo( fit_cop4, fit_cop5)
+  
+  summary()
+ plot <- conditional_effects(fit_cop4)
+ ggplot() +
+    geom_point(aes(x = Wn_median, y = prop_eaten), data = cop) +
+   geom_text(aes(x = Wn_median, y = prop_eaten, label = species), data = cop)
   
 }
 
@@ -343,10 +544,12 @@ fit_copr_models <- function(result_ext){
   
   # coprophage models
   
-  fit_copr <- brms::brm(coprophage ~  p_mu1_m,
+  fit_copr_p <- brms::brm(coprophage ~  Dp_median,
                    data = cop, family = "bernoulli")
+  fit_copr_n <- brms::brm(coprophage ~  Dn_median,
+                          data = cop, family = "bernoulli")
   
-  cop2 <- tidyr::drop_na(cop, c_mu1_m) %>%
+  cop2 <- tidyr::drop_na(cop, Dp_median) %>%
     dplyr::mutate(one = round(prop_eaten * n_feces)) %>%
     dplyr::mutate(zero = n_feces - one) %>%
     tidyr::pivot_longer(names_to = "key", values_to = "n", c(one, zero)) %>%
@@ -354,10 +557,12 @@ fit_copr_models <- function(result_ext){
     dplyr::mutate(key2 = dplyr::case_when(key == "one" ~ 1,
                                           key == "zero" ~ 0))
   
-  fit_cop <- brms::brm(key2 ~ p_mu2_m, 
+  fit_cop_p <- brms::brm(key2 ~ Wp_median, 
                  data = cop2, family = "bernoulli", iter = 2000)
+  fit_cop_n <- brms::brm(key2 ~ Wn_median, 
+                       data = cop2, family = "bernoulli", iter = 2000)
   
-  return(list(fit_copr, fit_cop))
+  return(list(fit_copr_n, fit_cop_n, fit_copr_p, fit_cop_p))
   
 }
 
@@ -416,6 +621,133 @@ predict_ae <- function(result_ext){
   pred
 }
 
+#' get sp level fluxes
+#'
+#' @param result_ext 
+#' @param group_ae 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+sp_fluxes <- function(data_ae, result_ext) {
+  
+  # median size per species 
+  spsize <- data_ae %>%
+    dplyr::filter(location == "Moorea", species %in% result_ext$species) %>%
+    dplyr::group_by(species) %>%
+    dplyr::summarize(size_median = round(median(tl)),
+                     size_max = round(max(tl)))
+  
+  # load parameters
+  params <- readr::read_csv("data/params_sst_glob.csv") %>%
+    dplyr::filter(v_m %in% c(26, 27, 28, 29)) %>%
+    dplyr::group_by(Family, species, Species) %>%
+    dplyr::summarize_all(mean) %>%
+    dplyr::select(-ac_m, -an_m, -ap_m, -Dc_m, -Dc_sd, 
+                  -Dn_m, -Dn_sd, - Dp_m, -Dp_sd)
+  
+  
+  ae_sp <- result_ext %>%
+    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0 ~ 0.1, TRUE ~ ac_mean), 
+                  an_mean = dplyr::case_when(an_mean < 0 ~ 0.1, TRUE ~ an_mean), 
+                  ap_mean = dplyr::case_when(ap_mean < 0 ~ 0.1, TRUE ~ ap_mean)) %>%
+    dplyr::mutate(ac_sd = dplyr::case_when(ac_sd > 0.3 ~ 0.3, 
+                                    TRUE ~ ac_sd),
+                  an_sd = dplyr::case_when(an_sd > 0.3 ~ 0.3, 
+                                    TRUE ~ an_sd),
+                  ap_sd = dplyr::case_when(ap_sd > 0.3 ~ 0.3, 
+                                    TRUE ~ ap_sd)) %>%
+    dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
+                  an_m = an_mean, an_sd, 
+                  ap_m = ap_mean, ap_sd,
+                  Dc_m = Dc_mean, Dc_sd,
+                  Dn_m = Dn_mean, Dn_sd,
+                  Dp_m = Dp_mean, Dp_sd)
+  
+
+  spsize <- dplyr::inner_join(spsize, ae_sp) %>%
+    dplyr::left_join(params) %>%
+    tidyr::drop_na(Qc_m)
+  
+  cnp_out <- function(x){
+    
+    d <- data[x,]
+    size <- c(5:purrr::simplify(d$size_max))
+    p <- d %>%
+      dplyr::select(k_m, Qc_m ,Qn_m, Qp_m, Dc_m, Dn_m, Dp_m, Dc_sd, Dn_sd, Dp_sd, 
+                    alpha_m, f0_m,          
+             theta_m, lwa_m,  lwb_m, r_m, h_m,  v_m, linf_m,        
+             F0nz_m, F0pz_m, ac_m, an_m, ap_m, ac_sd, an_sd, ap_sd) %>% 
+      purrr::simplify() %>% as.list()
+    
+    fit <- fishflux::cnp_model_mcmc(TL = size, param = p)
+    
+    out <- fishflux::extract(fit, c("Ic", "In", "Ip", "Sc","Sn", "Sp", 
+                                    "Fn", "Fp", "Wc", "Wn", "Wp", 
+                                    "Gc", "Gn", "Gp", "w1")) %>%
+      dplyr::mutate(species = purrr::simplify(d$species),
+                    size_median = purrr::simplify(d$size_median)) %>%
+      dplyr::select(
+        species,
+        size = TL,
+        size_median,
+        biomass = w1_median,
+        Ic = Ic_median,
+        In = In_median,
+        Ip = Ip_median,
+        Sc = Sc_median,
+        Sn = Sn_median,
+        Sp = Sp_median,
+        Fn = Fn_median,
+        Fp = Fp_median,
+        Wc = Wc_median,
+        Wn = Wn_median,
+        Wp = Wp_median,
+        Gc = Gc_median,
+        Gn = Gn_median,
+        Gp = Gp_median
+      )
+    
+    limit <- fishflux::limitation(fit)
+    lim_ <- which.max(limit$prop_lim)
+    
+    if(lim_ == 1){
+      lim_ <- "c"
+    } else if (lim_ == 2){
+      lim_ <- "n"
+    } else {
+      lim_ <- "p"
+    }
+    
+    out %>%
+      dplyr::mutate(lim = lim_, 
+                    plimc = limit[1,3],
+                    plimn = limit[2,3],
+                    plimp = limit[3,3])
+  }
+
+  
+  data <- spsize
+  
+  # in pieces to avoid crash
+  results1 <- lapply(1:nrow(data), cnp_out) %>%
+    dplyr::bind_rows() %>%
+    dplyr::mutate(GGEc = Gc/Ic,
+                  GGEn = Gn/In,
+                  GGEp = Gp/Ip)
+
+  results2 <- results1 %>% 
+    dplyr::filter(round(size) == round(size_median)) %>%
+    dplyr::left_join(result_ext)
+
+  
+  return(list(results1, results2))
+}
+
+
+
+
 #' get community level fluxes per broad diet group
 #'
 #' @param result_ext 
@@ -425,28 +757,29 @@ predict_ae <- function(result_ext){
 #' @export
 #'
 #' @examples
-community_fluxes <- function(result_ext, group_ae) {
+community_fluxes <- function(result_ext) {
   
   # load parameters
   params <- readr::read_csv("data/params_sst_glob.csv") %>%
     dplyr::filter(v_m %in% c(26, 27, 28, 29)) %>%
     dplyr::group_by(Family, species, Species) %>%
     dplyr::summarize_all(mean) %>%
-    dplyr::select(-ac_m, -an_m, -ap_m)
+    dplyr::select(-ac_m, -an_m, -ap_m, -Dc_m, -Dc_sd, 
+                  -Dn_m, -Dn_sd, - Dp_m, -Dp_sd)
   
   # uvc data
   moorea <- readr::read_csv("data/moorea_uvc.csv") %>%
     # correct a name 
     dplyr::mutate(Taxon = 
                     dplyr::case_when(Taxon == "Chlorurus sordidus" ~ 
-                              "Chlorurus spilurus",
-                            TRUE ~ Taxon)) %>%
+                                       "Chlorurus spilurus",
+                                     TRUE ~ Taxon)) %>%
     dplyr::filter(Island == "Moorea") %>%
     dplyr::filter(Size > 0) %>%
     dplyr::select(SurveyID, RepID, TransID, Month, Day, Year, Site_name, Lat, Long, Depth, TransectLength, TransectWidth, ReefZone,
-           Taxon, Abundance, Size) %>%
+                  Taxon, Abundance, Size) %>%
     dplyr::group_by(SurveyID, RepID, TransID, Month, Day, Year, Site_name, Lat, Long, Depth, TransectLength, TransectWidth, ReefZone,
-             Taxon, Size) %>%
+                    Taxon, Size) %>%
     dplyr::summarize(Abundance = sum(Abundance)) %>%
     janitor::clean_names() %>%
     dplyr::ungroup() %>%
@@ -456,59 +789,57 @@ community_fluxes <- function(result_ext, group_ae) {
     dplyr::mutate(biomass = lwa_m * size ^ lwb_m) %>%
     dplyr::mutate(biomass = (abundance * biomass)) %>%
     dplyr::filter(biomass > 0) %>%
-    dplyr::mutate(diet2 = dplyr::case_when(
-      diet_cat %in% c(1, 3, 5, 6) ~ "2_imix",
-      diet_cat == 2 ~ "1_hmd",
-      diet_cat %in% c(7, 4) ~ "4_carn",
-      diet_cat == 8 ~ "3_plank"
-    )) %>%
-    dplyr::mutate(group = paste(Family, diet2, sep = "_")) %>%
-    dplyr::mutate(check_species = species %in% result_ext$species,
-                  check_group = group %in% group_ae$group) 
-    
+
+    dplyr::mutate(check_species = species %in% result_ext$species)
+
   sum(moorea$biomass * moorea$check_species)/sum(moorea$biomass)
   #69.9% of biomass species
-  sum(moorea$biomass * moorea$check_group)/sum(moorea$biomass)
-  #94.0% of biomass groups
-  
+
   # add ae values 
   ae_sp <- result_ext %>%
-    dplyr::select(species, c_a_m, c_a_sd, n_a_m, n_a_sd, p_a_m, p_a_sd)
+    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0 ~ 0.1, TRUE ~ ac_mean), 
+                  an_mean = dplyr::case_when(an_mean < 0 ~ 0.1, TRUE ~ an_mean), 
+                  ap_mean = dplyr::case_when(ap_mean < 0 ~ 0.1, TRUE ~ ap_mean)) %>%
+    dplyr::mutate(ac_sd = dplyr::case_when(ac_sd > 0.3 ~ 0.3, 
+                                           TRUE ~ ac_sd),
+                  an_sd = dplyr::case_when(an_sd > 0.3 ~ 0.3, 
+                                           TRUE ~ an_sd),
+                  ap_sd = dplyr::case_when(ap_sd > 0.3 ~ 0.3, 
+                                           TRUE ~ ap_sd)) %>%
+    dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
+                  an_m = an_mean, an_sd, 
+                  ap_m = ap_mean, ap_sd,
+                  Dc_m = Dc_mean, Dc_sd,
+                  Dn_m = Dn_mean, Dn_sd,
+                  Dp_m = Dp_mean, Dp_sd)
   
+  ae_diet <- ae_sp %>%
+    group_by(diet2) %>%
+    summarize(an_diet = median(an_m),
+              ap_diet = median(ap_m),
+              ac_diet = median(ap_m),
+              Dc_diet = median(Dc_m),
+              Dn_diet = median(Dn_m),
+              Dp_diet = median(Dp_m))
+  
+  
+  loadd(diets)
   moorea <- moorea %>%
+    dplyr::inner_join(diets) %>%
     dplyr::left_join(ae_sp) %>%
-    dplyr::left_join(group_ae) %>%
-    dplyr::mutate(
-      ac_m = dplyr::case_when(
-        check_species == TRUE ~ c_a_m,
-        check_group == TRUE & check_species == FALSE ~ group_c_a_m,
-        TRUE ~ NA_real_),
-      an_m = dplyr::case_when(
-        check_species == TRUE ~ n_a_m,
-        check_group == TRUE & check_species == FALSE ~ group_n_a_m,
-        TRUE ~ NA_real_),
-      ap_m = dplyr::case_when(
-        check_species == TRUE ~ p_a_m,
-        check_group == TRUE & check_species == FALSE ~ group_p_a_m,
-        TRUE ~ NA_real_),
-      ac_sd = dplyr::case_when(
-        check_species == TRUE ~ c_a_sd,
-        check_group == TRUE & check_species == FALSE ~ group_c_a_sd,
-        TRUE ~ NA_real_),
-      an_sd = dplyr::case_when(
-        check_species == TRUE ~ n_a_sd,
-        check_group == TRUE & check_species == FALSE ~ group_n_a_sd,
-        TRUE ~ NA_real_),
-      ap_sd = dplyr::case_when(
-        check_species == TRUE ~ p_a_sd,
-        check_group == TRUE & check_species == FALSE ~ group_p_a_sd,
-        TRUE ~ NA_real_)
-    ) %>%
-    dplyr::filter(an_m > 0)
-  
+    dplyr::left_join(ae_diet) %>%
+    #dplyr::filter(species %in% result_ext$species)
+    dplyr::mutate(ac_m = dplyr::coalesce(ac_m, ac_diet),
+                  an_m = dplyr::coalesce(an_m, an_diet),
+                  ap_m = dplyr::coalesce(ap_m, ap_diet),
+                  Dc_m = dplyr::coalesce(Dc_m, Dc_diet),
+                  Dn_m = dplyr::coalesce(Dn_m, Dn_diet),
+                  Dp_m = dplyr::coalesce(Dp_m, Dp_diet))
+ 
   spsize <- moorea %>% 
-    dplyr::select(c(colnames(params), size, 
-                    ac_m, an_m, ap_m, ac_sd, an_sd, ap_sd)) %>%
+    dplyr::select(c(colnames(params), size, diet2,
+                    ac_m, an_m, ap_m, ac_sd, an_sd, ap_sd,
+                    Dc_m, Dn_m, Dp_m, Dc_sd, Dn_sd, Dp_sd)) %>%
     unique()
   
   cnp_out <- function(x){
@@ -517,13 +848,14 @@ community_fluxes <- function(result_ext, group_ae) {
     size <- purrr::simplify(d$size)
     p <- d %>%
       dplyr::select(k_m, Qc_m ,Qn_m, Qp_m, Dc_m, Dn_m, Dp_m, alpha_m, f0_m,          
-             theta_m, lwa_m,  lwb_m, r_m, h_m,  v_m, linf_m,        
-             F0nz_m, F0pz_m, ac_m, an_m, ap_m) %>% 
+                    theta_m, lwa_m,  lwb_m, r_m, h_m,  v_m, linf_m,        
+                    F0nz_m, F0pz_m, ac_m, an_m, ap_m) %>% 
       purrr::simplify() %>% as.list()
     
     fit <- fishflux::cnp_model_mcmc(TL = size, param = p)
     
-    out <- fishflux::extract(fit, c("Ic", "In", "Ip", "Sc","Sn", "Sp", "Fn", "Fp", "Wc", "Wn", "Wp")) %>%
+    out <- fishflux::extract(fit, c("Ic", "In", "Ip", "Sc","Sn", "Sp", 
+                                    "Fn", "Fp", "Wc", "Wn", "Wp")) %>%
       dplyr::select(
         Ic = Ic_median,
         In = In_median,
@@ -538,68 +870,146 @@ community_fluxes <- function(result_ext, group_ae) {
         Wp = Wp_median
       )
     
-    out
+    limit <- fishflux::limitation(fit)
+    lim_ <- which.max(limit$prop_lim)
+    
+    if(lim_ == 1){
+      lim_ <- "c"
+    } else if (lim_ == 2){
+      lim_ <- "n"
+    } else {
+      lim_ <- "p"
+    }
+    
+    out %>%
+      dplyr::mutate(lim = lim_, 
+                    plimc = limit[1,3],
+                    plimn = limit[2,3],
+                    plimp = limit[3,3])
   }
-
+  
   
   data <- spsize
   
   # in pieces to avoid crash
-  results1 <- lapply(1:1000, cnp_out) %>%
-    dplyr::bind_rows() 
-  results2 <- lapply(1001:2000, cnp_out) %>%
-    dplyr::bind_rows() 
-  results3 <- lapply(2001:nrow(data), cnp_out) %>%
+  results1 <- lapply(1:nrow(data), cnp_out) %>%
     dplyr::bind_rows() 
   
-  results <- dplyr::bind_rows(results1, results2, results3)
+  # coprophagy
+  summary(models_copro[[4]])
+  prob_cop <- cbind(select(result_ext, species, diet2), 
+    fitted(models_copro[[4]], newdata = result_ext)) %>%
+    select(species, diet2, prob_cop = Estimate)
   
-  result <- cbind(dplyr::select(data, species, size), results)
+  prob_cop <- unique(select(data, diet2, species)) %>%
+    left_join(prob_cop) %>%
+    group_by(diet2) %>%
+    mutate(prob_cop_diet = median(prob_cop, na.rm = TRUE)) %>%
+    mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet))
+  
+  result <- cbind(dplyr::select(data, species, diet2, size), results1) 
   
   moo <- moorea %>%
     dplyr::select(
-    survey_id, rep_id, trans_id, month, day, year, site_name, lat, long,
-    depth, transect_length, transect_width, reef_zone, diet2, species, size, abundance, biomass
-  ) %>%
+      survey_id, rep_id, trans_id, month, day, year, site_name, lat, long, diet2,
+      depth, transect_length, transect_width, reef_zone, species, size, abundance, biomass
+    ) %>%
     dplyr::left_join(result)
   
   summ <- moo %>%
-    dplyr::mutate(Fn = (Fn * abundance) , Fp = (Fp * abundance), 
+    dplyr::mutate(Fn = (Fn * abundance), Fp = (Fp * abundance), 
                   Wc = (Wc * abundance), Wn = (Wn * abundance), Wp = (Wp * abundance),
                   Ic = (Ic * abundance), In = (In * abundance), Ip = (Ip * abundance),
                   Sc = (Sc * abundance), Sn = (Sn * abundance), Sp = (Sp * abundance))%>%
     dplyr::group_by(survey_id, rep_id, trans_id, month, day, year, site_name, lat, long,
-             depth, transect_length, transect_width, reef_zone, diet2) %>%
-    dplyr::summarize(Fn = sum(Fn ) , Fp = sum(Fp ), 
-              Wc = sum(Wc ), Wn = sum(Wn ), Wp = sum(Wp ),
-              Ic = sum(Ic ), In = sum(In ), Ip = sum(Ip ),
-              Sc = sum(Sc ), Sn = sum(Sn ), Sp = sum(Sp ),
-              biomass = sum(biomass) ) %>%
+                    depth, transect_length, transect_width, reef_zone, species, diet2) %>%
+    dplyr::summarize(Fn = sum(Fn ), Fp = sum(Fp ), 
+                     Wc = sum(Wc ), Wn = sum(Wn ), Wp = sum(Wp ),
+                     Ic = sum(Ic ), In = sum(In ), Ip = sum(Ip ),
+                     Sc = sum(Sc ), Sn = sum(Sn ), Sp = sum(Sp ),
+                     biomass = sum(biomass) ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-           Fn = Fn/(transect_length*transect_width),
-           Fp = Fp/(transect_length*transect_width),
-           Wc = Wc/(transect_length*transect_width),
-           Wn = Wn/(transect_length*transect_width),
-           Wp = Wp/(transect_length*transect_width),
-           Ic = Ic/(transect_length*transect_width),
-           In = In/(transect_length*transect_width),
-           Ip = Ip/(transect_length*transect_width),
-           Sc = Sc/(transect_length*transect_width),
-           Sn = Sn/(transect_length*transect_width),
-           Sp = Sp/(transect_length*transect_width),
-           biomass = biomass/(transect_length*transect_width)) %>%
-    dplyr::group_by(year, site_name, reef_zone, diet2) %>%
+      Fn = Fn/(transect_length*transect_width),
+      Fp = Fp/(transect_length*transect_width),
+      Wc = Wc/(transect_length*transect_width),
+      Wn = Wn/(transect_length*transect_width),
+      Wp = Wp/(transect_length*transect_width),
+      Ic = Ic/(transect_length*transect_width),
+      In = In/(transect_length*transect_width),
+      Ip = Ip/(transect_length*transect_width),
+      Sc = Sc/(transect_length*transect_width),
+      Sn = Sn/(transect_length*transect_width),
+      Sp = Sp/(transect_length*transect_width),
+      biomass = biomass/(transect_length*transect_width)) %>%
+    dplyr::group_by(year, site_name, reef_zone, diet2, species) %>%
     dplyr::summarize(Fn = median(Fn), Fp = median(Fp), 
-              Wc = median(Wc), Wn = median(Wn), Wp = median(Wp),
-              Ic = median(Ic), In = median(In), Ip = median(Ip),
-              Sc = median(Sc), Sn = median(Sn), Sp = median(Sp),
-              biomass = median(biomass)) %>%
-    dplyr::ungroup() 
+                     Wc = median(Wc), Wn = median(Wn), Wp = median(Wp),
+                     Ic = median(Ic), In = median(In), Ip = median(Ip),
+                     Sc = median(Sc), Sn = median(Sn), Sp = median(Sp),
+                     biomass = median(biomass)) %>%
+    dplyr::ungroup() %>%
+    dplyr::left_join(prob_cop) %>%
+    dplyr::mutate(prob_cop = case_when(
+      prob_cop < 0.5 ~ 0, TRUE ~ prob_cop)) %>%
+    dplyr::mutate(pflux_cop = Wp * prob_cop/2) %>%
+    dplyr::group_by(year, site_name, reef_zone, diet2) %>%
+    dplyr::summarize(Fn = sum(Fn), Fp = sum(Fp), 
+                     Wc = sum(Wc), Wn = sum(Wn), Wp = sum(Wp),
+                     Ic = sum(Ic), In = sum(In), Ip = sum(Ip),
+                     Sc = sum(Sc), Sn = sum(Sn), Sp = sum(Sp),
+                     biomass = sum(biomass),
+                     pflux_cop = sum(pflux_cop)) %>%
+    #dplyr::filter(year == 2016) %>%
+    dplyr::group_by(reef_zone, site_name, year, diet2) %>%
+    dplyr::summarize(Fn = median(Fn), Fp = median(Fp), 
+                     Wc = median(Wc), Wn = median(Wn), Wp = median(Wp),
+                     Ic = median(Ic), In = median(In), Ip = median(Ip),
+                     Sc = median(Sc), Sn = median(Sn), Sp = median(Sp),
+                     biomass = median(biomass),
+                     pflux_cop = median(pflux_cop)) %>%
+    ungroup()
   
-  summ
-}
+  write_csv(summ, "output/data/comfluxes.csv")
+  
+  
+  pflux <- summ %>%
+    select(reef_zone, site_name, year, diet2, Ip, Fp, Sp, Wp, Wn, Fn, pflux_cop) %>%
+    group_by(reef_zone, site_name, year) %>%
+    mutate(Ip_tot = sum(Ip)) %>%
+    mutate(Ip_r = Ip/Ip_tot, Wp_r = Wp/Ip_tot,
+           Fp_r = Fp/Ip_tot, pcop_r = pflux_cop/Ip_tot) %>%
+    mutate(Wp_r = Wp_r - pcop_r) %>%
+    mutate(P_ratio = sum(Wp)/sum(Fp))%>%
+    mutate(N_ratio = sum(Wn)/sum(Fn)) %>%
+    group_by(reef_zone, diet2) %>%
+    summarize_all(mean, na.rm = TRUE)
+  
+  data <- pflux %>% filter(reef_zone == "forereef")
+sum(data$Wp_r + data$pcop_r)
+#0.8237873
+sum(data$Fp_r)
+#  0.08741516
+data <- data.frame(
+  prop = c(sum(data$Wp_r + data$pcop_r), sum(data$Fp_r)))
 
+ggplot(data, aes(x="", y = c(0.8237873, 0.08741516), fill = c("Wp", "Fp"))) +
+  geom_bar(stat="identity", width=1) +
+  scale_y_continuous(limits = c(0,1)) +
+  coord_polar("y", start=0) +
+  geom_text(aes(label = paste0(c(82.4, 8.7), "%")), position = position_stack(vjust=0.5)) +
+  labs(x = NULL, y = NULL, fill = NULL) +
+  theme_void()
+ggsave("pie.pdf")
+  
+ggplot(pflux) +
+    geom_boxplot(aes(x = as.character(year), y = log(N_ratio))) +
+    facet_grid(reef_zone~site_name)
+  
+  write_csv(pflux, "output/data/comflux.csv")
+  
+  return(list(result, summ))
+}
 
 
 

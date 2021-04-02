@@ -91,146 +91,88 @@ save_plot <- function(plot, name, width = 8, height = 6){
 #' @examples
 make_fig1 <- function(data){
   
-  data_sub <- data %>%
-    dplyr::group_by(family) %>%
-    dplyr::mutate(nfam = dplyr::n()) %>%
-    dplyr::filter(nfam > 1)
+  dat <- data %>%
+    dplyr::mutate(cdif1 = Dc_lqn > Wc_uqn | Dc_uqn < Wc_lqn,
+           ndif1 = Dn_lqn > Wn_uqn | Dn_uqn < Wn_lqn,
+           pdif1 = Dp_lqn > Wp_uqn | Dp_uqn < Wp_lqn,
+           cndif1 = Dcn_lqn > Wcn_uqn | Dcn_uqn < Wcn_lqn,
+           npdif1 = Dnp_lqn > Wnp_uqn | Dnp_uqn < Wnp_lqn,
+           cpdif1 = Dcp_lqn > Wcp_uqn | Dcp_uqn < Wcp_lqn,
+           cdif2 = Dc_lqr > Wc_uqr | Dc_uqr < Wc_lqr,
+           ndif2 = Dn_lqr > Wn_uqr | Dn_uqr < Wn_lqr,
+           pdif2 = Dp_lqr > Wp_uqr | Dp_uqr < Wp_lqr,
+           cndif2 = Dcn_lqr > Wcn_uqr | Dcn_uqr < Wcn_lqr,
+           npdif2 = Dnp_lqr > Wnp_uqr | Dnp_uqr < Wnp_lqr,
+           cpdif2 = Dcp_lqr > Wcp_uqr | Dcp_uqr < Wcp_lqr) 
   
-  p1 <-
-  ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.5) +
+  p1 <- ggplot(dat) +
+    geom_abline(slope = 1) +
     geom_abline(slope = 0.5, alpha = 0.5) +
-    geom_abline(slope = 0.7, alpha = 0.5) +
-    geom_abline(slope = 0.9, alpha = 0.5) +
-    geom_label(aes(x = 50, y = 0.3 * 50, label = "AE = 0.7")) +
-    geom_label(aes(x = 50, y = 0.5 * 50, label = "AE = 0.5")) +
-    geom_label(aes(x = 50, y = 0.7 * 50, label = "AE = 0.3")) +
-    geom_label(aes(x = 50, y = 0.9 * 50, label = "AE = 0.1")) +
-    geom_point(aes(x = c_mu1_m, y = c_mu2_m ),
-               size = 4, color = "lightgrey") +
-    geom_point(aes(x = c_mu1_m, y = c_mu2_m, color =  family),
-               size = 4, data = data_sub) +
-    # geom_text_repel(aes(x = c_mu1_m, y = c_mu2_m, label = species, color = family), 
-    #                 size = 3, alpha = 0.7) +
-    theme_custom() +
-    labs(x = "Gut content C%", y = "Feces C%", color = "Family") +
-    theme(legend.position = "none") +
-    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia")
-  
-  p2 <-
-    ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.5) +
-    geom_abline(slope = 0.5, alpha = 0.5) +
-    geom_abline(slope = 0.7, alpha = 0.5) +
-    geom_abline(slope = 0.9, alpha = 0.5) +
-    geom_label(aes(x = 13, y = 0.3 * 13, label = "AE = 0.7")) +
-    geom_label(aes(x = 13, y = 0.5 * 13, label = "AE = 0.5")) +
-    geom_label(aes(x = 13, y = 0.7 * 13, label = "AE = 0.3")) +
-    geom_label(aes(x = 13, y = 0.9 * 13, label = "AE = 0.1")) +
-    geom_point(aes(x = n_mu1_m, y = n_mu2_m ),
-               size = 4, color = "lightgrey") +
-    geom_point(aes(x = n_mu1_m, y = n_mu2_m, color =  family),
-               size = 4, data = data_sub) +
-    # geom_text_repel(aes(x = n_mu1_m, y = n_mu2_m, label = species, color = family), 
-    #                 size = 3, alpha = 0.7) +
-    theme_custom() +
-    labs(x = "Gut content N%", y = "Feces N%", color = "Family")+
-    theme(legend.position = "none") +
-    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia")
-  
-  
- 
-  p3 <-
-    ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.5) +
-    geom_abline(slope = 0.5, alpha = 0.5) +
-    geom_abline(slope = 0.7, alpha = 0.5) +
-    geom_abline(slope = 0.9, alpha = 0.5) +
-    geom_label(aes(x = 2.3, y = 0.3 * 2.5, label = "AE = 0.7")) +
-    geom_label(aes(x = 2.3, y = 0.5 * 2.5, label = "AE = 0.5")) +
-    geom_label(aes(x = 2.3, y = 0.7 * 2.5, label = "AE = 0.3")) +
-    geom_label(aes(x = 2.3, y = 0.9 * 2.5, label = "AE = 0.1")) +
-    geom_point(aes(x = p_mu1_m, y = p_mu2_m ),
-               size = 4, color = "lightgrey") +
-    geom_point(aes(x = p_mu1_m, y = p_mu2_m, color =  family),
-               size = 4, data = data_sub) +
-    # geom_text_repel(aes(x = p_mu1_m, y = p_mu2_m, label = species, color = dn),
-    #                 size = 3, alpha = 0.7) +
-    theme_custom() +
-    labs(x = "Gut content P%", y = "Feces P%", color = "") +
-    theme(legend.position = "bottom") +
-    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia")
-  
-  
-  plot <-
-  p1 + p2 + p3 +
-    plot_layout(nrow = 3)
-  
-  return(plot)
-  
-}
+    geom_abline(slope = 0.25, alpha = 0.5) +
+    geom_abline(slope = 0.75, alpha = 0.5) +
+    geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), 
+               alpha = 0.7, size = 3) +
+    # geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), alpha = 0.8, 
+    #            size = 3, data = dat[dat$cdif2 == TRUE & dat$cdif1 == FALSE,]) +
+    # geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), alpha = 0.8,
+    #            size = 5, data = dat[dat$cdif1 == TRUE,]) +
+    # geom_text_repel(aes(x = Dc_median, y = Wc_median, label = species), 
+    #                 size = 2, data = dat[dat$cdif1 == TRUE,]) +
+    geom_label(aes(x = 50, y = 1 * 50, label = "1")) +
+    geom_label(aes(x = 50, y = 0.5 * 50, label = "0.50")) +
+    geom_label(aes(x = 50, y = 0.75 * 50, label = "0.75")) +
+    labs(x = "Gut content C%", y = "Feces C%", color = "diet") +
+    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia") +
+    theme_custom() + theme(legend.position = "none")
 
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#' 
-#' @import ggplot2
-#' @import fishualize
-#' @import ggrepel
-#' @import patchwork
-#'
-#' @examples
-make_figs1 <- function(data){
- 
-  ## with errorbars
+  p2 <- ggplot(dat) +
+    geom_abline(slope = 1) +
+    geom_abline(slope = 0.5, alpha = 0.5) +
+    geom_abline(slope = 0.25, alpha = 0.5) +
+    geom_abline(slope = 0.75, alpha = 0.5) +
+    geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), 
+               alpha = 0.7, size = 3) +
+    # geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), alpha = 0.8,
+    #            size = 3, data = dat[dat$ndif2 == TRUE & dat$ndif1 == FALSE,]) +
+    # geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), alpha = 0.8,
+    #            size = 5, data = dat[dat$ndif1 == TRUE,]) +
+    # geom_text_repel(aes(x = Dn_median, y = Wn_median, label = species), 
+    #                 size = 2, data = dat[dat$ndif1 == TRUE,]) +
+    geom_label(aes(x = 12, y = 1 * 12, label = "1")) +
+    geom_label(aes(x = 12, y = 0.5 * 12, label = "0.50")) +
+    geom_label(aes(x = 12, y = 0.75 * 12, label = "0.75")) +
+    geom_label(aes(x = 12, y = 0.25 * 12, label = "0.25")) +
+    labs(x = "Gut content N%", y = "Feces N%", color = "diet") +
+    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia") +
+    theme_custom()
   
-  p1 <-
-  ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.7) +
-    geom_abline(slope = 0.5, alpha = 0.7) +
-    geom_abline(slope = 0.7, alpha = 0.7) +
-    geom_abline(slope = 0.9, alpha = 0.7) +
-    geom_point(aes(x = c_mu1_m, y = c_mu2_m),
-               size = 3) +
-    geom_text_repel(aes(x = c_mu1_m, y = c_mu2_m, label = species),
-                    size = 3, alpha = 0.8, color = "black") +
-    theme_custom() +
-    labs(x = "Gut content C%", y = "Feces C%", color = "Trophic guild")
-  
-  p2 <-
-    ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.7) +
-    geom_abline(slope = 0.5, alpha = 0.7) +
-    geom_abline(slope = 0.7, alpha = 0.7) +
-    geom_abline(slope = 0.9, alpha = 0.7) +
-    geom_point(aes(x = n_mu1_m, y = n_mu2_m),
-               size = 3) +
-    geom_text_repel(aes(x = n_mu1_m, y = n_mu2_m, label = species),
-                    size = 3, alpha = 0.8, color = "black") +
-    theme_custom() +
-    labs(x = "Gut content N%", y = "Feces N%")
-  
-  p3 <-
-    ggplot(data) +
-    geom_abline(slope = 0.3, alpha = 0.7) +
-    geom_abline(slope = 0.5, alpha = 0.7) +
-    geom_abline(slope = 0.7, alpha = 0.7) +
-    geom_abline(slope = 0.9, alpha = 0.7) +
-    geom_point(aes(x = p_mu1_m, y = p_mu2_m),
-               size = 3) +
-    geom_text_repel(aes(x = p_mu1_m, y = p_mu2_m, label = species),
-                    size = 3, alpha = 0.8, color = "black") +
-    theme_custom() +
-    labs(x = "Gut content P%", y = "Feces P%")
+  p3 <- ggplot(dat) +
+    geom_abline(slope = 1) +
+    geom_abline(slope = 0.5, alpha = 0.5) +
+    #geom_abline(slope = 0.25, alpha = 0.5) +
+    geom_abline(slope = 0.75, alpha = 0.5) +
+    geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), 
+               alpha = 0.7, size = 3) +
+    # geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), alpha = 0.8,
+    #            size = 3, data = dat[dat$pdif2 == TRUE & dat$pdif1 == FALSE,]) +
+    # geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), alpha = 0.8,
+    #            size = 5, data = dat[dat$pdif1 == TRUE,]) +
+    # geom_text_repel(aes(x = Dp_median, y = Wp_median, label = species), 
+    #                 size = 2, data = dat[dat$pdif1 == TRUE,]) +
+    geom_label(aes(x = 2, y = 1 * 2, label = "1")) +
+    geom_label(aes(x = 2, y = 0.5 * 2, label = "0.50")) +
+    geom_label(aes(x = 2, y = 0.75 * 2, label = "0.75")) +
+    labs(x = "Gut content P%", y = "Feces P%") +
+    scale_color_fish_d(option = "Pseudocheilinus_tetrataenia") +
+    theme_custom() + theme(legend.position = "none")
 
   plot <-
   p1 + p2 + p3 +
-    plot_layout(nrow = 3)
+    plot_layout(nrow = 3) + 
+    plot_annotation(tag_levels = "A")
   
   return(plot)
+  
 }
 
 
@@ -247,31 +189,140 @@ make_figs1 <- function(data){
 #' @import patchwork
 #'
 #' @examples
-make_figs2 <- function(data){
+make_figs1 <- function(data){
   
-  data_long <- data %>%
-    tidyr::pivot_longer(cols = 3:56, names_sep = "_", names_to = c("element", "key", "type")) %>%
-    tidyr::pivot_wider(names_from = type, values_from = value) %>%
-    dplyr::group_by(species, element) %>%
-    dplyr::mutate(a_m = m[key == "a"]) %>%
-    dplyr::filter(key %in% c("mu1", "mu2")) %>%
-    dplyr::ungroup() 
+  dat <- data %>%
+    dplyr::mutate(cdif1 = Dc_lqn > Wc_uqn | Dc_uqn < Wc_lqn,
+                  ndif1 = Dn_lqn > Wn_uqn | Dn_uqn < Wn_lqn,
+                  pdif1 = Dp_lqn > Wp_uqn | Dp_uqn < Wp_lqn,
+                  cndif1 = Dcn_lqn > Wcn_uqn | Dcn_uqn < Wcn_lqn,
+                  npdif1 = Dnp_lqn > Wnp_uqn | Dnp_uqn < Wnp_lqn,
+                  cpdif1 = Dcp_lqn > Wcp_uqn | Dcp_uqn < Wcp_lqn,
+                  cdif2 = Dc_lqr > Wc_uqr | Dc_uqr < Wc_lqr,
+                  ndif2 = Dn_lqr > Wn_uqr | Dn_uqr < Wn_lqr,
+                  pdif2 = Dp_lqr > Wp_uqr | Dp_uqr < Wp_lqr,
+                  cndif2 = Dcn_lqr > Wcn_uqr | Dcn_uqr < Wcn_lqr,
+                  npdif2 = Dnp_lqr > Wnp_uqr | Dnp_uqr < Wnp_lqr,
+                  cpdif2 = Dcp_lqr > Wcp_uqr | Dcp_uqr < Wcp_lqr) 
   
-  p1 <- 
-    ggplot(data_long) +
-    geom_hline(aes(yintercept = forcats::fct_rev(species), color = a_m), alpha = 0.5, size = 4) +
-    geom_errorbarh(aes(y = forcats::fct_rev(species), xmin = `25`, xmax = `75`, linetype = key), width = 0) +
-    geom_point(aes(x = m, y = forcats::fct_rev(species), shape = key), size = 2) +
-    facet_wrap(~element, scales = "free_x") +
-    scale_color_fish(option = "Hypsypops_rubicundus") +
+  p1 <-
+  ggplot(dat, aes(y = forcats::fct_rev(species), yend = forcats::fct_rev(species))) +
+    geom_hline(aes(yintercept = forcats::fct_rev(species), color = (Rc_median)), 
+               alpha = 0.3, size = 5, data = dat[dat$cdif2 == TRUE,]) +
+    geom_segment(aes(x = Dc_lqn, xend = Dc_uqn), size = 0.5, color = "grey40",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Dc_lqr, xend = Dc_uqr), size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_point(aes(x = Dc_median), size = 2,
+               position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Wc_lqn, xend = Wc_uqn), color = "grey40",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_segment(aes(x = Wc_lqr, xend = Wc_uqr),  size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_point(aes(x = Wc_median), size = 2, shape = 17,
+               position = position_nudge(y = -0.2)) +
+    fishualize::scale_color_fish(option = "Hypsypops_rubicundus",
+                                 trans = "log", breaks = c(0.5, 1, 2, 4)) +
     scale_shape_discrete(name = "", labels = c("gut", "feces")) +
-    scale_linetype_discrete(name = "", labels = c("gut", "feces")) +
     theme_custom() +
-    labs(x = "% content", y = "", color = "AE") 
+    labs(x = "C %", y = "", color = "feces:diet")  +
+    theme(legend.position = "bottom")
   
-  p1
+  p2 <-
+  ggplot(dat, aes(y = forcats::fct_rev(species), yend = forcats::fct_rev(species))) +
+    geom_hline(aes(yintercept = forcats::fct_rev(species), color = (Rn_median)), 
+               alpha = 0.3, size = 5, data = dat[dat$ndif2 == TRUE,]) +
+    geom_segment(aes(x = Dn_lqn, xend = Dn_uqn), size = 0.5, color = "grey40",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Dn_lqr, xend = Dn_uqr), size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_point(aes(x = Dn_median), size = 2,
+               position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Wn_lqn, xend = Wn_uqn), color = "grey40",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_segment(aes(x = Wn_lqr, xend = Wn_uqr),  size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_point(aes(x = Wn_median), size = 2, shape = 17,
+               position = position_nudge(y = -0.2)) +
+    fishualize::scale_color_fish(option = "Hypsypops_rubicundus", 
+                                 trans = "log", breaks = c(0.5, 1, 2, 4)) +
+    scale_shape_discrete(name = "", labels = c("gut", "feces")) +
+    theme_custom() +
+    labs(x = "N %", y = "", color = "feces:diet")  +
+    theme(legend.position = "bottom", axis.text.y = element_blank(),
+          axis.ticks.y = element_blank())
+  
+  p3 <-
+  ggplot(dat, aes(y = forcats::fct_rev(species), yend = forcats::fct_rev(species))) +
+    geom_hline(aes(yintercept = forcats::fct_rev(species), color = (Rp_median)), 
+               alpha = 0.3, size = 5, data = dat[dat$pdif2 == TRUE,]) +
+    geom_segment(aes(x = Dp_lqn, xend = Dp_uqn), size = 0.5, color = "grey40",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Dp_lqr, xend = Dp_uqr), size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = 0.2)) +
+    geom_point(aes(x = Dp_median), size = 2,
+               position = position_nudge(y = 0.2)) +
+    geom_segment(aes(x = Wp_lqn, xend = Wp_uqn), color = "grey40",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_segment(aes(x = Wp_lqr, xend = Wp_uqr),  size = 1.5, color = "grey30",
+                 linetype = 1, position = position_nudge(y = -0.2)) +
+    geom_point(aes(x = Wp_median), size = 2, shape = 17,
+               position = position_nudge(y = -0.2)) +
+    fishualize::scale_color_fish(option = "Hypsypops_rubicundus",
+                                 trans = "log", breaks = c(0.5, 1, 2, 4)) +
+    scale_shape_discrete(name = "", labels = c("gut", "feces")) +
+    theme_custom() +
+    labs(x = "P %", y = "", color = "feces:diet") +
+    theme(legend.position = "bottom", axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank())
+  
+  plot <-
+  p1 + p2 + p3 + plot_layout(nrow = 1)
+  
+  plot
   
 }
+
+#' #' Title
+#' #'
+#' #' @param model_ae_diet 
+#' #'
+#' #' @return
+#' #' @export
+#' #' @import ggplot2
+#' #' @import fishualize
+#' #' @import patchwork
+#' #'
+#' make_fig2 <- function(model_ae_diet) {
+#'   
+#'   pred_data <- model_ae_diet[[2]]
+#'   data <- model_ae_diet[[1]]$data
+#'   
+#'   a <- 
+#'     ggplot(pred_data) +
+#'     geom_ribbon(aes(x = mu1_st, ymin= y_a_lb, ymax = y_a_ub, fill = element), 
+#'                 alpha = 0.3) +
+#'     geom_line(aes(x = mu1_st, y = y_a_m, color = element), size = 1) +
+#'     geom_point(aes(x = mu1_st, y = ae, color = element), data = data) +
+#'     scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
+#'     labs(y = "Assimilation efficiency", x = "Standardised gut content %", 
+#'          color = "", fill = "") +
+#'     theme_custom() +
+#'     theme(legend.position = "top")
+#'   
+#'   b <-
+#'     ggplot(pred_data) +
+#'     geom_ribbon(aes(x = dn, ymin= y_mu1_lb, ymax = y_mu1_ub, fill = element), 
+#'                 alpha = 0.3) +
+#'     geom_line(aes(x = dn, y = y_mu1_m, color = element), size = 1) +
+#'     geom_point(aes(x = dn, y = mu1_st, color = element), data = data) +
+#'     scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
+#'     labs(x = "%dN", y = "Standardised gut content %") +
+#'     theme_custom() + theme(legend.position = "none")
+#'   
+#'   a + b + plot_layout(nrow = 2)
+#'   
+#' }
 
 
 #' Title
@@ -284,33 +335,490 @@ make_figs2 <- function(data){
 #' @import fishualize
 #' @import patchwork
 #'
-make_fig2 <- function(model_ae_diet) {
+make_fig3 <- function(model_ae_diet, result_ext) {
 
   pred_data <- model_ae_diet[[2]]
   data <- model_ae_diet[[1]]$data
   
+  long <- result_ext %>%
+    tidyr::pivot_longer(c(ac_mean, an_mean, ap_mean))
+  
   a <- 
+  ggplot(long) +
+    geom_boxplot(aes(x = family, y = value, color = name, fill = name), 
+                    outlier.shape = NA, alpha = 0.5) +
+    ylim(c(-1, 1)) +
+    scale_color_fish_d(end = 0.8, labels = c("C", "N", "P")) +
+    scale_fill_fish_d(end = 0.8, labels = c("C", "N", "P")) +
+    theme_custom() +
+    theme(legend.title = element_blank(), legend.position = "none",
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          plot.margin = unit(c(0, 0, 0, 0),"cm")) +
+    labs(x = "", y = "Absorption efficiency")
+  b <- 
+  ggplot(long) +
+    geom_boxplot(aes(x = diet2, y = value, color = name, fill = name), 
+                 outlier.shape = NA, alpha = 0.5) +
+    ylim(c(-1, 1)) +
+    scale_color_fish_d(end = 0.8, labels = c("C", "N", "P")) +
+    scale_fill_fish_d(end = 0.8, labels = c("C", "N", "P")) +
+    theme_custom() +
+    theme(legend.title = element_blank(), 
+          axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1),
+          plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+    labs(x = "", y = "Absorption efficiency")
+  
+  c <- 
   ggplot(pred_data) +
     geom_ribbon(aes(x = mu1_st, ymin= y_a_lb, ymax = y_a_ub, fill = element), 
                 alpha = 0.3) +
     geom_line(aes(x = mu1_st, y = y_a_m, color = element), size = 1) +
     geom_point(aes(x = mu1_st, y = ae, color = element), data = data) +
     scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
-    labs(y = "Assimilation efficiency", x = "Standardised gut content %", 
+    labs(y = "Absorption efficiency", x = "Standardised gut content %", 
          color = "", fill = "") +
     theme_custom() +
-    theme(legend.position = "top")
+    ylim(c(0,1)) +
+    theme(legend.position = "none", 
+          plot.margin = unit(c(0, 0, 0, 0),"cm") )
+library(patchwork)
 
-  b <-
-  ggplot(pred_data) +
-    geom_ribbon(aes(x = dn, ymin= y_mu1_lb, ymax = y_mu1_ub, fill = element), 
+  plot <- a + b + c + plot_layout(nrow = 3) + 
+    plot_annotation(tag_levels = "A")
+  
+  save_plot(plot, "fig3", width = 8, height = 10)
+  
+}
+
+make_fig2 <- function(result_ext, models_copro){
+  
+  ## Coprophagy models
+  ce1n <- brms::conditional_effects(models_copro[[1]])[[1]]
+  ce2n <- brms::conditional_effects(models_copro[[2]])[[1]]
+  ce1p <- brms::conditional_effects(models_copro[[3]])[[1]]
+  ce2p <- brms::conditional_effects(models_copro[[4]])[[1]]
+  
+  p1 <- 
+    ggplot(ce1n) + 
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__), 
                 alpha = 0.3) +
-    geom_line(aes(x = dn, y = y_mu1_m, color = element), size = 1) +
-    geom_point(aes(x = dn, y = mu1_st, color = element), data = data) +
-    scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
-    labs(x = "%dN", y = "Standardised gut content %") +
-    theme_custom() + theme(legend.position = "none")
+    geom_line(aes(x = effect1__, y = estimate__),
+              size = 1) +
+    labs(x = "Gut content N%", y = "Probability being coprophageous") +
+    coord_cartesian(expand= FALSE) +
+    theme_custom()
+  p1
   
-  a + b + plot_layout(nrow = 2)
+  library(ggdist)
   
-  }
+ p1d <-  ggplot(result_ext) +
+    stat_pointinterval(aes(x = Dn_mean, color = diet2, fill = diet2, y = diet2), alpha = 1, .width = c(0.95, 0.5))+
+    scale_x_continuous(limits = c(0, 12)) +
+   coord_cartesian(expand= 0.0, clip = "off") +
+    theme_custom() +
+   theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), 
+         axis.title.x = element_blank(), axis.title.y = element_blank())
+ p1b <- p1d + p1 +
+   plot_layout(nrow = 2, heights = c(1,5))
+  
+  p2 <- 
+    ggplot(ce2n) + 
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__), 
+                alpha = 0.3) +
+    geom_line(aes(x = effect1__, y = estimate__),
+              size = 1) +
+    labs(x = "Feces N%", y = "Probability feces eaten by coprophage") +
+    coord_cartesian(expand= FALSE) +
+    theme_custom()
+  p2
+  pd <-  ggplot(result_ext) +
+    geom_jitter(aes(x = Wn_mean, color = diet2, fill = diet2, y = 1), alpha = 0.3) +
+    scale_x_continuous(limits = c(0, 9)) +
+    geom_hline(yintercept = 0) +
+    coord_cartesian(expand= FALSE) +
+    theme_void()
+  p2b <- pd + p2 +
+    plot_layout(nrow = 2, heights = c(1, 3)) 
+  
+  p3 <- 
+    ggplot(ce1p) + 
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__), 
+                alpha = 0.3) +
+    geom_line(aes(x = effect1__, y = estimate__),
+              size = 1) +
+    labs(x = "Gut content P%", y = "Probability being coprophageous") +
+    coord_cartesian(expand= FALSE) +
+    theme_custom()
+  p3
+  pd <-  ggplot(result_ext) +
+    geom_density(aes(x = Dp_mean, color = diet2, fill = diet2), alpha = 0.3)+
+    scale_x_continuous(limits = c(0, 12)) +
+    geom_hline(yintercept = 0) +
+    coord_cartesian(expand= FALSE) +
+    theme_void()
+  p3b <- pd + p3 +
+    plot_layout(nrow = 2)
+  p4 <- 
+    ggplot(ce2p) + 
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__), 
+                alpha = 0.3) +
+    geom_line(aes(x = effect1__, y = estimate__),
+              size = 1) +
+    labs(x = "Feces P%", y = "Probability feces eaten by coprophage") +
+    theme_custom()
+  p4
+  
+  
+  
+  result_cnp <- (result_ext)
+  
+  # oc <- outer(result_cnp$Wc_median, result_cnp$Dc_median, "-") 
+  # oc2 <- outer(result_cnp$Wc_lqr, result_cnp$Dc_uqr, ">") 
+  # oc <- oc*oc2
+  # 
+  # 
+  # colnames(oc) <-  result_cnp$species
+  # rownames(oc) <-  result_cnp$species
+  # oc <- as.data.frame(oc) %>%
+  #   mutate(sp_feces = result_cnp$species) %>%
+  #   pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+  #   mutate(value = case_when(value <= 0 ~ NA_real_,
+  #                            sp_feces == sp_diet ~ NA_real_,
+  #                            TRUE ~ value))
+  # 
+  # species <- result_cnp %>%
+  #   select(species, diet2) %>%
+  #   unique() %>%
+  #   arrange(diet2, species)
+  # 
+  # sp1 <- species %>%
+  #   rename(sp_diet = species, diet1 = diet2)
+  # sp2 <- species %>%
+  #   rename(sp_feces = species)
+  # 
+  # oc <- oc %>% left_join(sp1) %>% left_join(sp2) %>%
+  #   mutate(sp_diet = as.factor(sp_diet),
+  #          sp_feces = as.factor(sp_feces)) %>%
+  #   mutate(sp_diet = fct_relevel(sp_diet, species$species),
+  #          sp_feces = fct_relevel(sp_feces, species$species))
+  # c <-
+  #   ggplot(oc) +
+  #   geom_tile(aes(x = (sp_feces),
+  #                 y = fct_rev(sp_diet),
+  #                 fill = value)) +
+  #   fishualize::scale_fill_fish(option = "Trimma_lantana",
+  #                               name = "C diff (%)", na.value = NA,
+  #                               trans = "sqrt") +
+  #   theme_bw() +
+  #   facet_grid(diet1~diet2, scales = "free",
+  #              space = "free") +
+  #   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  #   theme(strip.placement = "outside",                      # Place facet labels outside x axis labels.
+  #         strip.background = element_rect(fill = "white"),
+  #         axis.text.x = element_blank(), 
+  #         axis.title = element_blank()) 
+  # c
+  
+  cop <- result_cnp %>%
+    dplyr::select(species, Dn_median, Dp_median, Wn_median, Wp_median) %>%
+    dplyr::mutate(copn = Dn_median < 4.9, copp = Dp_median < 0.8,
+                  fecn = Wn_median > 2.6, fecp = Wp_median > 0.58)
+  
+  ## heatplot N
+  on <- outer(result_cnp$Wn_median, result_cnp$Dn_median, "-") 
+  on2 <- outer(result_cnp$Wn_lqr, result_cnp$Dn_uqr, ">") 
+  on <- on*on2
+  
+  
+  colnames(on) <-  result_cnp$species
+  rownames(on) <-  result_cnp$species
+  on <- as.data.frame(on) %>%
+    mutate(sp_feces = result_cnp$species) %>%
+    pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+    mutate(value = case_when(value <= 0 ~ NA_real_,
+                             sp_feces == sp_diet ~ NA_real_,
+                             TRUE ~ value))
+  
+  species <- result_cnp %>%
+    select(species, diet2) %>%
+    unique() %>%
+    arrange(diet2, species)
+  
+  sp1 <- species %>%
+    rename(sp_diet = species, diet1 = diet2)
+  sp2 <- species %>%
+    rename(sp_feces = species)
+  
+  on <- on %>% left_join(sp1) %>% left_join(sp2) %>%
+    mutate(sp_diet = as.factor(sp_diet),
+           sp_feces = as.factor(sp_feces)) %>%
+    mutate(sp_diet = fct_relevel(sp_diet, species$species),
+           sp_feces = fct_relevel(sp_feces, species$species))
+  n <- 
+    ggplot(on) +
+    geom_hline(aes(yintercept = species), 
+               size = 0.3, alpha = 0.5, 
+               data = cop[cop$copn == TRUE, ]) +
+    geom_vline(aes(xintercept = species), 
+               size = 0.3, alpha = 0.5, 
+               data = cop[cop$fecn == TRUE, ]) +
+    geom_tile(aes(x = (sp_feces),
+                  y = fct_rev(sp_diet),
+                  fill = value), alpha = 0.8) +
+    fishualize::scale_fill_fish(option = "Trimma_lantana",
+                                name = "N diff (%)", na.value = NA,
+                                trans = "sqrt") +
+    theme_bw() +
+    facet_grid(diet1~diet2, scales = "free",
+               space = "free") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(strip.placement = "outside",                      # Place facet labels outside x axis labels.
+          strip.background = element_rect(fill = "white"),  # Make facet label background white.
+          # axis.title.x = element_blank(),
+          # axis.text.x = element_blank(), 
+          panel.grid = element_blank())+
+    labs(y = "Gut content", x = "Feces")
+  n
+  ##### P #######
+  op <- outer(result_cnp$Wp_median, result_cnp$Dp_median, "-") 
+  op2 <- outer(result_cnp$Wp_lqr, result_cnp$Dp_uqr, ">") 
+  op <- op*op2
+  
+  
+  colnames(op) <-  result_cnp$species
+  rownames(op) <-  result_cnp$species
+  op <- as.data.frame(op) %>%
+    mutate(sp_feces = result_cnp$species) %>%
+    pivot_longer(cols = 1:51, names_to = "sp_diet") %>%
+    mutate(value = case_when(value <= 0 ~ NA_real_,
+                             sp_feces == sp_diet ~ NA_real_,
+                             TRUE ~ value))
+  
+  species <- result_cnp %>%
+    select(species, diet2) %>%
+    unique() %>%
+    arrange(diet2, species)
+  
+  sp1 <- species %>%
+    rename(sp_diet = species, diet1 = diet2)
+  sp2 <- species %>%
+    rename(sp_feces = species)
+  
+  op <- op %>% left_join(sp1) %>% left_join(sp2) %>%
+    mutate(sp_diet = as.factor(sp_diet),
+           sp_feces = as.factor(sp_feces)) %>%
+    mutate(sp_diet = fct_relevel(sp_diet, species$species),
+           sp_feces = fct_relevel(sp_feces, species$species))
+  
+  p <-
+    ggplot(op) +
+    geom_hline(aes(yintercept = species), 
+               size = 0.3, alpha = 0.5, 
+               data = cop[cop$copp == TRUE, ]) +
+    geom_vline(aes(xintercept = species), 
+               size = 0.3, alpha = 0.5, 
+               data = cop[cop$fecp == TRUE, ]) +
+    geom_tile(aes(x = (sp_feces),
+                  y = fct_rev(sp_diet),
+                  fill = value),
+              alpha = 0.8) +
+    fishualize::scale_fill_fish(option = "Trimma_lantana",
+                                name = "P diff (%)", na.value = NA,
+                                trans = "sqrt") +
+    theme_bw() +
+    facet_grid(diet1~diet2, scales = "free",
+               space = "free") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(strip.placement = "outside",                      # Place facet labels outside x axis labels.
+          strip.background = element_rect(fill = "white"),
+          # axis.title.y = element_blank(), 
+          panel.grid = element_blank()) +
+    labs(x = "Feces", y = "Gut content")
+  p
+  library(patchwork)
+  
+ plot_species <- n + p + plot_layout(nrow = 2)
+ save_plot(plot_species, "figS2", 10, 18)
+ 
+ ## second plot
+ on_sum <- on %>%
+   mutate(value = case_when(is.na(value) ~ 0,
+                    TRUE ~ value)) %>%
+   group_by(diet1, diet2) %>%
+   summarise(value = mean(value))
+ 
+ ps1 <- 
+ ggplot(on_sum) +
+   geom_tile(aes(x = (diet2),
+                 y = fct_rev(diet1),
+                 fill = value),
+             alpha = 0.8) +
+   fishualize::scale_fill_fish(option = "Trimma_lantana",
+                               name = "delta N(%)", na.value = NA) +
+   theme_custom() +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+   theme(strip.placement = "outside",                      # Place facet labels outside x axis labels.
+         strip.background = element_rect(fill = "white"),
+         panel.grid = element_blank(),
+         legend.position = "top") +
+   labs(x = "Feces", y = "Gut content")
+ 
+ op_sum <- op %>%
+   mutate(value = case_when(is.na(value) ~ 0,
+                            TRUE ~ value)) %>%
+   group_by(diet1, diet2) %>%
+   summarise(value = mean(value))
+ 
+ ps2 <- ggplot(op_sum) +
+   geom_tile(aes(x = (diet2),
+                 y = fct_rev(diet1),
+                 fill = value),
+             alpha = 0.8) +
+   fishualize::scale_fill_fish(option = "Trimma_lantana",
+                               name = "delta P(%)", na.value = NA) +
+   theme_custom() +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+   theme(strip.placement = "outside",                      # Place facet labels outside x axis labels.
+         strip.background = element_rect(fill = "white"),
+         axis.title.y = element_blank(), 
+         panel.grid = element_blank(),
+         legend.position = "top") +
+   labs(x = "Feces")
+ 
+  des <- 
+    "AB
+     AB
+     CD
+     EF"
+  plot <-
+    ps1 + ps2 + p1 + p3 + p2 + p4 + plot_annotation(tag_levels = "A") +
+    plot_layout(ncol = 2, design = des) & theme(strip.placement = NULL)
+  plot
+  ggsave("output/plots/fig2_diet_poo_pairwise.png", 
+         plot, height = 15, width = 13)
+}
+
+make_fig4 <- function(spflux){
+  drake::loadd(spflux)
+  
+  data <- spflux [[2]] %>%
+    dplyr::mutate(RRn = log(Wn/Fn),
+                  RRp = log(Wp/Fp),
+                  RRnp = log((Wn/Wp)/(Fn/Fp))) %>%
+    pivot_longer(c(RRn, RRp))
+  
+  data2 <- spflux [[2]] %>%
+    dplyr::mutate(RRnp = log((Wn/Wp)/(Fn/Fp))) 
+  
+  plot <-
+  
+  ggplot(data) +
+    geom_hline(yintercept = 0, linetype = 2) +
+    geom_boxplot(aes(x = family, y = value, color = name, fill = name),
+                 alpha = 0.5) +
+    scale_color_fish_d(end = 0.8, begin = 0.4, labels = c( "N", "P")) +
+    scale_fill_fish_d(end = 0.8, begin = 0.4, labels = c( "N", "P")) +
+    theme_custom() +
+    labs(x = "", y = "Release ratio \n ln(egestion/excretion)",
+         fill = "", color = "") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          legend.position = "none") +
+    
+    ggplot(data) +
+    geom_hline(yintercept = 0, linetype = 2) +
+    geom_boxplot(aes(x = diet2, y = value, color = name, fill = name),
+                 alpha = 0.5) +
+    scale_color_fish_d(end = 0.8, begin = 0.4, labels = c( "N", "P")) +
+    scale_fill_fish_d(end = 0.8, begin = 0.4, labels = c( "N", "P")) +
+    theme_custom() +
+    labs(x = "", y = "Release ratio \n ln(egestion/excretion)", 
+         fill = "", color = "") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          legend.position = "top") +
+    
+    ggplot(data2) +
+    geom_hline(yintercept = 0, linetype = 2) +
+    geom_boxplot(aes(x = family, y = RRnp),
+                 alpha = 0.5, fill = "grey") +
+    theme_custom() +
+    labs(x = "", y = "Release ratio N:P \n ln(egestion/excretion)", 
+         fill = "", color = "") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          legend.position = "right") +
+    
+    ggplot(data2) +
+    geom_hline(yintercept = 0, linetype = 2) +
+    geom_boxplot(aes(x = diet2, y = RRnp),
+                 alpha = 0.5, fill = "grey") +
+    theme_custom() +
+    labs(x = "", y = "Release ratio N:P \n ln(egestion/excretion)", 
+         fill = "", color = "") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          legend.position = "top") +
+    
+    plot_layout(nrow = 2) + plot_annotation(tag_levels = "A")
+      
+  save_plot(plot, "fig4_RR", width = 8, height = 8)
+  
+#   
+#   params <- readr::read_csv("data/params_sst_glob.csv") %>%
+#     select(species, family = Family, linf = linf_m) %>% unique()
+#     
+#   data2 <- spflux[[1]] %>%
+#     left_join(params) %>%
+#     left_join(select(spflux[[2]], species, diet2)) %>%
+#     dplyr::mutate(size_prop = size/linf_m) %>%
+#     dplyr::filter(size_prop > 0.1) %>%
+#     mutate(mat = case_when(
+#       size_prop < 0.25 ~ "G1",
+#       size_prop > 0.75 ~ "G3",
+#       TRUE ~ "G2"
+#     )) %>%
+#     pivot_longer(c(GGEc, GGEn, GGEp)) 
+#   
+#   
+#   ggplot(data2) +
+#     geom_boxplot(aes(x = family, y = value, color = name))
+#   
+#   ggplot(data2) +
+#     geom_point(aes(x = size_prop, y = GGEc))
+#   
+#   subn <- spflux[[2]] %>%
+#     filter(an_mean > 0)
+#   library(brms)
+#   test <- brm(an_mean ~ Dn_mean + plimn,
+#               family = "beta", data = subn)
+# 
+#   summary(test)
+#   
+#   
+#   plot_gge <- 
+#   ggplot(data2) +
+#     geom_boxplot(aes(y = value, x = diet2, color = name, fill = name),
+#                  alpha = 0.5) +
+#     facet_grid(name~mat, scales = "free_y") +
+#     labs(x = "", y = "GGE") +
+#     theme_custom() +
+#     theme(legend.position = "none",
+#           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+#     scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) 
+#   
+#   save_plot(plot_gge, "fig5_GGE", width = 8, height = 6)
+#   
+#   ggplot(data2) +
+#     geom_line(aes(x = size, y = value, group = species)) +
+#     facet_grid(name~diet2)
+#   
+#     geom_vline(xintercept = 0.5) +
+#     theme_custom() +
+#   
+#   ggplot(data2) +
+#     ggstance::geom_barh(aes(y = species, x = value, fill = name),
+#                         stat = "identity") +
+#     geom_vline(xintercept = 0.5) +
+#     theme_custom()
+# ggsave("output/plots/fig3test.png", width = 10, height = 10)
+#   
+    
+}
+
