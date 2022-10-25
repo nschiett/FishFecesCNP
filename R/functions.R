@@ -320,7 +320,7 @@ add_traits <- function(result, sia_species, intestine, diets){
     dplyr::left_join(intestine)
   }
 
-#' calculate assimilation efficiency
+#' calculate absorption efficiency
 #'
 #' @param ash 
 #' @param result_ext 
@@ -639,6 +639,24 @@ sp_fluxes <- function(data_ae, result_ext) {
     dplyr::summarize(size_median = round(median(tl)),
                      size_max = round(max(tl)))
   
+  result_ext <- read_csv("output/data/result_ae_predict.csv")
+  
+  # add ae values 
+  ae_sp <- result_ext %>%
+    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0.1 ~ ac_mean_pred, TRUE ~ ac_mean), 
+                  an_mean = dplyr::case_when(an_mean < 0.1 ~ an_mean_pred, TRUE ~ an_mean), 
+                  ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+                  ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+                  ac_sd = dplyr::case_when(ap_mean < 0.1 ~ ac_sd_pred, TRUE ~ ac_sd), 
+                  an_sd = dplyr::case_when(ap_mean < 0.1 ~ an_sd_pred, TRUE ~ an_sd), 
+                  ap_sd = dplyr::case_when(ap_mean < 0.1 ~ ap_sd_pred, TRUE ~ ap_sd)) %>%
+    dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
+                  an_m = an_mean, an_sd, 
+                  ap_m = ap_mean, ap_sd,
+                  Dc_m = Dc_mean, Dc_sd,
+                  Dn_m = Dn_mean, Dn_sd,
+                  Dp_m = Dp_mean, Dp_sd)
+  
   # load parameters
   params <- readr::read_csv("data/params_sst_glob.csv") %>%
     dplyr::filter(v_m %in% c(26, 27, 28, 29)) %>%
@@ -647,23 +665,21 @@ sp_fluxes <- function(data_ae, result_ext) {
     dplyr::select(-ac_m, -an_m, -ap_m, -Dc_m, -Dc_sd, 
                   -Dn_m, -Dn_sd, - Dp_m, -Dp_sd)
   
-  
-  ae_sp <- result_ext %>%
-    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0 ~ 0.1, TRUE ~ ac_mean), 
-                  an_mean = dplyr::case_when(an_mean < 0 ~ 0.1, TRUE ~ an_mean), 
-                  ap_mean = dplyr::case_when(ap_mean < 0 ~ 0.1, TRUE ~ ap_mean)) %>%
-    dplyr::mutate(ac_sd = dplyr::case_when(ac_sd > 0.3 ~ 0.3, 
-                                    TRUE ~ ac_sd),
-                  an_sd = dplyr::case_when(an_sd > 0.3 ~ 0.3, 
-                                    TRUE ~ an_sd),
-                  ap_sd = dplyr::case_when(ap_sd > 0.3 ~ 0.3, 
-                                    TRUE ~ ap_sd)) %>%
-    dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
-                  an_m = an_mean, an_sd, 
-                  ap_m = ap_mean, ap_sd,
-                  Dc_m = Dc_mean, Dc_sd,
-                  Dn_m = Dn_mean, Dn_sd,
-                  Dp_m = Dp_mean, Dp_sd)
+  # 
+  # ae_sp <- result_ext %>%
+  #   dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0.1 ~ ac_mean_pred, TRUE ~ ac_mean), 
+  #                 an_mean = dplyr::case_when(an_mean < 0.1 ~ an_mean_pred, TRUE ~ an_mean), 
+  #                 ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+  #                 ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+  #                 ac_sd = dplyr::case_when(ac_mean < 0.1 ~ ac_sd_pred, TRUE ~ ac_sd), 
+  #                 an_sd = dplyr::case_when(an_mean < 0.1 ~ an_sd_pred, TRUE ~ an_sd), 
+  #                 ap_sd = dplyr::case_when(ap_mean < 0.1 ~ ap_sd_pred, TRUE ~ ap_sd)) %>%
+  #   dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
+  #                 an_m = an_mean, an_sd, 
+  #                 ap_m = ap_mean, ap_sd,
+  #                 Dc_m = Dc_mean, Dc_sd,
+  #                 Dn_m = Dn_mean, Dn_sd,
+  #                 Dp_m = Dp_mean, Dp_sd)
   
 
   spsize <- dplyr::inner_join(spsize, ae_sp) %>%

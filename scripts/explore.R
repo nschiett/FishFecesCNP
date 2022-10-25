@@ -497,15 +497,14 @@ sia_species <- sia %>%
   
 
 
-pca1 <- PCA(sia_species[, c("DN", "DC",  "n_mu1_m", "p_mu1_m",
-                            "n_a_m", "p_a_m")])
-pca1 <- PCA(sia_species[, c("DN", "DC", "c_mu1_m", "cn_mu1", "cp_mu1")])
+pca1 <- PCA(result_ext[, c( "Dn_mean",  "ac_mean",
+                            "an_mean", "ap_mean")])
 
 plot(pca1)
 
 ind <- pca1$ind$coord %>%
   as.data.frame() %>%
-  cbind(sia_species)
+  cbind(result_ext)
 
 var <- pca1$var$coord %>%
   as.data.frame() 
@@ -520,7 +519,8 @@ circleFun <- function(center = c(0,0),diameter = 1, npoints = 100){
 
 circ <- circleFun(c(0,0),2,npoints = 500)
 
-ggplot(ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet))) +
+library(ggrepel)
+ggplot(ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet2))) +
   geom_point() +
   geom_text_repel()
 
@@ -535,8 +535,8 @@ vars.p <-  ggplot() +
                lwd = 1) + 
   geom_text(data = var, 
             aes(x = Dim.1*1.15, y =  Dim.2*1.15, 
-                label = c("DN", "DC", "n_mu1_m", "p_mu1_m",
-                         "n_a_m", "p_a_m")), 
+                label = c( "Dn_mean", "ac_mean",
+                           "an_mean", "ap_mean")), 
             check_overlap = F, size = 3) +
   xlab("PC 1") + 
   ylab("PC2") +
@@ -544,8 +544,8 @@ vars.p <-  ggplot() +
   theme_minimal() +
   theme(panel.grid = element_blank(), 
         panel.border = element_rect(fill= "transparent")) +
-  geom_point(data = ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet))) +
-  geom_text_repel(data = ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet)))
+  geom_point(data = ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet2))) +
+  geom_text_repel(data = ind, aes(x = Dim.1, y = Dim.2, label = species, color = as.character(diet2)))
 
 vars.p
 
@@ -618,3 +618,37 @@ ggplot(result) +
   geom_point(aes(x = c_mu1_m, y = n_mu1_m))
 ggplot(result) +
   geom_point(aes(x = c_mu1_m, y = p_mu1_m))
+
+ggplot(result_ext) +
+  geom_point(aes(x = Dn_mean, y = an_mean, color = diet2)) +
+  geom_smooth(aes(x = Dn_mean, y = an_mean, color = diet2, fill = diet2), 
+              method = "lm", alpha = 0.2) +
+  geom_smooth(aes(x = Dn_mean, y = an_mean), 
+              method = "lm", alpha = 0.2) +
+  ylim(c(0,1))
+
+ggplot(result_ext) +
+  geom_point(aes(x = Dc_mean, y = ac_mean, color = diet2)) +
+  geom_smooth(aes(x = Dc_mean, y = ac_mean, color = diet2, fill = diet2), 
+              method = "lm", alpha = 0.2) +
+  ylim(c(0,1))
+
+
+ggplot(result_ext) +
+  geom_point(aes(x = Dp_mean, y = ap_mean, color = diet2)) +
+  geom_smooth(aes(x = Dp_mean, y = ap_mean), 
+              method = "lm", alpha = 0.2) +
+  ylim(c(0,1))
+
+data <- dplyr::filter(result_ext, ac_mean > 0, an_mean>0, ap_mean>0)
+
+fitn <- brm(an_mean ~ Dn_mean + (1|diet2), data = data)
+fitn2 <- brm(an_mean ~ 0 + diet2, data = result_ext)
+
+summary(fitn)
+ranef(fitn)
+
+preds <- fitted(fitn)
+preds <- cbind(data, preds)
+ggplot(preds) +
+  geom_point(aes(x = Dn_mean, y = Estimate, color = diet2))

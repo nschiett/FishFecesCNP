@@ -1,5 +1,5 @@
 library(ggplot2)
-
+library(tidyverse)
 loadd(comflux)
 devtools::load_all()
 
@@ -7,6 +7,30 @@ comflux = summ
 ggplot(comflux) +
   geom_point(aes(x = year, y = Wc, color = site_name), se = FALSE) +
   facet_wrap(reef_zone~diet2, scales = "free_y")
+
+moorea_sizes <- moorea %>% uncount(as.integer(abundance)) %>%
+  group_by(survey_id, trans_id, year, site_name, reef_zone, diet2) %>%
+  summarise(size_50 = median(size),
+            size_75 = quantile(size, 0.75),
+            size_80 = quantile(size, 0.80),
+            size_90 = quantile(size, 0.90),
+            size_95 = quantile(size, 0.95),
+            size_975 = quantile(size, 0.975),
+            size_max = max(size)
+  )
+
+ggplot(moorea_sizes) +
+  geom_point(aes(x = year, y = log(size_95), color= diet2)) +
+  geom_smooth(aes(x = year, y = log(size_95), color = diet2)) +
+  facet_wrap(~reef_zone)
+
+ggplot(moorea_sizes) +
+  geom_boxplot(aes( y = log(size_90))) +
+  facet_wrap(~year)
+
+ggplot(moorea_long) +
+  geom_point(aes(y = log(size), x = year))
+  
 
 comflux <- comflux %>%
   dplyr::mutate(Wn_prop = Wn/(Wn + Fn),
@@ -17,6 +41,11 @@ comflux <- comflux %>%
                 Icn = Ic/In)
 hist(comflux$Inp)
 hist(comflux$Wnp)
+
+ggplot(comflux) +
+  geom_point(aes(x = year, y = log(biomass))) +
+  geom_smooth(aes(x = year, y = log(biomass))) +
+  facet_wrap(~diet2, scales = "free")
 
 comflux_prop <- 
   comflux %>%

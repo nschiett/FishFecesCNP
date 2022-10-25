@@ -1,0 +1,52 @@
+Species,Family,Diet,Range TL (cm),Range weight (g),Replicates
+Acanthurus achilles,Acanthuridae,herbivore,12.2-22.2,36-241.5,9
+Acanthurus guttatus,Acanthuridae,herbivore,16.3-19.8,114.7-206.9,9
+Acanthurus lineatus,Acanthuridae,herbivore,22.2-25.1,161.2-216.1,6
+Acanthurus nigricans,Acanthuridae,herbivore,8.2-27,11.1-176,17
+Acanthurus olivaceus,Acanthuridae,detritivore,23-29,174.7-299.3,5
+Acanthurus pyroferus,Acanthuridae,detritivore,13-40.1,36.3-137.3,9
+Acanthurus triostegus,Acanthuridae,herbivore,14-16.6,61.4-121.2,14
+Ctenochaetus striatus,Acanthuridae,detritivore,12-23.2,45.2-201.5,13
+Naso lituratus,Acanthuridae,herbivore,18.1-35.6,106.3-292,15
+Zebrasoma scopas,Acanthuridae,herbivore,2.9-18.5,0.6-142.3,51
+Aulostomus chinensis,Aulostomidae,carnivore,36.5-62.3,76.5-389,10
+Balistapus undulatus,Balistidae,mixed invertivore,12.5-26.7,46-385.5,15
+Melichthys niger,Balistidae,herbivore,12.5-26.4,48-368.1,14
+Melichthys vidua,Balistidae,herbivore,17.6-23.5,158.9-330.8,16
+Odonus niger,Balistidae,mixed invertivore,15.8-27.7,61.8-187,15
+Rhinecanthus aculeatus,Balistidae,mixed invertivore,14.5-22.2,66.9-201.5,10
+Sufflamen bursa,Balistidae,mixed invertivore,11.8-18.2,36.6-117,12
+Chaetodon auriga,Chaetodontidae,corallivore,14.5-21.4,62.5-134.6,10
+Chaetodon citrinellus,Chaetodontidae,corallivore,10.1-11.3,18.3-299.5,8
+Chaetodon ephippium,Chaetodontidae,corallivore,15.7-19.1,81.9-116.2,7
+Chaetodon lunulatus,Chaetodontidae,corallivore,9.1-13.5,20.1-57.7,10
+Chaetodon ornatissimus,Chaetodontidae,corallivore,7-15,0.1-103.9,31
+Chaetodon reticulatus,Chaetodontidae,corallivore,8.6-13,17.7-69.6,32
+Chaetodon vagabundus,Chaetodontidae,corallivore,12.5-15.1,59.2-95.3,13
+Forcipiger flavissimus,Chaetodontidae,mixed invertivore,14.2-40.9,33.1-55.1,7
+Heniochus chrysostomus,Chaetodontidae,corallivore,11-14.2,35.8-97,10
+Paracirrhites hemistictus,Cirrhitidae,carnivore,16.2-22.1,92.9-175.9,16
+Myripristis berndti,Holocentridae,carnivore,12-22.4,50.6-230.1,10
+Neoniphon sammara,Holocentridae,carnivore,14.1-22.2,35.2-132.2,16
+Sargocentron tiere,Holocentridae,carnivore,19-31.2,76.5-328.2,8
+Calotomus carolinus,Labridae,herbivore,26.1-38.6,284.1-558,5
+Cheilinus chlorourus,Labridae,carnivore,16.5-20.7,70.3-169.3,6
+Chlorurus spilurus,Labridae,detritivore,17.5-47.5,100.4-418.2,11
+Epibulus insidiator,Labridae,carnivore,17-27.5,88.7-281.4,14
+Halichoeres hortulanus,Labridae,mixed invertivore,15.2-26.1,49.9-249.8,11
+Scarus schlegeli,Labridae,herbivore,27.1-30.1,490-490,4
+Gnathodentex aureolineatus,Lethrinidae,mixed invertivore,21.4-31.1,121.3-196.8,9
+Cantherhines sandwichiensis,Monacanthidae,mixed invertivore,15-17.2,65.1-102,5
+Parupeneus multifasciatus,Mullidae,carnivore,13.9-29.8,33.6-370,10
+Centropyge flavissima,Pomacanthidae,mixed invertivore,5.5-10.1,7.3-26.8,7
+Abudefduf septemfasciatus,Pomacentridae,planktivore,16.4-19.4,97.7-162.3,7
+Abudefduf sexfasciatus,Pomacentridae,planktivore,12.9-17.4,40.8-117.6,10
+Chromis xanthura,Pomacentridae,planktivore,11.1-15.8,24.2-47,20
+Dascyllus flavicaudus,Pomacentridae,planktivore,7.5-11,10.1-33.9,13
+Dascyllus trimaculatus,Pomacentridae,planktivore,12-13.5,43.6-60.3,8
+Stegastes nigricans,Pomacentridae,herbivore,12-14.1,49.1-69.3,9
+Cephalopholis argus,Serranidae,carnivore,21-31.5,126.3-470.2,11
+Cephalopholis urodeta,Serranidae,carnivore,15.9-18.9,67.6-130.1,7
+Epinephelus merra,Serranidae,carnivore,16.5-23,80.9-166.3,10
+Arothron meleagris,Tetraodontidae,corallivore,13.6-26.9,80.9-571,9
+Zanclus cornutus,Zanclidae,mixed invertivore,13.1-18.1,65.2-135.8,16

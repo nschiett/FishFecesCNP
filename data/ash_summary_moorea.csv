@@ -1,0 +1,967 @@
+,fish_id,code,genus_species,ash_percent,ash_percent_wet
+,,,,,
+1,19AMSC1,AMSC,Amanses Scopas,95.42902967,64.9394546904
+,,,,,
+2,19AMSC2,AMSC,Amanses Scopas,66.3590604,33.5776845624
+,,,,,
+3,19AMSC3,AMSC,Amanses Scopas,94.93206023,60.2818582461
+,,,,,
+4,19AMSC4,AMSC,Amanses Scopas,95.16897256,54.5508550714
+,,,,,
+5,19AMSC5,AMSC,Amanses Scopas,91.2732475,56.005264666
+,,,,,
+6,19AMSC7,AMSC,Amanses scopas,91.43968872,61.2005836603
+,,,,,
+7,19CHCU2,NA,NA,NA,NA
+,,,,,
+8,19CHLO6,NA,NA,NA,NA
+,,,,,
+9,19CHLU1,CHLU,Chaetodon lunulatus,NA,NA
+,,,,,
+10,19CHLU2,CHLU,Chaetodon lunulatus,NA,NA
+,,,,,
+11,19CHLU3,CHLU,Chaetodon lunulatus,NA,NA
+,,,,,
+12,19CHLU4,CHLU,Chaetodon lunulatus,70.11258956,19.5824462641
+,,,,,
+13,19CHLU5,CHLU,Chaetodon lunulatus,58.90168291,15.8798937125
+,,,,,
+14,19CHLU6,CHLU,Chaetodon lunulatus,NA,NA
+,,,,,
+15,19CHLU7,CHLU,Chaetodon lunulatus,NA,NA
+,,,,,
+16,19CHLU8,CHLU,Chaetodon lunulatus,50.71428571,10.8731428562
+,,,,,
+17,19CHOR1,CHOR,Chaetodon ornatissimus,59.260902635,16.8300963483
+,,,,,
+18,19CHOR1,CHOR,Chaetodon ornatissimus,59.260902635,24.1725221848
+,,,,,
+19,19CHOR10,CHOR,Chaetodon ornatissimus,58.8053553,13.7016477849
+,,,,,
+20,19CHOR11,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+21,19CHOR12,CHOR,Chaetodon ornatissimus,54.27272727,18.2627727264
+,,,,,
+22,19CHOR13,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+23,19CHOR14,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+24,19CHOR2,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+25,19CHOR3,CHOR,Chaetodon ornatissimus,7.062983062,2.2269585594
+,,,,,
+26,19CHOR4,CHOR,Chaetodon ornatissimus,57.80885781,12.3306293709
+,,,,,
+27,19CHOR5,CHOR,Chaetodon ornatissimus,59.33179724,16.8086981581
+,,,,,
+28,19CHOR6,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+29,19CHOR7,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+30,19CHOR8,CHOR,Chaetodon ornatissimus,58.34287896,16.0092859866
+,,,,,
+31,19CHOR9,CHOR,Chaetodon ornatissimus,57.96992481,14.5272631574
+,,,,,
+32,19CHPE2,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+33,19CHPE91,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+34,19CHPE92,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+35,19CHRE1,CHRE,Chaetodon reticulatus,47.99426934,10.0691977075
+,,,,,
+36,19CHRE10,CHRE,Chaetodon reticulatus,48.35164835,11.106373626
+,,,,,
+37,19CHRE11,CHRE,Chaetodon reticulatus,54.26195426,13.7282744278
+,,,,,
+38,19CHRE2,CHRE,Chaetodon reticulatus,46.16977226,11.1869358186
+,,,,,
+39,19CHRE3,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+40,19CHRE4,CHRE,Chaetodon reticulatus,60.04728132,16.6751300226
+,,,,,
+41,19CHRE5,CHRE,Chaetodon reticulatus,56.82539683,15.1098730171
+,,,,,
+42,19CHRE6,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+43,19CHRE7,CHRE,Chaetodon reticulatus,50.31982942,9.278976545
+,,,,,
+44,19CHRE8,CHRE,Chaetodon reticulatus,47.6340694,13.2994321765
+,,,,,
+45,19CHRE9,CHRE,Chaetodon reticulatus,49.45652174,9.7231521741
+,,,,,
+46,19CHSP1,CHSP,Chlorurus spilurus,88.89426567,50.3941592083
+,,,,,
+47,19CHSP2,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+48,19CHSP3,CHSP,Chlorurus spilurus,88.30601093,40.452983607
+,,,,,
+49,19CHSP3,CHSP,Chlorurus spilurus,88.30601093,68.2340546456
+,,,,,
+50,19CHSP4,CHSP,Chlorurus spilurus,81.5738342,NA
+,,,,,
+51,19CHSP5,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+52,19CHSP6,CHSP,Chlorurus spilurus,90.98639456,55.010374151
+,,,,,
+53,19CHSP7,CHSP,Chlorurus spilurus,87.00607903,44.5297112476
+,,,,,
+54,19CHSP8,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+55,19CHUN1,CHUN,Chaetodon unimaculatus,NA,NA
+,,,,,
+56,19CTFL1,CTFL,Ctenochaetus flavicauda,87.38738739,46.63864865
+,,,,,
+57,19CTFL2,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+58,19CTFL3,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+59,19CTFL4,CTFL,Ctenochaetus flavicauda,68.05194805,27.5202077914
+,,,,,
+60,19CTFL5,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+61,19CTFL6,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+62,19CTFL7,CTFL,Ctenochaetus flavicauda,81.66421208,39.6398085436
+,,,,,
+63,19CTST1,CTST,Ctenochaetus striatus,25.22421525,11.6661995531
+,,,,,
+64,19CTST2,CTST,Ctenochaetus striatus,87.18204489,40.5832418963
+,,,,,
+65,19CTST3,CTST,Ctenochaetus striatus,88.22495606,45.9387346204
+,,,,,
+66,19CTST3,CTST,Ctenochaetus striatus,88.22495606,43.0273110705
+,,,,,
+67,19CTST4,CTST,Ctenochaetus striatus,86.19631902,NA
+,,,,,
+68,19CTST5,CTST,Ctenochaetus striatus,NA,NA
+,,,,,
+69,19CTST6,CTST,Ctenochaetus striatus,89.89589712,42.8713533365
+,,,,,
+70,19DAFL91,DAFL,Dascyllus flauvicauda,NA,NA
+,,,,,
+71,19DAFL92,DAFL,Dascyllus flauvicauda,NA,NA
+,,,,,
+72,19DYOI1,NA,NA,NA,NA
+,,,,,
+73,19PYDI1,NA,NA,NA,NA
+,,,,,
+74,19PYDI91,PYDI,Pygoplites diacanthus,NA,NA
+,,,,,
+75,ABSE1,ABSE,Abudefduf sexfasciatus,NA,NA
+,,,,,
+76,ACNA1,ACNA,Acanthurus nigricauda,NA,NA
+,,,,,
+77,ACNG1,ACNG,Acanthurus nigricans,NA,NA
+,,,,,
+78,ACNG2,ACNG,Acanthurus nigricans,NA,NA
+,,,,,
+79,ACNG2,ACNG,Acanthurus nigricans,NA,NA
+,,,,,
+80,ACNG20,ACNG,Acanthurus nigricans,NA,NA
+,,,,,
+81,ACNG21,ACNG,Acanthurus nigricans,NA,NA
+,,,,,
+82,ACNG22,ACNG,Acanthurus nigricans,50.60037093,9.2850917046
+,,,,,
+83,ACNG3,NA,NA,NA,NA
+,,,,,
+84,ACNG4,ACNG,Acanthurus nigricans,61.3832853,NA
+,,,,,
+85,ACNI1,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+86,ACNI2,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+87,ACNI20,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+88,ACNI21,ACNI,Acanthurus nigrofuscus,1.923076923,0.2388462986
+,,,,,
+89,ACNI3,ACNI,Acanthurus nigrofuscus,78.38814742,31.5079566256
+,,,,,
+90,ACNI4,ACNI,Acanthurus nigrofuscus,86.60869565,28.5587480148
+,,,,,
+91,ACNI5,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+92,ACNI6,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+93,ACNI7,ACNI,Acanthurus nigrofuscus,NA,NA
+,,,,,
+94,ACOL1,ACOL,Acanthurus olivaceous,81.26672614,30.2341384212
+,,,,,
+95,ACOL2,ACOL,Acanthurus olivaceous,79.70914127,27.2761618283
+,,,,,
+96,ACOL3,ACOL,Acanthurus olivaceous,91.66666667,44.4084936458
+,,,,,
+97,ACOL4,ACOL,Acanthurus olivaceous,84.3156516,35.8280091469
+,,,,,
+98,ACOL5,ACOL,Acanthurus olivaceous,87.54139073,32.4326184219
+,,,,,
+99,ACPY20,ACPY,Acanthurus pyroferus,NA,NA
+,,,,,
+100,AMSC1,AMSC,Amanses scopas,91.82892907,47.3622093384
+,,,,,
+101,AMSC2,AMSC,Amanses scopas,89.07462687,50.8182980337
+,,,,,
+102,AMSC20,AMSC,Amanses scopas,91.67270094,45.5590646596
+,,,,,
+103,AMSC3,AMSC,Amanses scopas,87.66561514,55.3908560164
+,,,,,
+104,B3,NA,NA,NA,NA
+,,,,,
+105,BAUN1,BAUN,Balistapus undulatus,NA,NA
+,,,,,
+106,BAUN2,BAUN,Balistapus undulatus,NA,NA
+,,,,,
+107,CALO1,CALO,Amanses scopas,91.13300493,NA
+,,,,,
+108,CASA1,CASA,Cantherhines sandwichiensis,85.30805687,22.8671452402
+,,,,,
+109,CASA2,CASA,Cantherhines sandwichiensis,87.50897344,26.3260299073
+,,,,,
+110,CASA3,CASA,Cantherhines sandwichiensis,58.18540434,11.8070740129
+,,,,,
+111,CASA4,CASA,Cantherhines sandwichiensis,76.40232108,20.9965279038
+,,,,,
+112,CASA5,CASA,Cantherhines sandwichiensis,NA,NA
+,,,,,
+113,CEAR1,CEAR,Cephalopholis argus,NA,NA
+,,,,,
+114,CEAR1,CEAR,Cephalopholis argus,NA,NA
+,,,,,
+115,CEAR2,CEAR,Cephalopholis argus,60.24442847,15.0904061699
+,,,,,
+116,CEAR2,CEAR,Cephalopholis argus,60.24442847,15.0904061699
+,,,,,
+117,CEBI1,CEBI,Centropyge bispinosa,NA,NA
+,,,,,
+118,CEBI2,CEBI,Centropyge bispinosa,77.62557078,28.9187433009
+,,,,,
+119,CEBI20,CEBI,Centropyge bispinosa,81.160887655,48.7478461178
+,,,,,
+120,CEBI21,CEBI,Centropyge bispinosa,NA,NA
+,,,,,
+121,CEBI3,CEBI,Centropyge bispinosa,52.25806452,23.7640427187
+,,,,,
+122,CEBI4,CEBI,Centropyge bispinosa,NA,NA
+,,,,,
+123,CEBI8,NA,NA,NA,NA
+,,,,,
+124,CEFL1,CEFL,Centropyge flavissima,NA,NA
+,,,,,
+125,CEFL2,CEFL,Centropyge flavissima,NA,NA
+,,,,,
+126,CEFL20,CEFL,Centropyge flavissima,NA,NA
+,,,,,
+127,CHLU1,CHLU,Chaetodon lunulata,NA,NA
+,,,,,
+128,CHLU2,CHLU,Chaetodon lunulata,NA,NA
+,,,,,
+129,CHMA1,CHMA,Chromis margaritifer,NA,NA
+,,,,,
+130,CHMA2,CHMA,Chromis margaritifer,NA,NA
+,,,,,
+131,CHOR1,CHOR,Chaetodon ornatissimus,60.4850214,14.2287172831
+,,,,,
+132,CHOR10,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+133,CHOR11,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+134,CHOR12,CHOR,Chaetodon ornatissimus,46.43696163,10.0372540745
+,,,,,
+135,CHOR2,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+136,CHOR3,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+137,CHOR4,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+138,CHOR5,CHOR,Chaetodon ornatissimus,53.36826347,16.4450795613
+,,,,,
+139,CHOR6,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+140,CHOR7,CHOR,Chaetodon ornatissimus,51.02489019,11.1618916188
+,,,,,
+141,CHOR8,CHOR,Chaetodon ornatissimus,50.40214477,13.8738867443
+,,,,,
+142,CHOR9,CHOR,Chaetodon ornatissimus,NA,NA
+,,,,,
+143,CHPE1,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+144,CHPE2,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+145,CHPE20,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+146,CHPE3,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+147,CHPE4,NA,NA,NA,NA
+,,,,,
+148,CHPE5,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+149,CHPE6,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+150,CHPE7,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+151,CHPE8,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+152,CHPE9,CHPE,Chaetodon pelewensis,NA,NA
+,,,,,
+153,CHQU1,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+154,CHQU10,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+155,CHQU11,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+156,CHQU2,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+157,CHQU3,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+158,CHQU4,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+159,CHQU47,NA,NA,NA,NA
+,,,,,
+160,CHQU5,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+161,CHQU6,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+162,CHQU7,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+163,CHQU8,CHQU,Chaetodon quadrimaculatus,NA,NA
+,,,,,
+164,CHQU9,CHQU,Chaetodon quadrimaculatus,36.8627451,4.5702440038
+,,,,,
+165,CHRE1,CHRE,Chaetodon reticulatus,48.52780807,9.9383778884
+,,,,,
+166,CHRE10,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+167,CHRE11,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+168,CHRE2,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+169,CHRE3,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+170,CHRE4,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+171,CHRE5,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+172,CHRE6,CHRE,Chaetodon reticulatus,50.90329437,12.6453338832
+,,,,,
+173,CHRE7,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+174,CHRE8,CHRE,Chaetodon reticulatus,NA,NA
+,,,,,
+175,CHRE9,CHRE,Chaetodon reticulatus,38.63928113,7.5454830926
+,,,,,
+176,CHSP1,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+177,CHSP2,CHSP,Chlorurus spilurus,87.89822536,NA
+,,,,,
+178,CHSP20,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+179,CHSP21,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+180,CHSP22,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+181,CHSP23,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+182,CHSP24,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+183,CHSP25,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+184,CHSP26,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+185,CHSP27,CHSP,Chlorurus spilurus,81.99791883,35.171096255
+,,,,,
+186,CHSP28,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+187,CHSP29,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+188,CHSP3,CHSP,Chlorurus spilurus,64.43370166,31.2094513223
+,,,,,
+189,CHSP30,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+190,CHSP31,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+191,CHSP32,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+192,CHSP33,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+193,CHSP39,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+194,CHSP4,CHSP,Chlorurus spilurus,69.97792494,25.9231137528
+,,,,,
+195,CHSP41,CHSP,Chlorurus spilurus,74.92138365,29.708480202
+,,,,,
+196,CHSP42,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+197,CHSP43,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+198,CHSP44,CHSP,Chlorurus spilurus,74.7645951,68.8438616394
+,,,,,
+199,CHSP45,CHSP,Chlorurus spilurus,84.67100506,47.2512003916
+,,,,,
+200,CHSP46,CHSP,Chlorurus spilurus,84.64611872,44.6488641226
+,,,,,
+201,CHSP47,CHSP,Chlorurus spilurus,NA,NA
+,,,,,
+202,CHSP48,CHSP,Chlorurus spilurus,78.74750167,40.6220216298
+,,,,,
+203,CHSP5,CHSP,Chlorurus spilurus,82.90128306,37.7713071521
+,,,,,
+204,CHSP6,CHSP,Chlorurus spilurus,85.68892045,45.1701653998
+,,,,,
+205,CHSP7,CHSP,Chlorurus spilurus,84.69333061,45.2991183255
+,,,,,
+206,CHSP8,CHSP,Chlorurus spilurus,86.37573712,48.5574190221
+,,,,,
+207,CHUN1,CHUN,Chaetodon unimaculatus,NA,NA
+,,,,,
+208,CHVA1,CHVA,Chaetodon vagabundus,NA,NA
+,,,,,
+209,CISC1,CISC,Cirrhilabrus scottorum,NA,NA
+,,,,,
+210,COGA1,COGA,Coris gaimard,NA,NA
+,,,,,
+211,COGA2,COGA,Coris gaimard,NA,NA
+,,,,,
+212,COGA3,COGA,Coris gaimard,NA,NA
+,,,,,
+213,CTBI,CTBI,Ctenochaetus binotatus,NA,NA
+,,,,,
+214,CTBI1,CTBI,Ctenochaetus binotatus,76.84478372,28.6751144833
+,,,,,
+215,CTBI2,CTBI,Ctenochaetus binotatus,83.172147,NA
+,,,,,
+216,CTBI20,CTBI,Ctenochaetus binotatus,85.50420168,32.112792256
+,,,,,
+217,CTBI21,CTBI,Ctenochaetus binotatus,85.88490771,46.6440545144
+,,,,,
+218,CTBI2A,NA,NA,NA,NA
+,,,,,
+219,CTBI2B,NA,NA,NA,NA
+,,,,,
+220,CTBI3,CTBI,Ctenochaetus binotatus,83.67158672,39.4273167434
+,,,,,
+221,CTFL1,CTFL,Ctenochaetus flavicauda,80.18318068,34.9691954721
+,,,,,
+222,CTFL1 -??,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+223,CTFL10,CTFL,Ctenochaetus flavicauda,87.22659668,44.9622137129
+,,,,,
+224,CTFL11,CTFL,Ctenochaetus flavicauda,89.67168263,47.1582560697
+,,,,,
+225,CTFL2,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+226,CTFL20,CTFL,Ctenochaetus flavicauda,83.709565625,45.2329145029
+,,,,,
+227,CTFL3,CTFL,Ctenochaetus flavicauda,91.61698957,52.0460486423
+,,,,,
+228,CTFL4,CTFL,Ctenochaetus flavicauda,79.58748222,34.7922832149
+,,,,,
+229,CTFL5,CTFL,Ctenochaetus flavicauda,78.80952381,33.5162903543
+,,,,,
+230,CTFL6,CTFL,Ctenochaetus flavicauda,85.69157393,39.6820488283
+,,,,,
+231,CTFL7,CTFL,Ctenochaetus flavicauda,81.92771084,41.9889143004
+,,,,,
+232,CTFL8,CTFL,Ctenochaetus flavicauda,NA,NA
+,,,,,
+233,CTFL9,CTFL,Ctenochaetus flavicauda,85.56291391,39.6852208807
+,,,,,
+234,CTST1,CTST,Ctenochaetus striatus,NA,NA
+,,,,,
+235,CTST10,CTST,Ctenochaetus striatus,83.61957709,32.0033411319
+,,,,,
+236,CTST2,CTST,Ctenochaetus striatus,90.36334913,51.5841139845
+,,,,,
+237,CTST3,CTST,Ctenochaetus striatus,92.10526316,49.7960826367
+,,,,,
+238,CTST4,CTST,Ctenochaetus striatus,86.68981481,44.8873691199
+,,,,,
+239,CTST5,CTST,Ctenochaetus striatus,NA,NA
+,,,,,
+240,CTST6,CTST,Ctenochaetus striatus,NA,NA
+,,,,,
+241,CTST7,CTST,Ctenochaetus striatus,86.98196002,34.049697802
+,,,,,
+242,CTST8,CTST,Ctenochaetus striatus,46.35506003,21.5830095872
+,,,,,
+243,CTST9,CTST,Ctenochaetus striatus,78.34125726,26.2246485016
+,,,,,
+244,DAAR1,DAAR,Dascyllus aranus,NA,NA
+,,,,,
+245,DAFL1,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+246,DAFL10,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+247,DAFL2,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+248,DAFL3,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+249,DAFL4,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+250,DAFL5,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+251,DAFL6,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+252,DAFL7,DAFL,Dascyllus flavicaudus,3.614457831,0.7004232462
+,,,,,
+253,DAFL8,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+254,DAFL9,DAFL,Dascyllus flavicaudus,NA,NA
+,,,,,
+255,DATR1,DATR,Dascyllus trimaculatus,NA,NA
+,,,,,
+256,EPIN1,EPIN,Epibulus insidiator,NA,NA
+,,,,,
+257,EPIN20,EPIN,Epibulus insidiator,NA,NA
+,,,,,
+258,GOVA1,GOVA,Gomphosus varius,NA,NA
+,,,,,
+259,GOVA20,GOVA,Gomphosus varius,NA,NA
+,,,,,
+260,HAHO1,HAHO,Halichoeres hortulanus,NA,NA
+,,,,,
+261,HAHO20,HAHO,Halichoeres hortulanus,NA,NA
+,,,,,
+262,HAMA1,HAMA,Halichoeres marginatus,NA,NA
+,,,,,
+263,HAMA2,HAMA,Halichoeres marginatus,NA,NA
+,,,,,
+264,HAMA20,HAMA,Halichoeres marginatus,NA,NA
+,,,,,
+265,M108P,NA,NA,41.13856069,NA
+,,,,,
+266,M16P,NA,NA,25.77683616,NA
+,,,,,
+267,M17P,NA,NA,30.24911032,NA
+,,,,,
+268,M18P,NA,NA,26.73267327,NA
+,,,,,
+269,M1P,NA,NA,40.41212121,NA
+,,,,,
+270,M23P,NA,NA,40.89661482,NA
+,,,,,
+271,M2P,NA,NA,53.24137931,NA
+,,,,,
+272,M32P,NA,NA,34.99327052,NA
+,,,,,
+273,M34P,NA,NA,53.69244136,NA
+,,,,,
+274,M37P,NA,NA,56.34517766,NA
+,,,,,
+275,M39P,NA,NA,34.51676529,NA
+,,,,,
+276,M3P,NA,NA,33.06264501,NA
+,,,,,
+277,M4P,NA,NA,47.10743802,NA
+,,,,,
+278,M5P,NA,NA,41.93083573,NA
+,,,,,
+279,M87P,NA,NA,33.03393214,NA
+,,,,,
+280,M8P,NA,NA,45.31059683,NA
+,,,,,
+281,M90P,NA,NA,53.85826772,NA
+,,,,,
+282,M94P,NA,NA,43.50230415,NA
+,,,,,
+283,MEVI1,MEVI,Melichthys vidua,45.78796562,4.9626737402
+,,,,,
+284,MEVI10,MEVI,Melichthys vidua,56.166127345,10.0006053289
+,,,,,
+285,MEVI2,MEVI,Melichthys vidua,60.4416675233,NA
+,,,,,
+286,MEVI3,MEVI,Melichthys vidua,47.24199288,7.5756485888
+,,,,,
+287,MEVI4,MEVI,Melichthys vidua,66.69699727,NA
+,,,,,
+288,MEVI5,MEVI,Melichthys vidua,39.79057592,9.7480587565
+,,,,,
+289,MEVI6,MEVI,Melichthys vidua,77.4153074,18.0087138786
+,,,,,
+290,MEVI7,MEVI,Melichthys vidua,65.464244115,13.9941120139
+,,,,,
+291,MEVI8,MEVI,Melichthys vidua,67.14719272,13.4884790159
+,,,,,
+292,MEVI9,MEVI,Melichthys vidua,61.023468305,14.888605662
+,,,,,
+293,MEVIB?,NA,NA,57.71428571,NA
+,,,,,
+294,MYAM1,MYAM,Myripristis amaena,NA,NA
+,,,,,
+295,MYAM2,MYAM,Myripristis amaena,NA,NA
+,,,,,
+296,MYAM3,MYAM,Myripristis amaena,NA,NA
+,,,,,
+297,MYAM4,MYAM,Myripristis amaena,NA,NA
+,,,,,
+298,MYAM5,MYAM,Myripristis amaena,NA,NA
+,,,,,
+299,MYAM6,MYAM,Myripristis amaena,26.76056338,6.8646899754
+,,,,,
+300,MYAM7,MYAM,Myripristis amaena,NA,NA
+,,,,,
+301,MYAM8,MYAM,Myripristis amaena,NA,NA
+,,,,,
+302,MYAM9,MYAM,Myripristis amaena,NA,NA
+,,,,,
+303,MYBE1,MYBE,Myripristis berndti,NA,NA
+,,,,,
+304,MYBE2,MYBE,Myripristis berndti,NA,NA
+,,,,,
+305,MYWO1,MYWO,Myripristis woodsi,NA,NA
+,,,,,
+306,NALI?,NA,NA,44.20289855,NA
+,,,,,
+307,NALI1,NALI,Naso lituratus,NA,NA
+,,,,,
+308,NALI10,NALI,Naso lituratus,NA,NA
+,,,,,
+309,NALI11,NALI,Naso lituratus,NA,NA
+,,,,,
+310,NALI12,NALI,Naso lituratus,NA,NA
+,,,,,
+311,NALI13,NALI,Naso lituratus,39.22330097,4.1639715105
+,,,,,
+312,NALI14,NALI,Naso lituratus,NA,NA
+,,,,,
+313,NALI15,NALI,Naso lituratus,35.43307087,3.0566379653
+,,,,,
+314,NALI2,NALI,Naso lituratus,45.00846024,4.6356701584
+,,,,,
+315,NALI3,NALI,Naso lituratus,NA,NA
+,,,,,
+316,NALI4,NALI,Naso lituratus,NA,NA
+,,,,,
+317,NALI5,NALI,Naso lituratus,27.806183025,3.0515556854
+,,,,,
+318,NALI6,NALI,Naso lituratus,NA,NA
+,,,,,
+319,NALI7,NALI,Naso lituratus,10.32608696,1.0768524946
+,,,,,
+320,NALI8,NALI,Naso lituratus,NA,NA
+,,,,,
+321,NALI9,NALI,Naso lituratus,NA,NA
+,,,,,
+322,NEAR1,NEAR,Neocirrhites armatus,NA,NA
+,,,,,
+323,NEAR2,NEAR,Neocirrhites armatus,NA,NA
+,,,,,
+324,ODNI1,ODNI,Odonus niger,NA,NA
+,,,,,
+325,ODNI10,ODNI,Odonus niger,39.83957219,2.9590845312
+,,,,,
+326,ODNI11,ODNI,Odonus niger,NA,NA
+,,,,,
+327,ODNI12,ODNI,Odonus niger,NA,NA
+,,,,,
+328,ODNI2,ODNI,Odonus niger,NA,NA
+,,,,,
+329,ODNI3,ODNI,Odonus niger,NA,NA
+,,,,,
+330,ODNI4,ODNI,Odonus niger,NA,NA
+,,,,,
+331,ODNI5,ODNI,Odonus niger,NA,NA
+,,,,,
+332,ODNI6,ODNI,Odonus niger,NA,NA
+,,,,,
+333,ODNI7,ODNI,Odonus niger,NA,NA
+,,,,,
+334,ODNI8,ODNI,Odonus niger,NA,NA
+,,,,,
+335,ODNI9,ODNI,Odonus niger,NA,NA
+,,,,,
+336,OSFU1,OSFU,Ostorhinchus fuscus,NA,NA
+,,,,,
+337,OSFU2,OSFU,Ostorhinchus fuscus,NA,NA
+,,,,,
+338,OSFU3,OSFU,Ostorhinchus fuscus,NA,NA
+,,,,,
+339,OSFU4,OSFU,Ostorhinchus fuscus,NA,NA
+,,,,,
+340,OSRE1,OSRE,Ostorhinchus relativus,NA,NA
+,,,,,
+341,OXUN20,OXUN,Oxycheilinus unifasciatus,NA,NA
+,,,,,
+342,OXUN21,OXUN,Oxycheilinus unifasciatus,NA,NA
+,,,,,
+343,PAAR1,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+344,PAAR10,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+345,PAAR11,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+346,PAAR12,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+347,PAAR13,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+348,PAAR2,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+349,PAAR3,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+350,PAAR4,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+351,PAAR5,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+352,PAAR6,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+353,PAAR7,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+354,PAAR8,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+355,PAAR9,PAAR,Paracirrhites arcatus,NA,NA
+,,,,,
+356,PACY1,PACY,Parupeneus cyclostomus,NA,NA
+,,,,,
+357,PAFO1,PAFO,Paracirrhites fosteri,NA,NA
+,,,,,
+358,PAFO2,PAFO,Paracirrhites fosteri,NA,NA
+,,,,,
+359,Pal47,NA,NA,NA,NA
+,,,,,
+360,Pal50,NA,NA,NA,NA
+,,,,,
+361,Pal6,NA,NA,NA,NA
+,,,,,
+362,PLLA1,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+363,PLLA10,PLLA,Plectroglyphidodon lacrymatus,11.32075472,2.6665234377
+,,,,,
+364,PLLA11,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+365,PLLA12,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+366,PLLA13,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+367,PLLA14,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+368,PLLA15,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+369,PLLA16,PLLA,Plectroglyphidodon lacrymatus,6.405124099,2.5023892636
+,,,,,
+370,PLLA17,PLLA,Plectroglyphidodon lacrymatus,72.27369922,18.6868677415
+,,,,,
+371,PLLA18,PLLA,Plectroglyphidodon lacrymatus,73.4006734,75.1302311818
+,,,,,
+372,PLLA2,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+373,PLLA3,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+374,PLLA4,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+375,PLLA5,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+376,PLLA6,PLLA,Plectroglyphidodon lacrymatus,84.09405256,23.8490593128
+,,,,,
+377,PLLA7,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+378,PLLA8,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+379,PLLA9,PLLA,Plectroglyphidodon lacrymatus,NA,NA
+,,,,,
+380,POPA1,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+381,POPA2,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+382,POPA20,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+383,POPA21,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+384,POPA22,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+385,POPA23,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+386,POPA24,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+387,POPA25,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+388,POPA26,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+389,POPA27,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+390,POPA3,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+391,POPA4,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+392,POPA5,NA,NA,NA,NA
+,,,,,
+393,POPA5A,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+394,POPA5B,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+395,POPA6,NA,NA,NA,NA
+,,,,,
+396,POPA6A,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+397,POPA6B,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+398,POPA6C,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+399,POPA6D,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+400,POPA6E,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+401,POPA6F,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+402,POPA6G,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+403,POPA7,NA,NA,NA,NA
+,,,,,
+404,POPA7A,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+405,POPA7B,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+406,POPA7C,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+407,POPA7D,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+408,POPA7E,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+409,POPA7F,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+410,POPA7G,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+411,POPA7H,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+412,POPA7I,POPA,Pomacentrus pavo,NA,NA
+,,,,,
+413,PRFR1,PRFR,Pristiapogon fraenatus,NA,NA
+,,,,,
+414,PRFR2,PRFR,Pristiapogon fraenatus,NA,NA
+,,,,,
+415,PRFR3,PRFR,Pristiapogon fraenatus,NA,NA
+,,,,,
+416,SACA1,SACA,Sargocentron caudimaculatum,NA,NA
+,,,,,
+417,SAMI1,SAMI,Sargocentron microstoma,NA,NA
+,,,,,
+418,SCFR1,SCFR,Scarus frenatus,NA,NA
+,,,,,
+419,SCPS1,SCPS,Scarus psittacus,NA,NA
+,,,,,
+420,SCPS2,SCPS,Scarus psittacus,NA,NA
+,,,,,
+421,SCPS20,SCPS,Scarus psittacus,75.12953368,41.7833757662
+,,,,,
+422,SCPS21,SCPS,Scarus psittacus,92.41545894,NA
+,,,,,
+423,SCPS22,SCPS,Scarus psittacus,NA,NA
+,,,,,
+424,SCPS23,SCPS,Scarus psittacus,NA,NA
+,,,,,
+425,SCPS24,SCPS,Scarus psittacus,89.43620178,61.5354302381
+,,,,,
+426,SCPS25,SCPS,Scarus  globiceps,89.59608323,46.7518630974
+,,,,,
+427,SCPS26,SCPS,Scarus psittacus,NA,NA
+,,,,,
+428,SCPS27,SCPS,Scarus psittacus,NA,NA
+,,,,,
+429,SCPS28,SCPS,Scarus psittacus,NA,NA
+,,,,,
+430,SCPS29,SCPS,Scarus psittacus,NA,NA
+,,,,,
+431,SCPS3,SCPS,Scarus psittacus,82.92501856,44.2004818428
+,,,,,
+432,SCPS30,SCPS,Scarus psittacus,84.99735869,44.6647015029
+,,,,,
+433,SCPS4,SCPS,Scarus psittacus,NA,NA
+,,,,,
+434,STBA1,STBA,Stethojulis bandanensis,NA,NA
+,,,,,
+435,STNI1,STNI,Stegastes nigricans,NA,NA
+,,,,,
+436,STNI10,STNI,Stegastes nigricans,NA,NA
+,,,,,
+437,STNI2,STNI,Stegastes nigricans,NA,NA
+,,,,,
+438,STNI20,STNI,Stegastes nigricans,NA,NA
+,,,,,
+439,STNI21,STNI,Stegastes nigricans,68.73537483,15.7975721989
+,,,,,
+440,STNI22,STNI,Stegastes nigricans,NA,NA
+,,,,,
+441,STNI23,STNI,Stegastes nigricans,NA,NA
+,,,,,
+442,STNI24,STNI,Stegastes nigricans,NA,NA
+,,,,,
+443,STNI25,STNI,Stegastes nigricans,NA,NA
+,,,,,
+444,STNI3,STNI,Stegastes nigricans,62.66490765,14.3838663858
+,,,,,
+445,STNI4,STNI,Stegastes nigricans,NA,NA
+,,,,,
+446,STNI5,STNI,Stegastes nigricans,NA,NA
+,,,,,
+447,STNI6,STNI,Stegastes nigricans,NA,NA
+,,,,,
+448,STNI7,STNI,Stegastes nigricans,NA,NA
+,,,,,
+449,STNI8,STNI,Stegastes nigricans,71.19565217,21.7520649499
+,,,,,
+450,STNI9,STNI,Stegastes nigricans,NA,NA
+,,,,,
+451,SUBU1,SUBU,Sufflamen bursa,78.1512605,27.2103232836
+,,,,,
+452,SUBU10,SUBU,Sufflamen bursa,74.82057416,23.2949226403
+,,,,,
+453,SUBU11,SUBU,Sufflamen bursa,NA,NA
+,,,,,
+454,SUBU12,SUBU,Sufflamen bursa,42.58114374,9.2449889572
+,,,,,
+455,SUBU13,SUBU,Sufflamen bursa,65.80663653,21.9040312393
+,,,,,
+456,SUBU13,SUBU,Sufflamen bursa,65.80663653,21.9040312393
+,,,,,
+457,SUBU14,SUBU,Sufflamen bursa,80.19323671,27.6629526355
+,,,,,
+458,SUBU2,SUBU,Sufflamen bursa,81.87347932,29.4071313418
+,,,,,
+459,SUBU3,SUBU,Sufflamen bursa,80.75241484,21.2932200169
+,,,,,
+460,SUBU4,SUBU,Sufflamen bursa,75.09025271,24.1446313729
+,,,,,
+461,SUBU5,SUBU,Sufflamen bursa,66.52789342,30.3349389867
+,,,,,
+462,SUBU6,SUBU,Sufflamen bursa,64.52991453,20.7355136285
+,,,,,
+463,SUBU7,SUBU,Sufflamen bursa,80.06925741,31.8919192273
+,,,,,
+464,SUBU8,SUBU,Sufflamen bursa,79.65367965,20.9468459557
+,,,,,
+465,SUBU9,SUBU,Sufflamen bursa,89.25619835,31.9335692976
+,,,,,
+466,THHA1,THHA,Thalassoma hardwicke,NA,NA
+,,,,,
+467,THHA20,THHA,Thalassoma hardwicke,42.75568182,11.8015699522
+,,,,,
+468,THHA21,THHA,Thalassoma hardwicke,6.175298805,1.4041623403
+,,,,,
+469,THHA22,THHA,Thalassoma hardwicke,NA,NA
+,,,,,
+470,THHA23,THHA,Thalassoma hardwicke,78.60696517,27.3655826893
+,,,,,
+471,THHA24,THHA,Thalassoma hardwicke,NA,NA
+,,,,,
+472,THHA25,THHA,Thalassoma hardwicke,80.67961165,39.3494859645
+,,,,,
+473,THHA26,THHA,Thalassoma hardwicke,NA,NA
+,,,,,
+474,ZESC1,ZESC,Zebrasoma scopas,43.19526627,5.1365227269
+,,,,,
+475,ZESC10,ZESC,Zebrasoma scopas,50.2250225,8.2071833443
+,,,,,
+476,ZESC2,ZESC,Zebrasoma scopas,NA,NA
+,,,,,
+477,ZESC3,ZESC,Zebrasoma scopas,NA,NA
+,,,,,
+478,ZESC4,ZESC,Zebrasoma scopas,NA,NA
+,,,,,
+479,ZESC5,ZESC,Zebrasoma scopas,45.75289575,6.0276785979
+,,,,,
+480,ZESC6,ZESC,Zebrasoma scopas,NA,NA
+,,,,,
+481,ZESC7,ZESC,Zebrasoma scopas,50.34364261,7.6736617887
+,,,,,
+482,ZESC8,ZESC,Zebrasoma scopas,52.417607505,6.6939122834
+,,,,,
+483,ZESC9,ZESC,Zebrasoma scopas,NA,NA

@@ -40,8 +40,16 @@ moo <- moorea %>%
   #filter(Site_name == "Tiahura") %>%
   mutate(biomass = lwa_m * Size ^ lwb_m) %>%
   filter(biomass > 0) %>%
-  group_by(TransID, Year, ReefZone, diet_cat, Site_name) %>%
+  group_by(TransID, Year, ReefZone, species, Site_name) %>%
   summarize(biomass = sum(Abundance * biomass))
+
+moo %>% 
+  group_by(ReefZone, Site_name) %>%
+  summarize(sum(biomass[species%in%result_ext$species], na.rm = TRUE)/sum(biomass, na.rm = TRUE) )
+
+
+sum(moo[moo$species%in%result_ext$species,]$biomass, na.rm = TRUE)/
+  sum(moo$biomass, na.rm = TRUE)
 
 ggplot(moo[moo$ReefZone == "forereef",]) +
   #geom_point(aes(x = Year, y = (biomass), color = as.character(Site_name))) +

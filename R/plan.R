@@ -56,12 +56,15 @@ make_plan <- function(){
     # figs2 = make_figs2(result_ext),
     
     # output
-    out1 = save_plot(fig1, "fig1", height = 10),
+    out1 = save_plot(fig1, "fig1", height = 12),
     # out2 = save_plot(fig2, "fig2", height = 8),
-    outs1 = save_plot(figs1, "figs1", height = 10, width = 10)#,
+    outs1 = save_plot(figs1, "figs1", height = 10, width = 10),
     
     ### paper ###
-    
+    main_text_doc = rmarkdown::render(knitr_in("text/main.Rmd"), 
+                                      output_format = "word_document", 
+                                      output_dir = "./output/text/",
+                                      output_file = "main.docx")
     
   )
 }
