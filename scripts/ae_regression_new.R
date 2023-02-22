@@ -5,6 +5,15 @@ library(patchwork)
 library(fishualize)
 loadd(result_ext)
 
+intestine <- read_csv("data/intestine_dataset.csv") %>%
+  filter(location == "Moorea") %>%
+  mutate(int_rel = intestine_surface/weight) %>%
+  group_by(species) %>%
+  summarize(int_rel = median(int_rel, na.rm = T)) %>%
+  mutate(species = gsub(" ", "_", species))
+
+ggplot(intestine) +
+  geom_boxplot(aes(x = species, y = int_rel))
 
 
 spmass <- data_ae %>%
@@ -19,11 +28,16 @@ data <- result_ext %>%
   mutate(negp = ap_mean<0)
 
 
+data <- result_ext %>%
+  left_join(diets) %>%
+  left_join(spmass) %>%
+  left_join(intestine)
+
 ggplot(data) +
   geom_point(aes(x = (biomass), y = int_surface)) 
 
 ggplot(data) +
-  geom_point(aes(color = log(int_surface/biomass), y = ap_mean, x = Dp_mean), size = 3) +
+  geom_point(aes(color = log(int_rel), y = ap_mean, x = Dp_mean), size = 3) +
   # geom_smooth(aes(x = log(int_surface/biomass), y = ap_mean), method = "lm") +
   ylim(c(0,1))
 
@@ -45,61 +59,27 @@ ggplot(aes(x = Dc_median, y = ac_median, color = diet2), data = data) +
   geom_smooth(method = "lm")
 
 
-fitc_se <- brm(ac_mean | resp_se(`ac_sd`, sigma = FALSE) ~ me(Dc_mean, Dc_sd)  + log(int_surface/biomass),
+fitc_se <- brm(ac_mean | resp_se(`ac_sd`, sigma = FALSE) ~ me(Dc_mean, Dc_sd)  + log(int_rel),
                backend = "cmdstanr", family = "student", data = datac, iter = 4000, cores = 4, threads = 2)
 
-fitn_se <- brm(an_mean | resp_se(`an_sd`, sigma = FALSE) ~ me(Dn_mean, Dn_sd) +  log(int_surface/biomass),
+fitn_se <- brm(an_mean | resp_se(`an_sd`, sigma = FALSE) ~ me(Dn_mean, Dn_sd) +  log(int_rel),
                backend = "cmdstanr", family = "student", data = datan, iter = 4000, cores = 4, threads = 2)
 
-fitp_se <- brm(ap_mean | resp_se(`ap_sd`, sigma = FALSE) ~ me(Dp_mean, Dp_sd) + log(int_surface/biomass) ,
+fitp_se <- brm(ap_mean | resp_se(`ap_sd`, sigma = FALSE) ~ me(Dp_mean, Dp_sd) + log(int_rel) ,
                backend = "cmdstanr", family = "student", data = datap, iter = 4000, cores = 4, threads = 2)
-
-data_long1 <- data %>%
-  select(species, ac_mean, an_mean, ap_mean) %>%
-  pivot_longer(-species, names_to = "k_mean", values_to = "a_mean")
-data_long2 <- data %>%
-  select(species, ac_sd, an_sd, ap_sd) %>%
-  pivot_longer(-species, names_to = "k_sd", values_to = "a_sd")
-data_long <- cbind(data_long1, data_long2) %>%
-  select(-4)
-
-data_long1 <- data %>%
-  select(species, Dc_mean, Dn_mean, Dp_mean) %>%
-  pivot_longer(-species, names_to = "kd_mean", values_to = "d_mean")
-data_long2 <- data %>%
-  select(species, Dc_sd, Dn_sd, Dp_sd) %>%
-  pivot_longer(-species, names_to = "kd_sd", values_to = "d_sd")
-
-data_long_D <- cbind(data_long1, data_long2) %>%
-  select(-4, -1) %>%
-  cbind(data_long) %>%
-  dplyr::mutate(element = rep(c("c","n", "p"), 51)) %>%
-  select(species, element, a_mean, a_sd, d_mean, d_sd) %>%
-  left_join(select(data, species, int_surface, biomass))
-
-fitcnp_se <- brm(mean | resp_se(`sd`, sigma = FALSE) ~ 0+ k_mean + (1|species),
-               backend = "cmdstanr", family = "student", data = data_long, iter = 4000, cores = 4, threads = 2)
-
-bprior <- c(prior_string("normal(0,1)", class = "b"))
-# fitcnp_se2 <- brm(a_mean | resp_se(`a_sd`, sigma = FALSE) ~ 0 +  element +
-#                     element:me(d_mean, d_sd)  + element:log(int_surface/biomass),
-#                  backend = "cmdstanr", family = "student", data = data_long_D, iter = 4000, 
-#                  cores = 4, threads = 2,prior = bprior )
-
 
 summary(fitc_se)
 summary(fitn_se)
 summary(fitp_se)
 
-summary(fitcnp_se)
-summary(fitcnp_se2)
+
 
 conditional_effects(fitc_se)
 conditional_effects(fitn_se)
 conditional_effects(fitp_se)
 
-conditional_effects(fitcnp_se2)
-ranef(fitcnp_se)
+# conditional_effects(fitcnp_se2)
+# ranef(fitcnp_se)
 
 nd1 <- expand_grid(Dp_mean = seq(0.05, 2.7, 0.01),
                    int_rel = seq(1.5,5.2,0.01))

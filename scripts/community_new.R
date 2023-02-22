@@ -150,7 +150,8 @@ prob_cop <- unique(select(data, diet2, species)) %>%
   left_join(prob_cop) %>%
   group_by(diet2) %>%
   mutate(prob_cop_diet = median(prob_cop, na.rm = TRUE)) %>%
-  mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet))
+  mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet)) %>%
+  filter(species %in% results1$species)
 
 result <- cbind(dplyr::select(data, species, diet2, size), results1) 
 
@@ -197,7 +198,7 @@ summ <- moo %>%
   dplyr::left_join(prob_cop) %>%
   dplyr::mutate(prob_cop = case_when(
     prob_cop < 0.5 ~ 0, TRUE ~ prob_cop)) %>%
-  dplyr::mutate(pflux_cop = Wp * prob_cop/2) %>%
+  dplyr::mutate(pflux_cop = Wp * prob_cop/2) %>% # only consider half a day
   dplyr::group_by(year, site_name, reef_zone, diet2) %>%
   dplyr::summarize(Fn = sum(Fn), Fp = sum(Fp), 
                    Wc = sum(Wc), Wn = sum(Wn), Wp = sum(Wp),

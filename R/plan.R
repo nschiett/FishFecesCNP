@@ -16,29 +16,21 @@ make_plan <- function(){
     data_raw = read_csv("data/results_aecnp.csv"),
     data_ae = prune(data_raw),
     
-    # additional info
-    sia_species = get_sia_means(),
-    intestine = get_intestine_residuals(),
-    
-    # get ash
+    # get extra traits per species
     diets = get_diets(),
     ash = get_ash(diets),
+    intestine = get_intestine(),
+    mass = get_mass(data_ae),
     
-    
-    # ae models
-    # stanmodel_ae = rstan::stan_model("stan/ae_student.stan"),
-    # result_ae = run_ae_models(data = data_ae, stanmodel = stanmodel_ae),
-    # 
     # cnp models
     stanmodel_cnp = rstan::stan_model("stan/cnp_student_simple.stan"),
     result_cnp = run_cnp_models(data = data_ae, stanmodel = stanmodel_cnp, ash),
 
-    
     # add traits to ae results
-    result_ext = add_traits(result_cnp, sia_species, intestine, diets),
+    result_ext = add_traits(result_cnp, mass, intestine, diets),
     
     # more models
-    model_ae_diet = fit_diet_models(result_ext),
+    models_ae_diet = fit_diet_models(result_ext),
     models_copro = fit_copr_models(result_ext),
     
     # predict ae per group
@@ -58,13 +50,13 @@ make_plan <- function(){
     # output
     out1 = save_plot(fig1, "fig1", height = 12),
     # out2 = save_plot(fig2, "fig2", height = 8),
-    outs1 = save_plot(figs1, "figs1", height = 10, width = 10),
+    outs1 = save_plot(figs1, "figs1", height = 10, width = 10)
     
     ### paper ###
-    main_text_doc = rmarkdown::render(knitr_in("text/main.Rmd"), 
-                                      output_format = "word_document", 
-                                      output_dir = "./output/text/",
-                                      output_file = "main.docx")
+    # main_text_doc = rmarkdown::render(knitr_in("text/main.Rmd"), 
+    #                                   output_format = "word_document", 
+    #                                   output_dir = "./output/text/",
+    #                                   output_file = "main.docx")
     
   )
 }

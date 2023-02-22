@@ -348,73 +348,98 @@ make_figs1 <- function(data){
 #' @import fishualize
 #' @import patchwork
 #'
-make_fig3 <- function(model_ae_diet, result_ext) {
+make_fig3 <- function(models_ae_diet, result_ext) {
 
-  pred_data <- model_ae_diet[[2]]
-  data <- model_ae_diet[[1]]$data
   
-  long <- result_ext %>%
-    tidyr::pivot_longer(c(ac_mean, an_mean, ap_mean))
+  nd1 <- expand_grid(Dp_mean = seq(0.05, 2.7, 0.01),
+                     int_rel = seq(1.5,5.2,0.01))
   
-  a <- 
-  ggplot(long) +
-    geom_boxplot(aes(x = family, y = value, color = name, fill = name), 
-                    outlier.shape = NA, alpha = 0.5) +
-    ylim(c(-1, 1)) +
-    scale_color_fish_d(end = 0.8, labels = c("C", "N", "P")) +
-    scale_fill_fish_d(end = 0.8, labels = c("C", "N", "P")) +
-    theme_custom() +
-    theme(legend.title = element_blank(), legend.position = "none",
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-          plot.margin = unit(c(0, 0, 0, 0),"cm")) +
-    labs(x = "", y = "Absorption efficiency")
-  b <- 
-  ggplot(long) +
-    geom_boxplot(aes(x = diet2, y = value, color = name, fill = name), 
-                 outlier.alpha = 0.5, alpha = 0.5) +
-    ylim(c(-1, 1.15)) +
-    scale_color_fish_d(end = 0.8, labels = c("C", "N", "P")) +
-    scale_fill_fish_d(end = 0.8, labels = c("C", "N", "P")) +
-    scale_x_discrete(labels = c("DE", "HE", "MI", "CO", "PL", "CA")) +
-    theme_custom() +
-    theme(legend.title = element_blank(), 
-          legend.position = "top",
-          axis.text.x = element_text(angle = 0),
-          plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-    labs(x = "", y = "Absorption efficiency") +
-    add_fishape(family = "Acanthuridae", option = "Ctenochaetus_striatus", 
-                xmin = 0.5, xmax = 1.5, ymin = 0.9, ymax = 1.2, fill = "grey20") +
-    add_fishape(family = "Acanthuridae", option = "Zebrasoma_scopas", 
-                xmin = 1.5, xmax = 2.5, ymin = 0.9, ymax = 1.2, fill = "grey20") +
-    add_fishape(family = "Balistidae", option = NA, 
-                xmin = 2.5, xmax = 3.5, ymin = 0.9, ymax = 1.2, fill = "grey20") +
-    add_fishape(family = "Chaetodontidae", option = "Chaetodon_ornatissimus", 
-                xmin = 3.5, xmax = 4.5, ymin = 0.9, ymax = 1.2, fill = "grey20") +
-    add_fishape(family = "Pomacentridae", option = NA, 
-                xmin = 4.5, xmax = 5.5, ymin = 0.9, ymax = 1.2, fill = "grey20") +
-    add_fishape(family = "Serranidae", option = "Cephalopholis_argus", 
-                xmin = 5.5, xmax = 6.5, ymin = 0.9, ymax = 1.2, fill = "grey20")
+  fe <- fixef(models_ae_diet[[3]], summary = F)
   
+  nd1$estimate <- lapply(1:nrow(fe), function(i){
+    df <- data.frame(c = fe[i,1] + nd1$int_rel*fe[i,2] + (nd1$Dp_mean)*fe[i,3])
+  }) %>% bind_cols() %>% rowMeans()
   
-  c <- 
-  ggplot(pred_data) +
-    geom_ribbon(aes(x = mu1_st, ymin= y_a_lb, ymax = y_a_ub, fill = element), 
-                alpha = 0.3) +
-    geom_line(aes(x = mu1_st, y = y_a_m, color = element), size = 1) +
-    geom_point(aes(x = mu1_st, y = ae, color = element), data = data) +
-    scale_color_fish_d(end = 0.8) + scale_fill_fish_d(end = 0.8) +
-    labs(y = "Absorption efficiency", x = "Standardised food content", 
-         color = "", fill = "") +
-    theme_custom() +
-    ylim(c(0,1)) +
-    theme(legend.position = "none", 
-          plot.margin = unit(c(0, 0, 0, 0),"cm") )
-library(patchwork)
+  pp <-
+    ggplot(nd1[nd1$estimate<1&nd1$estimate>0,]) +
+    geom_raster(aes(x = Dp_mean, y = int_rel, fill = estimate)) +
+    geom_point(aes(x = Dp_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+               alpha = 0.9, data = data, size = 3) +
+    scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), 
+                    breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) +
+    theme_classic() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    scale_shape_discrete(guide = "none") +
+    theme(legend.position = 'none') +
+    guides(fill = guide_colorbar(title.position = 'top', title.hjust = .5,
+                                 barwidth = unit(20, 'lines'), 
+                                 barheight = unit(.5, 'lines'))) +
+    labs(x = "Stomach content P%", y = "log(intestine surface/ biomass)", fill = "Predicted absorption efficiency") +
+    theme(text = element_text(size = 14))
+  
 
-  plot <- b + c + plot_layout(nrow = 2) + 
-    plot_annotation(tag_levels = "A")
+  # N
   
-  save_plot(plot, "fig3", width = 7, height = 8)
+  ndn <- expand_grid(Dn_mean = seq(0.8, 12, 0.05),
+                     int_rel = seq(1.5,5.2,0.05))
+  
+  fe <- fixef(models_ae_diet[[2]], summary = F)
+  
+  ndn$estimate <- lapply(1:nrow(fe), function(i){
+    df <- data.frame(c = fe[i,1] + ndn$int_rel*fe[i,2] + (ndn$Dn_mean)*fe[i,3])
+  }) %>% bind_cols() %>% rowMeans()
+  
+  
+  pn <-
+    ggplot(ndn[ndn$estimate<1&ndn$estimate>0,]) +
+    geom_raster(aes(x = Dn_mean, y = int_rel, fill = estimate)) +
+    geom_point(aes(x = Dn_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+               alpha = 0.7, data = data, size = 3) +
+    scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), breaks = c(0, 0.2, 0.4,0.6, 0.8, 1), guide = "none")  +
+    theme_classic() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    scale_shape_discrete(labels=c('DE', 'HE', 'MI', 'CO', 'PL', 'CA')) +
+    theme(legend.position = 'bottom') +
+    labs(x = "Stomach content N%", y = "log(intestine surface/ biomass)", 
+         fill = "Predicted absorption efficiency", shape = "") +
+    theme(text = element_text(size = 14))
+  
+  ####c
+  ndc <- expand_grid(Dc_mean = seq(5, 50, 0.5),
+                     int_rel = seq(1.5,5.2,0.01))
+  
+  fe <- fixef(models_ae_diet[[1]], summary = F)
+  
+  ndc$estimate <- lapply(1:nrow(fe), function(i){
+    df <- data.frame(c = fe[i,1] + ndc$int_rel*fe[i,2] + (ndc$Dc_mean)*fe[i,3])
+  }) %>% bind_cols() %>% rowMeans()
+  
+  pc <-
+    ggplot(ndc[ndc$estimate<1,]) +
+    geom_raster(aes(x = Dc_mean, y = int_rel, fill = estimate)) +
+    geom_point(aes(x = Dc_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+               alpha = 0.8, data = data, size = 3) +
+    scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), 
+                    breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1))  +
+    theme_classic() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    scale_shape_discrete(guide = "none") +
+    theme(legend.position = 'bottom') +
+    guides(fill = guide_colorbar(title.position = 'top', title.hjust = .5,
+                                 barwidth = unit(15, 'lines'), 
+                                 barheight = unit(.7, 'lines'))) +
+    labs(x = "Stomach content C%", y = "log(intestine surface/ biomass)", fill = "Predicted absorption efficiency") +
+    theme(text = element_text(size = 14))
+
+  plot <-
+    pc + pn + pp + plot_annotation(tag_levels = "A")
+  
+  return(plot)
+  
+  # ggsave("test.pdf", plot, width = 12, height = 5)
   
 }
 

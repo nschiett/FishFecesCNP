@@ -263,6 +263,22 @@ get_ash <- function(diets){
   read_csv("output/data/ash_species_estimate.csv")
 }
 
+get_intestine <- function(){
+  read_csv("data/intestine_dataset.csv") %>%
+    filter(location == "Moorea") %>%
+    mutate(int_rel = intestine_surface/weight) %>%
+    group_by(species) %>%
+    summarize(int_rel = median(int_rel, na.rm = T)) %>%
+    mutate(species = gsub(" ", "_", species))
+}
+
+get_mass <- function(data_ae){
+  
+  data_ae %>%
+    group_by(species) %>%
+    summarise(biomass = mean(weight, na.rm = T))
+}
+
 #' load trophic guilds
 #'
 #' @return
@@ -301,7 +317,7 @@ get_diets <- function(){
 #' @return
 #' @export
 #'
-add_traits <- function(result, sia_species, intestine, diets){
+add_traits <- function(result, mass, intestine, diets){
   
   # keep only Moorea
   result <- result %>%
@@ -309,14 +325,10 @@ add_traits <- function(result, sia_species, intestine, diets){
      #remove outlier species manually
      dplyr::filter(!species == "Chaetodon_quadrimaculatus")
   
-  # diet category
-
-  
-  
   # combine
   result %>% 
     dplyr::left_join(diets) %>%
-    dplyr::left_join(sia_species) %>%
+    dplyr::left_join(mass) %>%
     dplyr::left_join(intestine)
   }
 
@@ -348,46 +360,6 @@ get_ae <- function(ash, result_ext){
            ap_uqn = 1 - (Rp_uqn*ash_ratio)) 
 }
 
-#' import sia data and model species means
-#'
-#' @return
-#' @export
-#'
-
-get_sia_means <- function(){
-  sia <- read.csv("data/moorea.sia.2019.csv", sep = ";") %>%
-    dplyr::select(-1) %>%
-    dplyr::select(species = Names, N = X.N, C = X.C, DN, DC, weight = Weight) %>%
-    dplyr::mutate(species = gsub("  ", " ", species)) %>%
-    dplyr::mutate(species = gsub(" ", "_", species)) %>%
-    tidyr::drop_na(DN) %>%
-    dplyr::group_by(species) %>%
-    dplyr::mutate(n_sia = dplyr::n()) %>%
-    dplyr::filter(n_sia > 5) 
-  
-  fit <- brms::brm(DN ~ 0 + species, data = sia)
-  
-  newdata <- data.frame(unique(dplyr::select(sia, species, n_sia)))
-
-  pred <- fitted(fit, newdata = newdata)
-  
-  newdata %>% 
-    dplyr::mutate(dn = pred[,1],
-           dn_sd = pred[,2])
-}
-
-get_intestine_residuals <- function(){
-  int <- readr::read_csv("data/intestine_dataset.csv")
-  int %>%
-    dplyr::filter(location == "Moorea") %>%
-    dplyr::group_by(family, species) %>%
-    dplyr::summarize(int_surface = mean(intestine_surface),
-              sl = mean(sl)) %>% 
-    dplyr::mutate(species = gsub(" ", "_", species),
-                  int_surface_res = log(int_surface) - (1.68*log(sl))) # Ghilardi et al.
-}
-
-
 #' Title
 #'
 #' @param result_ext 
@@ -397,54 +369,8 @@ get_intestine_residuals <- function(){
 #'
 fit_diet_models <- function(result_ext){
   
-    long1 <- result_ext %>%
-      dplyr::filter(ac_mean>0, an_mean>0, ap_mean>0) %>%
-      dplyr::mutate(c = standard(Dc_mean),
-                    n = standard(Dn_mean),
-                    p = standard(Dp_mean)
-      ) %>%
-      tidyr::pivot_longer(cols = c(c, n, p), 
-                          names_to = "element", values_to = "mu1_st") %>%
-      dplyr::select(species, element, mu1_st, dn, family, diet, int_surface_res)
-    
-    long2 <- result_ext %>%
-      dplyr::mutate(c = ac_mean,
-             n = an_mean,
-             p = ap_mean
-      ) %>%
-      tidyr::pivot_longer(cols = c(c, n, p), 
-                          names_to = "element", values_to = "ae") %>%
-      dplyr::select(species, element, ae, diet2)
-    
-    long3 <- result_ext %>%
-      dplyr::mutate(c = ac_sd,
-                    n = an_sd,
-                    p = ap_sd
-      ) %>%
-      tidyr::pivot_longer(cols = c(c, n, p), 
-                          names_to = "element", values_to = "ae_sd") %>%
-      dplyr::select(species, element, ae_sd)
-    
-    
-    long <- dplyr::left_join(long1, long2) %>%
-      dplyr::left_join(long3)
-    
-    fit <- brms::brm(ae ~ 0 + element + element:mu1_st, data = long,
-                     family = "beta")
-    
-    
-    newdata <- tidyr::expand_grid(mu1_st = seq(min(long$mu1_st), 
-                                               max(long$mu1_st), 0.2), 
-                           element = c("c", "n", "p"))
-    
-    pred <- fitted(fit, newdata)
-    
-    pred_data <- newdata %>%
-      dplyr::mutate(y_a_m = pred[,1],
-             y_a_sd = pred[,2],
-             y_a_lb = pred[,3],
-             y_a_ub = pred[,4])
-    
+  
+
     
     return(list(fit = fit, pred = pred_data))
     
