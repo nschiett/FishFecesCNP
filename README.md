@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# The Role of Fish Feces for Nutrient Cycling on Coral Reefs
+# The Role of Fish Feces for Nutrient Cycling on Coral Reefs :tropical_fish: :poop:
 
 <!-- badges: start -->
 <!-- badges: end -->
