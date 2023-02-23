@@ -23,9 +23,10 @@ The directory contains:
     - **functions_plots.R**: Contains functions to create figures
     presenting the results.  
 -   [:file_folder: data](/data): Folder containing all data.
--   [:file_folder: output](/text): All output including results and
+-   [:file_folder: stan](/stan): Folder containing stan code.
+-   [:file_folder: output](/output): All output including results and
     figures for publication.
--   \_targets.R File containing workflow
+-   \_targets.R: Script containing workflow
 -   make.R File: Script to run the whole project.
 
 ## Session info
