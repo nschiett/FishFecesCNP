@@ -42,7 +42,12 @@ list(
   tar_target(fig2, make_fig2(result_ext, models_copro)),
   tar_target(fig3, make_fig3(models_ae_diet, result_ext)),
   tar_target(fig4, make_fig4(spflux)),
+  
+  # Supplemental figs and plots
   tar_target(figs1, make_figs1(result_ext)),
+  tar_target(tables1, make_table1(data_ae, result_ext)),
+  tar_target(tables2, make_table2(result_ext)),
+  tar_target(tables3, make_table3(result_ext)),
   
   # Save plots
   tar_target(p1, save_plot(fig1, "fig1", height = 12)),

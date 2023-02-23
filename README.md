@@ -3,8 +3,7 @@
 
 # The Role of Fish Feces for Nutrient Cycling on Coral Reefs :tropical_fish: :poop:
 
-<!-- badges: start -->
-<!-- badges: end -->
+![](output/plots/ae_fig6_updated.png)
 
 The goal of this project is to reproduce all results and figures
 presented in the paper “The Role of Fish Feces for Nutrient Cycling on
