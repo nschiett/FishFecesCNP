@@ -11,25 +11,39 @@ knitr::opts_chunk$set(
 )
 ```
 
-# assimilation_efficiency
+# The Role of Fish Feces for Nutrient Cycling on Coral Reefs
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of assimilation_efficiency is to ...
+The goal of this project is to reproduce all results and figures presented in the paper "The Role of Fish Feces for Nutrient Cycling on Coral Reefs", currently under revision at **Oikos**.
+The project uses [targets](https://docs.ropensci.org/targets/), a pipeline tool for statistics and data science in R. 
+Packages needed to reproduce this analysis and code to install them can be found in [make.R](make.R). 
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-summary(cars)
+## Content
+
+The directory contains:
+
+  - [:file\_folder: R](/R): Folder containing all functions, packages
+    and drake plan.  
+    \- **functions\_wrangling.R**: Contains functions to prepare the
+    data for analyses.  
+    \- **functions.R**: Contains functions used to reproduce
+    analysis.  
+    \- **functions\_plots.R**: Contains functions to create figures
+    presenting the results.  
+  - [:file\_folder: data](/data): Folder containing all data.
+  - [:file\_folder: output](/text): All output including results and figures
+    for publication.
+  - _targets.R File containing workflow
+  - make.R File: Script to run the whole project.
+  
+  
+  
+## Session info
+
+```{r, echo=F}
+sessionInfo()
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!

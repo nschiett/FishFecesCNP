@@ -44,15 +44,11 @@ ggplot(data) +
 lm(log(int_surface) ~ log(biomass), data = data)
 
 datac <- data %>%
-  filter(ac_mean>0) %>%
-  left_join(diets)
+  filter(ac_mean>0) 
 datan <- data %>%
-  filter(an_mean>0) %>%
-  left_join(diets)
+  filter(an_mean>0) 
 datap <- data %>%
-  filter(ap_mean>0) %>%
-  left_join(diets) %>%
-  mutate(dietfam = paste0(diet2, family))
+  filter(ap_mean>0) 
 
 ggplot(aes(x = Dc_median, y = ac_median, color = diet2), data = data) +
   geom_point() +

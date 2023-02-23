@@ -71,9 +71,9 @@ theme_custom <- function(){
 #' @export
 #'
 #' @examples
-save_plot <- function(plot, name, width = 8, height = 6){
+save_plot <- function(plot, name, width = 8, height = 6, type = "png"){
   
-  ggsave(plot, filename = paste0("output/plots/", name, ".png"), 
+  ggsave(plot, filename = paste0("output/plots/", name, ".", type), 
          width = width, height = height)
 }
 
@@ -116,12 +116,6 @@ make_fig1 <- function(data){
                    alpha = 0.3, size = 1) +
     geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), 
                alpha = 0.7, size = 3) +
-    # geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), alpha = 0.8, 
-    #            size = 3, data = dat[dat$cdif2 == TRUE & dat$cdif1 == FALSE,]) +
-    # geom_point(aes(x = Dc_median, y = Wc_median, color = diet2), alpha = 0.8,
-    #            size = 5, data = dat[dat$cdif1 == TRUE,]) +
-    # geom_text_repel(aes(x = Dc_median, y = Wc_median, label = species), 
-    #                 size = 2, data = dat[dat$cdif1 == TRUE,]) +
     geom_label(aes(x = 50, y = 1 * 50, label = "1")) +
     geom_label(aes(x = 50, y = 0.5 * 50, label = "0.50")) +
     geom_label(aes(x = 50, y = 0.75 * 50, label = "0.75")) +
@@ -140,12 +134,6 @@ make_fig1 <- function(data){
                    alpha = 0.3, size = 1) +
     geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), 
                alpha = 0.7, size = 3) +
-    # geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), alpha = 0.8,
-    #            size = 3, data = dat[dat$ndif2 == TRUE & dat$ndif1 == FALSE,]) +
-    # geom_point(aes(x = Dn_median, y = Wn_median, color = diet2), alpha = 0.8,
-    #            size = 5, data = dat[dat$ndif1 == TRUE,]) +
-    # geom_text_repel(aes(x = Dn_median, y = Wn_median, label = species), 
-    #                 size = 2, data = dat[dat$ndif1 == TRUE,]) +
     geom_label(aes(x = 12, y = 1 * 12, label = "1")) +
     geom_label(aes(x = 12, y = 0.5 * 12, label = "0.50")) +
     geom_label(aes(x = 12, y = 0.75 * 12, label = "0.75")) +
@@ -166,12 +154,6 @@ make_fig1 <- function(data){
                    alpha = 0.3, size = 1) +
     geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), 
                alpha = 0.7, size = 3) +
-    # geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), alpha = 0.8,
-    #            size = 3, data = dat[dat$pdif2 == TRUE & dat$pdif1 == FALSE,]) +
-    # geom_point(aes(x = Dp_median, y = Wp_median, color = diet2), alpha = 0.8,
-    #            size = 5, data = dat[dat$pdif1 == TRUE,]) +
-    # geom_text_repel(aes(x = Dp_median, y = Wp_median, label = species), 
-    #                 size = 2, data = dat[dat$pdif1 == TRUE,]) +
     geom_label(aes(x = 2.2, y = 1 * 2.2, label = "1")) +
     geom_label(aes(x = 2.2, y = 0.5 * 2.2, label = "0.50")) +
     geom_label(aes(x = 2.2, y = 0.75 * 2.2, label = "0.75")) +
@@ -439,8 +421,6 @@ make_fig3 <- function(models_ae_diet, result_ext) {
   
   return(plot)
   
-  # ggsave("test.pdf", plot, width = 12, height = 5)
-  
 }
 
 make_fig2 <- function(result_ext, models_copro){
@@ -670,8 +650,7 @@ make_fig2 <- function(result_ext, models_copro){
           panel.grid = element_blank()) +
     labs(x = "Feces", y = "Food")
   p
-  library(patchwork)
-  
+
  plot_species <- n + p + plot_layout(nrow = 2)
  save_plot(plot_species, "figS2", 10, 18)
  
@@ -784,14 +763,13 @@ make_fig2 <- function(result_ext, models_copro){
   plot <-
     ps1 + ps2 + p1 + p3 + p2 + p4 + plot_annotation(tag_levels = "A") +
     plot_layout(ncol = 2, design = des) & theme(strip.placement = NULL)
-  plot
   ggsave("output/plots/fig2_diet_poo_pairwise.png", 
          plot, height = 14, width = 12)
+  return(plot)
 }
 
 make_fig4 <- function(spflux){
-  drake::loadd(spflux)
-  
+
   data <- spflux[[2]] %>%
     dplyr::mutate(RRn = log(Wn/Fn),
                   RRp = log(Wp/Fp),
@@ -803,11 +781,8 @@ make_fig4 <- function(spflux){
   
   data %>% group_by(name) %>%
     summarise(n = sum(value>0))
-  data %>% group_by(name) %>%
-    summarise(n = sum(value>0))
   
   plot <-
- 
     ggplot(data) +
     geom_hline(yintercept = 0, linetype = 2) +
     geom_boxplot(aes(x = diet2, y = value, color = name, fill = name),
@@ -848,6 +823,8 @@ make_fig4 <- function(spflux){
     plot_layout(nrow = 2) + plot_annotation(tag_levels = "A")
       
   save_plot(plot, "fig4_RR", width = 7, height = 8)
+  
+  return(plot)
 }
 
 make_table1 <- function(data_ae, result_ext){

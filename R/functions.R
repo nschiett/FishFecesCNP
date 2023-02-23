@@ -367,88 +367,33 @@ get_ae <- function(ash, result_ext){
 #' @return
 #' @export
 #'
-fit_diet_models <- function(result_ext){
+fit_diet_models <- function(data){
   
+  datac <- data %>%
+    filter(ac_mean>0) 
+  datan <- data %>%
+    filter(an_mean>0) 
+  datap <- data %>%
+    filter(ap_mean>0) 
   
-
-    
-    return(list(fit = fit, pred = pred_data))
-    
+  fitc_se <- brm(ac_mean | resp_se(`ac_sd`, sigma = FALSE) ~ me(Dc_mean, Dc_sd)  + log(int_rel),
+                 backend = "cmdstanr", family = "student", data = datac, iter = 4000, cores = 4, threads = 2)
   
-}
-
-#' Title
-#'
-#' @param result_ext 
-#'
-#' @return
-#' @export
-#'
-#' @import  brms
-test_copr_models <- function(result_ext){
+  fitn_se <- brm(an_mean | resp_se(`an_sd`, sigma = FALSE) ~ me(Dn_mean, Dn_sd) +  log(int_rel),
+                 backend = "cmdstanr", family = "student", data = datan, iter = 4000, cores = 4, threads = 2)
   
-  cop <- read_csv("data/coprophagy_robertson1982.csv") %>%
-    dplyr::mutate(species = gsub(" ", "_", species)) %>%
-    dplyr::inner_join(result_ext)
+  fitp_se <- brm(ap_mean | resp_se(`ap_sd`, sigma = FALSE) ~ me(Dp_mean, Dp_sd) + log(int_rel) ,
+                 backend = "cmdstanr", family = "student", data = datap, iter = 4000, cores = 4, threads = 2)
   
-  # coprophage models
-
-  fit_copr1 <- brm(coprophage ~ Dc_median + Dn_median + Dp_median,
-                  data = cop, family = "bernoulli")
-  fit_copr2 <- update(fit_copr1, formula = coprophage ~ Dc_median)
-  fit_copr3 <- update(fit_copr1, formula = coprophage ~ Dn_median)
-  fit_copr4 <- update(fit_copr1, formula = coprophage ~ Dp_median)
-  fit_copr5 <- update(fit_copr1, formula = coprophage ~ Dp_median + Dn_median)
-  fit_copr6 <- update(fit_copr1, formula = coprophage ~ Dc_median + Dn_median)
-  fit_copr7 <- update(fit_copr1, formula = coprophage ~  diet2, newdata = cop)
+  summary(fitc_se)
+  summary(fitn_se)
+  summary(fitp_se)
   
-  loo_values <- loo(fit_copr1, fit_copr2, fit_copr3, fit_copr4)
+  conditional_effects(fitc_se)
+  conditional_effects(fitn_se)
+  conditional_effects(fitp_se)
   
-  ##### being coprophage
-  
-  cop2 <- tidyr::drop_na(cop, Dp_median) %>%
-    dplyr::mutate(one = round(prop_eaten * n_feces)) %>%
-    dplyr::mutate(zero = n_feces - one) %>%
-    tidyr::pivot_longer(names_to = "key", values_to = "n", c(one, zero)) %>%
-    tidyr::uncount(n) %>%
-    dplyr::mutate(key2 = dplyr::case_when(key == "one" ~ 1,
-                                          key == "zero" ~ 0))
-  
-
-  ggplot(cop2) +
-    geom_boxplot(aes(x = as.character(key2), y = Wn_median))
-  
-  
-  ggplot(result_ext) +
-    geom_point(aes(x = (Wp_median), y = (Wn_median)))
-  
-  ggplot(result_ext) +
-    geom_point(aes(x = log(Dc_median), y = log(Dn_median)))
-  ggplot(result_ext) +
-    geom_point(aes(x = log(Dc_median), y = log(Dp_median)))
-  ggplot(result_ext) +
-    geom_point(aes(x = log(Dp_median), y = log(Dn_median)))
-  
-  ggplot(result_ext) +
-    geom_point(aes(x = (Wc_median), y = (Wn_median)))
-  ggplot(result_ext) +
-    geom_point(aes(x = (Wc_median), y = (Wp_median)))
-  
-  fit_cop1 <- brm(key ~ Wp_median + (1|species), 
-                 data = cop2, family = "bernoulli")
-  fit_cop2 <- update(fit_cop1, formula = key ~ Wn_median + (1|species), newdata = cop2)
-  fit_cop3 <- update(fit_cop1, formula = key ~ Wc_median + (1|species), newdata = cop2)
-  fit_cop4 <- update(fit_cop1, formula = key2 ~ Wn_median , newdata = cop2)
-  fit_cop5 <- update(fit_cop4, formula = key2 ~ Wp_median , newdata = cop2)
-  fit_cop6 <- update(fit_cop4, formula = key2 ~ Wp_median + Wn_median , newdata = cop2)
-  
-  loo( fit_cop4, fit_cop5)
-  
-  summary()
- plot <- conditional_effects(fit_cop4)
- ggplot() +
-    geom_point(aes(x = Wn_median, y = prop_eaten), data = cop) +
-   geom_text(aes(x = Wn_median, y = prop_eaten, label = species), data = cop)
+  return(list(fitc_se, fitn_se, fitp_se))
   
 }
 
@@ -490,6 +435,21 @@ fit_copr_models <- function(result_ext){
   
   return(list(fit_copr_n, fit_cop_n, fit_copr_p, fit_cop_p))
   
+}
+
+add_pred <- function(result_ext, models_ae_diet){
+  
+  predc <- fitted(models_ae_diet[[1]], newdata = result_ext) 
+  predn <- fitted(models_ae_diet[[2]], newdata = result_ext) 
+  predp <- fitted(models_ae_diet[[3]], newdata = result_ext) 
+  
+  result_ext %>%
+    mutate(ac_mean_pred = predc[,1],
+           ac_sd_pred = predc[,2],
+           an_mean_pred = predn[,1],
+           an_sd_pred = predn[,2],
+           ap_mean_pred = predp[,1],
+           ap_sd_pred = predp[,2])
 }
 
 #' Predict ae for extrapolation for community estimates
@@ -556,19 +516,17 @@ predict_ae <- function(result_ext){
 #' @export
 #'
 #' @examples
-sp_fluxes <- function(data_ae, result_ext) {
+sp_fluxes <- function(data_ae, result_ext_pred) {
   
   # median size per species 
   spsize <- data_ae %>%
-    dplyr::filter(location == "Moorea", species %in% result_ext$species) %>%
+    dplyr::filter(location == "Moorea", species %in% result_ext_pred$species) %>%
     dplyr::group_by(species) %>%
     dplyr::summarize(size_median = round(median(tl)),
                      size_max = round(max(tl)))
   
-  result_ext <- read_csv("output/data/result_ae_predict.csv")
-  
   # add ae values 
-  ae_sp <- result_ext %>%
+  ae_sp <- result_ext_pred %>%
     dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0.1 ~ ac_mean_pred, TRUE ~ ac_mean), 
                   an_mean = dplyr::case_when(an_mean < 0.1 ~ an_mean_pred, TRUE ~ an_mean), 
                   ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
@@ -590,23 +548,6 @@ sp_fluxes <- function(data_ae, result_ext) {
     dplyr::summarize_all(mean) %>%
     dplyr::select(-ac_m, -an_m, -ap_m, -Dc_m, -Dc_sd, 
                   -Dn_m, -Dn_sd, - Dp_m, -Dp_sd)
-  
-  # 
-  # ae_sp <- result_ext %>%
-  #   dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0.1 ~ ac_mean_pred, TRUE ~ ac_mean), 
-  #                 an_mean = dplyr::case_when(an_mean < 0.1 ~ an_mean_pred, TRUE ~ an_mean), 
-  #                 ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
-  #                 ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
-  #                 ac_sd = dplyr::case_when(ac_mean < 0.1 ~ ac_sd_pred, TRUE ~ ac_sd), 
-  #                 an_sd = dplyr::case_when(an_mean < 0.1 ~ an_sd_pred, TRUE ~ an_sd), 
-  #                 ap_sd = dplyr::case_when(ap_mean < 0.1 ~ ap_sd_pred, TRUE ~ ap_sd)) %>%
-  #   dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
-  #                 an_m = an_mean, an_sd, 
-  #                 ap_m = ap_mean, ap_sd,
-  #                 Dc_m = Dc_mean, Dc_sd,
-  #                 Dn_m = Dn_mean, Dn_sd,
-  #                 Dp_m = Dp_mean, Dp_sd)
-  
 
   spsize <- dplyr::inner_join(spsize, ae_sp) %>%
     dplyr::left_join(params) %>%
@@ -681,7 +622,7 @@ sp_fluxes <- function(data_ae, result_ext) {
 
   results2 <- results1 %>% 
     dplyr::filter(round(size) == round(size_median)) %>%
-    dplyr::left_join(result_ext)
+    dplyr::left_join(select(result_ext_pred, -biomass))
 
   
   return(list(results1, results2))
@@ -699,7 +640,7 @@ sp_fluxes <- function(data_ae, result_ext) {
 #' @export
 #'
 #' @examples
-community_fluxes <- function(result_ext) {
+community_fluxes <- function(result_ext, diets, models_copro) {
   
   # load parameters
   params <- readr::read_csv("data/params_sst_glob.csv") %>%
@@ -731,23 +672,21 @@ community_fluxes <- function(result_ext) {
     dplyr::mutate(biomass = lwa_m * size ^ lwb_m) %>%
     dplyr::mutate(biomass = (abundance * biomass)) %>%
     dplyr::filter(biomass > 0) %>%
-
+    
     dplyr::mutate(check_species = species %in% result_ext$species)
-
+  
   sum(moorea$biomass * moorea$check_species)/sum(moorea$biomass)
   #69.9% of biomass species
-
+  
   # add ae values 
   ae_sp <- result_ext %>%
-    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0 ~ 0.1, TRUE ~ ac_mean), 
-                  an_mean = dplyr::case_when(an_mean < 0 ~ 0.1, TRUE ~ an_mean), 
-                  ap_mean = dplyr::case_when(ap_mean < 0 ~ 0.1, TRUE ~ ap_mean)) %>%
-    dplyr::mutate(ac_sd = dplyr::case_when(ac_sd > 0.3 ~ 0.3, 
-                                           TRUE ~ ac_sd),
-                  an_sd = dplyr::case_when(an_sd > 0.3 ~ 0.3, 
-                                           TRUE ~ an_sd),
-                  ap_sd = dplyr::case_when(ap_sd > 0.3 ~ 0.3, 
-                                           TRUE ~ ap_sd)) %>%
+    dplyr::mutate(ac_mean = dplyr::case_when(ac_mean < 0.1 ~ ac_mean_pred, TRUE ~ ac_mean), 
+                  an_mean = dplyr::case_when(an_mean < 0.1 ~ an_mean_pred, TRUE ~ an_mean), 
+                  ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+                  ap_mean = dplyr::case_when(ap_mean < 0.1 ~ ap_mean_pred, TRUE ~ ap_mean),
+                  ac_sd = dplyr::case_when(ap_mean < 0.1 ~ ac_sd_pred, TRUE ~ ac_sd), 
+                  an_sd = dplyr::case_when(ap_mean < 0.1 ~ an_sd_pred, TRUE ~ an_sd), 
+                  ap_sd = dplyr::case_when(ap_mean < 0.1 ~ ap_sd_pred, TRUE ~ ap_sd)) %>%
     dplyr::select(species, diet2, ac_m = ac_mean, ac_sd, 
                   an_m = an_mean, an_sd, 
                   ap_m = ap_mean, ap_sd,
@@ -765,19 +704,17 @@ community_fluxes <- function(result_ext) {
               Dp_diet = median(Dp_m))
   
   
-  loadd(diets)
   moorea <- moorea %>%
     dplyr::inner_join(diets) %>%
     dplyr::left_join(ae_sp) %>%
     dplyr::left_join(ae_diet) %>%
-    #dplyr::filter(species %in% result_ext$species)
     dplyr::mutate(ac_m = dplyr::coalesce(ac_m, ac_diet),
                   an_m = dplyr::coalesce(an_m, an_diet),
                   ap_m = dplyr::coalesce(ap_m, ap_diet),
                   Dc_m = dplyr::coalesce(Dc_m, Dc_diet),
                   Dn_m = dplyr::coalesce(Dn_m, Dn_diet),
                   Dp_m = dplyr::coalesce(Dp_m, Dp_diet))
- 
+  
   spsize <- moorea %>% 
     dplyr::select(c(colnames(params), size, diet2,
                     ac_m, an_m, ap_m, ac_sd, an_sd, ap_sd,
@@ -834,20 +771,21 @@ community_fluxes <- function(result_ext) {
   data <- spsize
   
   # in pieces to avoid crash
-  results1 <- lapply(1:nrow(data), cnp_out) %>%
+  results1 <- parallel::mclapply(1:nrow(data), cnp_out, mc.cores = 4) %>%
     dplyr::bind_rows() 
   
   # coprophagy
   summary(models_copro[[4]])
   prob_cop <- cbind(select(result_ext, species, diet2), 
-    fitted(models_copro[[4]], newdata = result_ext)) %>%
+                    fitted(models_copro[[4]], newdata = result_ext)) %>%
     select(species, diet2, prob_cop = Estimate)
   
   prob_cop <- unique(select(data, diet2, species)) %>%
     left_join(prob_cop) %>%
     group_by(diet2) %>%
     mutate(prob_cop_diet = median(prob_cop, na.rm = TRUE)) %>%
-    mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet))
+    mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet)) %>%
+    filter(species %in% results1$species)
   
   result <- cbind(dplyr::select(data, species, diet2, size), results1) 
   
@@ -894,7 +832,7 @@ community_fluxes <- function(result_ext) {
     dplyr::left_join(prob_cop) %>%
     dplyr::mutate(prob_cop = case_when(
       prob_cop < 0.5 ~ 0, TRUE ~ prob_cop)) %>%
-    dplyr::mutate(pflux_cop = Wp * prob_cop/2) %>%
+    dplyr::mutate(pflux_cop = Wp * prob_cop/2) %>% # only consider half a day
     dplyr::group_by(year, site_name, reef_zone, diet2) %>%
     dplyr::summarize(Fn = sum(Fn), Fp = sum(Fp), 
                      Wc = sum(Wc), Wn = sum(Wn), Wp = sum(Wp),
@@ -902,7 +840,6 @@ community_fluxes <- function(result_ext) {
                      Sc = sum(Sc), Sn = sum(Sn), Sp = sum(Sp),
                      biomass = sum(biomass),
                      pflux_cop = sum(pflux_cop)) %>%
-    #dplyr::filter(year == 2016) %>%
     dplyr::group_by(reef_zone, site_name, year, diet2) %>%
     dplyr::summarize(Fn = median(Fn), Fp = median(Fp), 
                      Wc = median(Wc), Wn = median(Wn), Wp = median(Wp),
@@ -925,32 +862,28 @@ community_fluxes <- function(result_ext) {
     mutate(P_ratio = sum(Wp)/sum(Fp))%>%
     mutate(N_ratio = sum(Wn)/sum(Fn)) %>%
     group_by(reef_zone, diet2) %>%
-    summarize_all(mean, na.rm = TRUE)
+    summarize_all(mean, na.rm = TRUE) %>% 
+    filter(reef_zone == "forereef")
   
-  data <- pflux %>% filter(reef_zone == "forereef")
-sum(data$Wp_r + data$pcop_r)
-#0.8237873
-sum(data$Fp_r)
-#  0.08741516
-data <- data.frame(
-  prop = c(sum(data$Wp_r + data$pcop_r), sum(data$Fp_r)))
-
-ggplot(data, aes(x="", y = c(0.8237873, 0.08741516), fill = c("Wp", "Fp"))) +
-  geom_bar(stat="identity", width=1) +
-  scale_y_continuous(limits = c(0,1)) +
-  coord_polar("y", start=0) +
-  geom_text(aes(label = paste0(c(82.4, 8.7), "%")), position = position_stack(vjust=0.5)) +
-  labs(x = NULL, y = NULL, fill = NULL) +
-  theme_void()
-ggsave("pie.pdf")
+  sum(data$Wp_r + data$pcop_r)
+  #0.6528274
+  sum(data$Fp_r)
+  #  0.1349268
+  data <- data.frame(
+    prop = c(sum(data$Wp_r + data$pcop_r), sum(data$Fp_r)))
   
-ggplot(pflux) +
-    geom_boxplot(aes(x = as.character(year), y = log(N_ratio))) +
-    facet_grid(reef_zone~site_name)
+  ggplot(data, aes(x="", y = c(0.6528274, 0.1349268), fill = c("Wp", "Fp"))) +
+    geom_bar(stat="identity", width=1) +
+    scale_y_continuous(limits = c(0,1)) +
+    coord_polar("y", start=0) +
+    geom_text(aes(label = paste0(c(82.4, 8.7), "%")), position = position_stack(vjust=0.5)) +
+    labs(x = NULL, y = NULL, fill = NULL) +
+    theme_void()
+  ggsave("output/plots/fig5_pie.pdf")
   
-  write_csv(pflux, "output/data/comflux.csv")
+  write_csv(pflux, "output/data/pcomflux.csv")
   
-  return(list(result, summ))
+  return(pflux)
 }
 
 
