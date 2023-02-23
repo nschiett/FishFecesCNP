@@ -27,8 +27,6 @@ The directory contains:
 
   - [:file\_folder: R](/R): Folder containing all functions, packages
     and drake plan.  
-    \- **functions\_wrangling.R**: Contains functions to prepare the
-    data for analyses.  
     \- **functions.R**: Contains functions used to reproduce
     analysis.  
     \- **functions\_plots.R**: Contains functions to create figures
