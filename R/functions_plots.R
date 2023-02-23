@@ -997,6 +997,29 @@ make_table3 <- function(result_ext){
   readr::write_csv(sub, "output/data/Table_results2.csv")
 }
 
-## References
+
+make_table4 <- function(pflux){
+  
+  sub <- pflux %>%
+    filter(reef_zone == "forereef") %>%
+    ungroup() %>%
+    dplyr::mutate(diet = dplyr::case_when(
+                    diet2 == "1_detr" ~ "detritivore",
+                    diet2 == "2_herb" ~ "herbivore",
+                    diet2 == "3_imix" ~ "mixed invertivore",
+                    diet2 == "4_cor" ~ "corallivore",
+                    diet2 == "5_plank" ~ "planktivore",
+                    diet2 == "6_carn" ~ "carnivore"
+                  )) %>%
+    dplyr::select(Diet = diet, 
+                  `P consumption` = Ip, 
+                  `P Excretion` = Fp, 
+                  `P Egestion` = Wp, 
+                  `P to coprophagy` = pflux_cop) %>%
+    dplyr::arrange(Diet)
+  
+  
+  readr::write_csv(sub, "output/data/Table_results4.csv")
+}
 
 

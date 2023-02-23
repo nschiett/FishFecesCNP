@@ -31,6 +31,7 @@ make_figs1|function|0db8781244fd5096|||||||||||||||
 make_table1|function|dd58b7830ee5d425|||||||||||||||
 make_table2|function|96b7fb7c5579713b|||||||||||||||
 make_table3|function|6bb0d2a409423753|||||||||||||||
+make_table4|function|463268ecaa034f6d|||||||||||||||
 mass|stem|99acf90f83a581e7|dee26aaa9eea9e6f|bb1984c3d7ad6a85|1271239883||t19410.8738855319s|e2a93af4f48d8bc5|1204|rds|local|vector|||0.004||
 models_ae_diet|stem|e47f53a7a21d1ea9|0ca0d044f738f823|67ed5aa6e134b285|1989980315||t19410.9189486686s|1680340fb472d857|25221861|rds|local|vector|||43.449||
 models_copro|stem|bf5d9c2c1995bccd|ff25b6561c5f2c74|50fd105f02c10363|-781967232||t19410.9195716031s|3a7871f22912151e|7365620|rds|local|vector|||53.222||
@@ -52,5 +53,6 @@ stanmodel_cnp|stem|bfbe89f41e426316|098b3b307159692f|c3b5fc02cdc369c1|548591273|
 tables1|stem|93b3c99162a8b821|ffd8f5e0aafd6297|47a10f53b6192388|97732656||t19411.0819754929s|c680e4ba36df029a|1685|rds|local|vector|||0.14||
 tables2|stem|0ed61149274ab4da|de83b46a729beafe|1f318bb77f5256c5|1344298185||t19411.0819760021s|b58f86c8ef1b867a|2909|rds|local|vector|||0.04||
 tables3|stem|6d0c70f0b8efb0b3|bc0e47a59d34fe00|d818940dcd4d95e7|1533440853||t19411.0819764188s|d194086375ff5579|2016|rds|local|vector|||0.033||
+tables4|stem|40b152220479716f|83f3e2bc6e90f1d4|d393b0c0ef871d4a|-211082400||t19411.1075688615s|4566d5bf5a60f145|413|rds|local|vector|||0.084||
 test_copr_models|function|dac6dac4467c822a|||||||||||||||
 theme_custom|function|6b901db89a00ddff|||||||||||||||

@@ -48,6 +48,7 @@ list(
   tar_target(tables1, make_table1(data_ae, result_ext)),
   tar_target(tables2, make_table2(result_ext)),
   tar_target(tables3, make_table3(result_ext)),
+  tar_target(tables4, make_table4(pcomflux)),
   
   # Save plots
   tar_target(p1, save_plot(fig1, "fig1", height = 12)),
