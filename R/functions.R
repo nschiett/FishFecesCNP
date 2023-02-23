@@ -332,34 +332,6 @@ add_traits <- function(result, mass, intestine, diets){
     dplyr::left_join(intestine)
   }
 
-#' calculate absorption efficiency
-#'
-#' @param ash 
-#' @param result_ext 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-get_ae <- function(ash, result_ext){
-  dplyr::left_join(result_ext, ash) %>%
-    dplyr::mutate(ac_m = 1 - (Rc_mean*ash_ratio),
-           ac_median = 1 - (Rc_median*ash_ratio),
-           ac_sd = 1 - (Rc_sd*ash_ratio),
-           ac_lqn = 1 - (Rc_lqn*ash_ratio),
-           ac_uqn = 1 - (Rc_uqn*ash_ratio),
-           an_m = 1 - (Rn_mean*ash_ratio),
-           an_median = 1 - (Rn_median*ash_ratio),
-           an_sd = 1 - (Rn_sd*ash_ratio),
-           an_lqn = 1 - (Rn_lqn*ash_ratio),
-           an_uqn = 1 - (Rn_uqn*ash_ratio),
-           ap_m = 1 - (Rp_mean*ash_ratio),
-           ap_median = 1 - (Rp_median*ash_ratio),
-           ap_sd = 1 - (Rp_sd*ash_ratio),
-           ap_lqn = 1 - (Rp_lqn*ash_ratio),
-           ap_uqn = 1 - (Rp_uqn*ash_ratio)) 
-}
-
 #' Title
 #'
 #' @param result_ext 
@@ -450,61 +422,6 @@ add_pred <- function(result_ext, models_ae_diet){
            an_sd_pred = predn[,2],
            ap_mean_pred = predp[,1],
            ap_sd_pred = predp[,2])
-}
-
-#' Predict ae for extrapolation for community estimates
-#'
-#' @param result_ext 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-predict_ae <- function(result_ext){
-  
-  result_ext <- result_ext %>%
-    dplyr::mutate(diet2 = dplyr::case_when(
-      diet %in% c(1, 3, 5, 6) ~ "2_imix",
-      diet == 2 ~ "1_hmd",
-      diet %in% c(7, 4) ~ "4_carn",
-      diet == 8 ~ "3_plank"
-    )) %>%
-    dplyr::mutate(group = paste(family, diet2, sep = "_"))
-  
-  # set prior for ae estimates per diet group
-  priors <- brms::prior("normal(0.5, 0.5)", lb = 0, ub = 1, class = "b")
-  
-  fit1 <- brms::brm(c_a_m|se(c_a_sd) ~ 0 + group + (1|species), 
-              prior = priors,
-              data = result_ext, 
-              cores = 4,
-              iter = 4000)
-  
-  fit2 <- update(fit1, formula = n_a_m|se(n_a_sd) ~ 0 + group + (1|species), 
-                 result_ext)
-  fit3 <- update(fit1, formula = p_a_m|se(p_a_sd) ~ 0 + group + (1|species), 
-                 result_ext)
-  
-  # summary(fit1)
-  # bayes_R2(fit1)
-  # bayes_R2(fit2)
-  # bayes_R2(fit3)
-  # 
-  # fixef(fit3)
-
-  pred <- result_ext %>%
-    dplyr::select(diet2, family, group) %>%
-    unique() %>%
-    dplyr::arrange(group) %>%
-    dplyr::mutate(
-      group_c_a_m = as.vector(brms::fixef(fit1)[,1]),
-      group_c_a_sd = as.vector(brms::fixef(fit1)[,2]),
-      group_n_a_m = as.vector(brms::fixef(fit2)[,1]),
-      group_n_a_sd = as.vector(brms::fixef(fit2)[,2]),
-      group_p_a_m = as.vector(brms::fixef(fit3)[,1]),
-      group_p_a_sd = as.vector(brms::fixef(fit3)[,2])
-    ) 
-  pred
 }
 
 #' get sp level fluxes
