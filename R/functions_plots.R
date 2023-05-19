@@ -75,6 +75,7 @@ save_plot <- function(plot, name, width = 8, height = 6, type = "png"){
   
   ggsave(plot, filename = paste0("output/plots/", name, ".", type), 
          width = width, height = height)
+  return("name")
 }
 
 #' fig 1
@@ -332,7 +333,7 @@ make_figs1 <- function(data){
 #'
 make_fig3 <- function(models_ae_diet, result_ext) {
 
-  
+  data <- result_ext
   nd1 <- expand_grid(Dp_mean = seq(0.05, 2.7, 0.01),
                      int_rel = seq(1.5,5.2,0.01))
   
@@ -345,7 +346,7 @@ make_fig3 <- function(models_ae_diet, result_ext) {
   pp <-
     ggplot(nd1[nd1$estimate<1&nd1$estimate>0,]) +
     geom_raster(aes(x = Dp_mean, y = int_rel, fill = estimate)) +
-    geom_point(aes(x = Dp_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+    geom_point(aes(x = Dp_mean, y = log(int_rel), shape = as.character(diet2)), 
                alpha = 0.9, data = data, size = 3) +
     scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), 
                     breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) +
@@ -376,7 +377,7 @@ make_fig3 <- function(models_ae_diet, result_ext) {
   pn <-
     ggplot(ndn[ndn$estimate<1&ndn$estimate>0,]) +
     geom_raster(aes(x = Dn_mean, y = int_rel, fill = estimate)) +
-    geom_point(aes(x = Dn_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+    geom_point(aes(x = Dn_mean, y = log(int_rel), shape = as.character(diet2)), 
                alpha = 0.7, data = data, size = 3) +
     scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), breaks = c(0, 0.2, 0.4,0.6, 0.8, 1), guide = "none")  +
     theme_classic() +
@@ -401,7 +402,7 @@ make_fig3 <- function(models_ae_diet, result_ext) {
   pc <-
     ggplot(ndc[ndc$estimate<1,]) +
     geom_raster(aes(x = Dc_mean, y = int_rel, fill = estimate)) +
-    geom_point(aes(x = Dc_mean, y = log(int_surface/biomass), shape = as.character(diet2)), 
+    geom_point(aes(x = Dc_mean, y = log(int_rel), shape = as.character(diet2)), 
                alpha = 0.8, data = data, size = 3) +
     scale_fill_fish(option = "Chaetodon_ephippium", limits = c(0,1), 
                     breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1))  +
@@ -418,6 +419,7 @@ make_fig3 <- function(models_ae_diet, result_ext) {
 
   plot <-
     pc + pn + pp + plot_annotation(tag_levels = "A")
+  save_plot(plot, "fig3", height = 6, width = 12)
   
   return(plot)
   
@@ -769,7 +771,7 @@ make_fig2 <- function(result_ext, models_copro){
 }
 
 make_fig4 <- function(spflux){
-
+ print("test")
   data <- spflux[[2]] %>%
     dplyr::mutate(RRn = log(Wn/Fn),
                   RRp = log(Wp/Fp),
@@ -933,7 +935,7 @@ make_table2 <- function(result_ext){
     dplyr::arrange(Family)
   
   
-  readr::write_csv(sub, "output/data/Table_results1.csv")
+  readr::write_csv(sub, "output/data/Table_results2.csv")
 }
 
 
@@ -994,7 +996,7 @@ make_table3 <- function(result_ext){
     dplyr::arrange(Family)
   
   
-  readr::write_csv(sub, "output/data/Table_results2.csv")
+  readr::write_csv(sub, "output/data/Table_results3.csv")
 }
 
 

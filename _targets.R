@@ -51,7 +51,9 @@ list(
   tar_target(tables4, make_table4(pcomflux)),
   
   # Save plots
-  tar_target(p1, save_plot(fig1, "fig1", height = 12)),
+  tar_target(p1, save_plot(fig1, "fig1", height = 12, type = "pdf")),
+  tar_target(p2, save_plot(fig2, "fig2", height = 12, width = 10, type = "pdf")),
+  tar_target(p3, save_plot(fig3, "fig3", height = 5, width = 10, type = "pdf")),
+  tar_target(p4, save_plot(fig4, "fig4", height = 8, width = 6, type = "pdf")),
   tar_target(ps1, save_plot(figs1, "figs1", height = 10, width = 10))
-
 )

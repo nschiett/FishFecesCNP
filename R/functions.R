@@ -697,12 +697,11 @@ community_fluxes <- function(result_ext, diets, models_copro) {
                     fitted(models_copro[[4]], newdata = result_ext)) %>%
     select(species, diet2, prob_cop = Estimate)
   
-  prob_cop <- unique(select(data, diet2, species)) %>%
-    left_join(prob_cop) %>%
-    group_by(diet2) %>%
+  prob_cop <- left_join(select(data, species, diet2), prob_cop) %>%
+    dplyr::group_by(diet2) %>%
     mutate(prob_cop_diet = median(prob_cop, na.rm = TRUE)) %>%
     mutate(prob_cop = dplyr::coalesce(prob_cop, prob_cop_diet)) %>%
-    filter(species %in% results1$species)
+    select(species, prob_cop)
   
   result <- cbind(dplyr::select(data, species, diet2, size), results1) 
   
@@ -782,14 +781,14 @@ community_fluxes <- function(result_ext, diets, models_copro) {
     summarize_all(mean, na.rm = TRUE) %>% 
     filter(reef_zone == "forereef")
   
-  sum(data$Wp_r + data$pcop_r)
+  sum(pflux$Wp_r + pflux$pcop_r)
   #0.6528274
-  sum(data$Fp_r)
+  sum(pflux$Fp_r)
   #  0.1349268
-  data <- data.frame(
-    prop = c(sum(data$Wp_r + data$pcop_r), sum(data$Fp_r)))
+  test <- data.frame(
+    prop = c(sum(pflux$Wp_r + pflux$pcop_r), sum(pflux$Fp_r)))
   
-  ggplot(data, aes(x="", y = c(0.6528274, 0.1349268), fill = c("Wp", "Fp"))) +
+  ggplot(test, aes(x="", y = c(0.6528274, 0.1349268), fill = c("Wp", "Fp"))) +
     geom_bar(stat="identity", width=1) +
     scale_y_continuous(limits = c(0,1)) +
     coord_polar("y", start=0) +
