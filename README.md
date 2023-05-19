@@ -5,7 +5,7 @@
 
 The goal of this project is to reproduce all results and figures
 presented in the paper “The Role of Fish Feces for Nutrient Cycling on
-Coral Reefs”, currently under revision at **Oikos**. The project uses
+Coral Reefs”, currently in press at **Oikos** (doi:10.1111/oik.09914). The project uses
 [targets](https://docs.ropensci.org/targets/), a pipeline tool for
 statistics and data science in R. Packages needed to reproduce this
 analysis and code to install them can be found in [make.R](make.R).
