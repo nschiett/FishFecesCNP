@@ -260,7 +260,7 @@ run_cnp_models <- function(data, stanmodel, ash){
 #'
 #' @examples
 get_ash <- function(diets){
-  read_csv("output/data/ash_species_estimate.csv")
+  read_csv("data/ash_species_estimate.csv")
 }
 
 get_intestine <- function(){

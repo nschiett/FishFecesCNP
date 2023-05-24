@@ -1,97 +1,97 @@
-troph_robertson,position,family,species,habitat,prop_eaten,n_feces,coprophage
-zooplanktivore,15,Caesionidae,Caesio caerulaurea,edge,0.99,459,0
-zooplanktivore,15,Caesionidae,Caesio cuning,edge,0.99,459,0
-zooplanktivore,7,Caesionidae,Caesio lunaris,edge,0.99,459,0
-zooplanktivore,7,Caesionidae,Pterocaesio chrysozona,edge,0.99,459,0
-zooplanktivore,7,Acanthuridae,Naso brevirostris,edge,0.75,8,0
-zooplanktivore,7,Pomacentridae,Abudefduf saxatilis,edge,0.96,196,
-zooplanktivore,7,Pomacentridae,Chromis atripectoralis,edge,0.98,135,0
-zooplanktivore,7,Pomacentridae,Chromis atripectoralis,flat,0.9,165,0
-zooplanktivore,7,Pomacentridae,Chromis atripectoralis,channel,0.95,42,0
-zooplanktivore,7,Pomacentridae,Chromis caerulea,edge,0.96,25,
-zooplanktivore,7,Pomacentridae,Chromis caerulea,flat,0.85,27,
-zooplanktivore,7,Pomacentridae,Chromis caerulea,channel,0.7,57,
-zooplanktivore,7,Pomacentridae,Chromis ternatensis,edge,0.96,296,0
-zooplanktivore,7,Pomacentridae,Chromis ternatensis,channel,0.85,39,0
-zooplanktivore,7,Labridae,Thalassoma amblycephalum,edge,0.9,321,0
-zooplanktivore,7,Labridae,Thalassoma hardwicke,edge,0.91,23,0
-zooplanktivore,3,Pomacentridae,Pomacentrus emarginatus,edge,0.62,117,0
-zooplanktivore,3,Pomacentridae,Amblyglyphidodon curacao,edge,0.8,10,0
-zooplanktivore,3,Gobiidae,Ptereleotris evides,edge,0.9,10,0
-zooplanktivore,1,Pomacentridae,Pomacentrus moluccensis,edge,0.06,34,0
-zooplanktivore,1,Pomacentridae,Dascyllus aruanus,flat,0.19,27,0
-egg eater,,Caesionidae,Caesio caerulaurea,,0.98,487,0
-egg eater,,Pomacentridae,Abudefduf saxatilis,,0.87,110,0
-egg eater,,Pomacentridae,Chromis atripectoralis,,0.89,145,0
-piscivore,,Belonidae,Belonidae sp.,,1,2,0
-piscivore,,Lutjanidae,Lutjanus bohar,,1,1,0
-piscivore,,Carangidae,Caranx melampygus,,1,1,0
-piscivore,,Caeangidae,Elagatis bipinnulata,,1,1,0
-piscivore,,Serranidae,Cephalopholis argus,,1,1,0
-benthic invertivore,,Labridae,Hemigymnus melapterus,,0.91,11,0
-benthic invertivore,,Labridae,Hemigymnus fasciatus,,0.75,4,0
-benthic invertivore,,Labridae,Anampses geographicus,,1,3,0
-benthic invertivore,,Labridae,Stethojulis bandanensis,,1,2,0
-benthic invertivore,,Labridae,Epibulus insidiator,,0.25,4,0
-benthic invertivore,,Mullidae,Parupeneus barberinus,,1,7,0
-benthic invertivore,,Mullidae,Parupeneus trifasciatus,,1,3,0
-benthic invertivore,,Lethrinidae,Monotaxis grandoculis,,0.71,7,0
-benthic invertivore,,Lethrinidae,Gnathodentex aureolineatus,,1,2,0
-benthic invertivore,,Labridae,Anampses caeruleopunctatus,,0.88,1,0
-benthic invertivore,,Labridae,Stethojulis strigiventer,,0.88,1,0
-benthic invertivore,,Labridae,Halichoeres marginatus,,0.88,1,0
-benthic invertivore,,Labridae,Coris variegata,,0.88,1,0
-benthic invertivore,,Labridae,Cheilinus trilobatus,,0.88,1,0
-benthic invertivore,,Mullidae,Parupeneus trifasciatus,,0.88,1,0
-benthic invertivore,,Nemipteridae,Scolopsis bilineata,,0.88,1,0
-microalgae,,Acanthuridae,Acanthurus nigricans,,0.92,127,1
-microalgae,,Acanthuridae,Acanthurus lineatus,,0.57,190,1
-microalgae,,Acanthuridae,Acanthurus nigrofuscus,,0.06,132,1
-microalgae,,Acanthuridae,Zebrasoma scopas,,0.81,99,1
-microalgae,,Acanthuridae,Zebrasoma velifer,,0.88,51,0
-microalgae,,Balistidae,Melichthys vidua,,1,8,1
-microalgae,,Pomacentridae,Stegastes lividus,,0.11,9,1
-microalgae,,Pomacentridae,Stegastes nigricans,,0.21,14,1
-microalgae,,Siganidae,Siganus vulpinus,,0.05,84,1
-macroalgae,,Kyphosidae,Kyphosus sp. ,,0.58,31,0
-macroalgae,,Acanthuridae,Naso vlamingii,,0.39,72,1
-macroalgae,,Acanthuridae,Naso lituratus,,0.02,127,1
-macroalgae,,Siganidae,Siganus argenteus,,0.11,63,1
-macroalgae,,Siganidae,Siganus punctatus,,0,13,1
-macroalgae,,Siganidae,Siganus corallinus,,0.04,103,1
-macroalgae,,Siganidae,Siganus doliatus,,0,34,1
-macroalgae,,Siganidae,Siganus puellus,,0,36,1
-microalgae_detritus,,Acanthuridae,Acanthurus auranticavus,,0.11,66,1
-microalgae_detritus,,Acanthuridae,Acanthurus nigricauda,,0,91,1
-microalgae_detritus,,Acanthuridae,Acanthurus olivaceus,,0,16,1
-microalgae_detritus,,Acanthuridae,Acanthurus maculiceps,,0,23,1
-microalgae_detritus,,Acanthuridae,Ctenochaetus striatus,,0,247,1
-microalgae_detritus,,Monacanthidae,Amanses scopas,,0.13,8,1
-microalgae_detritus,,Pomacentridae,Dischistodus perspicillatus,,0,25,1
-endolythic_epiphytic_algae,,Labridae,Scarus spinus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Chlorurus sordidus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus quoyi,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Chlorurus bleekeri,,0,50,0
-endolythic_epiphytic_algae,,Labridae,Scarus oviceps,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus niger,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus dimidiatus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus rivulatus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Chlorurus gibbus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus psittacus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus prasiognathos,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Chlorurus japanensis,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus frenatus,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus festivus,,0,50,0
-endolythic_epiphytic_algae,,Labridae,Scarus schlegeli,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Scarus rubroviolaceus,,0,50,0
-endolythic_epiphytic_algae,,Labridae,Cetoscarus bicolor,,0,50,0
-endolythic_epiphytic_algae,,Labridae,Hipposcarus harid,,0,50,1
-endolythic_epiphytic_algae,,Labridae,Bolbometopon muricatum,,0,50,0
-corralivore,,Chaetodontidae,Chaetodon trifasciatus,,0.85,75,0
-corralivore,,Chaetodontidae,Chaetodon reticulatus,,0.98,44,0
-corralivore,,Chaetodontidae,Chaetodon ornatissimus,,0.88,25,0
-corralivore,,Chaetodontidae,Chaetodon meyeri,,0.95,20,0
-corralivore,,Chaetodontidae,Chaetodon trifascialis,,0.67,9,0
-corralivore,,Chaetodontidae,Chaetodon baronessa,,0.67,9,0
-corralivore,,Chaetodontidae,Chaetodon unimaculatus,,0,20,0
-corralivore,,Pomacentridae,Plectroglyphidodon dickii,,0.05,39,1
+troph_robertson,family,species,habitat,prop_eaten,n_feces,coprophage
+zooplanktivore,Caesionidae,Caesio caerulaurea,edge,0.99,459,0
+zooplanktivore,Caesionidae,Caesio cuning,edge,0.99,459,0
+zooplanktivore,Caesionidae,Caesio lunaris,edge,0.99,459,0
+zooplanktivore,Caesionidae,Pterocaesio chrysozona,edge,0.99,459,0
+zooplanktivore,Acanthuridae,Naso brevirostris,edge,0.75,8,0
+zooplanktivore,Pomacentridae,Abudefduf saxatilis,edge,0.96,196,NA
+zooplanktivore,Pomacentridae,Chromis atripectoralis,edge,0.98,135,0
+zooplanktivore,Pomacentridae,Chromis atripectoralis,flat,0.9,165,0
+zooplanktivore,Pomacentridae,Chromis atripectoralis,channel,0.95,42,0
+zooplanktivore,Pomacentridae,Chromis caerulea,edge,0.96,25,NA
+zooplanktivore,Pomacentridae,Chromis caerulea,flat,0.85,27,NA
+zooplanktivore,Pomacentridae,Chromis caerulea,channel,0.7,57,NA
+zooplanktivore,Pomacentridae,Chromis ternatensis,edge,0.96,296,0
+zooplanktivore,Pomacentridae,Chromis ternatensis,channel,0.85,39,0
+zooplanktivore,Labridae,Thalassoma amblycephalum,edge,0.9,321,0
+zooplanktivore,Labridae,Thalassoma hardwicke,edge,0.91,23,0
+zooplanktivore,Pomacentridae,Pomacentrus emarginatus,edge,0.62,117,0
+zooplanktivore,Pomacentridae,Amblyglyphidodon curacao,edge,0.8,10,0
+zooplanktivore,Gobiidae,Ptereleotris evides,edge,0.9,10,0
+zooplanktivore,Pomacentridae,Pomacentrus moluccensis,edge,0.06,34,0
+zooplanktivore,Pomacentridae,Dascyllus aruanus,flat,0.19,27,0
+egg eater,Caesionidae,Caesio caerulaurea,,0.98,487,0
+egg eater,Pomacentridae,Abudefduf saxatilis,,0.87,110,0
+egg eater,Pomacentridae,Chromis atripectoralis,,0.89,145,0
+piscivore,Belonidae,Belonidae sp.,,1,2,0
+piscivore,Lutjanidae,Lutjanus bohar,,1,1,0
+piscivore,Carangidae,Caranx melampygus,,1,1,0
+piscivore,Caeangidae,Elagatis bipinnulata,,1,1,0
+piscivore,Serranidae,Cephalopholis argus,,1,1,0
+benthic invertivore,Labridae,Hemigymnus melapterus,,0.91,11,0
+benthic invertivore,Labridae,Hemigymnus fasciatus,,0.75,4,0
+benthic invertivore,Labridae,Anampses geographicus,,1,3,0
+benthic invertivore,Labridae,Stethojulis bandanensis,,1,2,0
+benthic invertivore,Labridae,Epibulus insidiator,,0.25,4,0
+benthic invertivore,Mullidae,Parupeneus barberinus,,1,7,0
+benthic invertivore,Mullidae,Parupeneus trifasciatus,,1,3,0
+benthic invertivore,Lethrinidae,Monotaxis grandoculis,,0.71,7,0
+benthic invertivore,Lethrinidae,Gnathodentex aureolineatus,,1,2,0
+benthic invertivore,Labridae,Anampses caeruleopunctatus,,0.88,1,0
+benthic invertivore,Labridae,Stethojulis strigiventer,,0.88,1,0
+benthic invertivore,Labridae,Halichoeres marginatus,,0.88,1,0
+benthic invertivore,Labridae,Coris variegata,,0.88,1,0
+benthic invertivore,Labridae,Cheilinus trilobatus,,0.88,1,0
+benthic invertivore,Mullidae,Parupeneus trifasciatus,,0.88,1,0
+benthic invertivore,Nemipteridae,Scolopsis bilineata,,0.88,1,0
+microalgae,Acanthuridae,Acanthurus nigricans,,0.92,127,1
+microalgae,Acanthuridae,Acanthurus lineatus,,0.57,190,1
+microalgae,Acanthuridae,Acanthurus nigrofuscus,,0.06,132,1
+microalgae,Acanthuridae,Zebrasoma scopas,,0.81,99,1
+microalgae,Acanthuridae,Zebrasoma velifer,,0.88,51,0
+microalgae,Balistidae,Melichthys vidua,,1,8,1
+microalgae,Pomacentridae,Stegastes lividus,,0.11,9,1
+microalgae,Pomacentridae,Stegastes nigricans,,0.21,14,1
+microalgae,Siganidae,Siganus vulpinus,,0.05,84,1
+macroalgae,Kyphosidae,Kyphosus sp. ,,0.58,31,0
+macroalgae,Acanthuridae,Naso vlamingii,,0.39,72,1
+macroalgae,Acanthuridae,Naso lituratus,,0.02,127,1
+macroalgae,Siganidae,Siganus argenteus,,0.11,63,1
+macroalgae,Siganidae,Siganus punctatus,,0,13,1
+macroalgae,Siganidae,Siganus corallinus,,0.04,103,1
+macroalgae,Siganidae,Siganus doliatus,,0,34,1
+macroalgae,Siganidae,Siganus puellus,,0,36,1
+microalgae_detritus,Acanthuridae,Acanthurus auranticavus,,0.11,66,1
+microalgae_detritus,Acanthuridae,Acanthurus nigricauda,,0,91,1
+microalgae_detritus,Acanthuridae,Acanthurus olivaceus,,0,16,1
+microalgae_detritus,Acanthuridae,Acanthurus maculiceps,,0,23,1
+microalgae_detritus,Acanthuridae,Ctenochaetus striatus,,0,247,1
+microalgae_detritus,Monacanthidae,Amanses scopas,,0.13,8,1
+microalgae_detritus,Pomacentridae,Dischistodus perspicillatus,,0,25,1
+endolythic_epiphytic_algae,Labridae,Scarus spinus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Chlorurus sordidus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus quoyi,,0,50,1
+endolythic_epiphytic_algae,Labridae,Chlorurus bleekeri,,0,50,0
+endolythic_epiphytic_algae,Labridae,Scarus oviceps,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus niger,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus dimidiatus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus rivulatus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Chlorurus gibbus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus psittacus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus prasiognathos,,0,50,1
+endolythic_epiphytic_algae,Labridae,Chlorurus japanensis,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus frenatus,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus festivus,,0,50,0
+endolythic_epiphytic_algae,Labridae,Scarus schlegeli,,0,50,1
+endolythic_epiphytic_algae,Labridae,Scarus rubroviolaceus,,0,50,0
+endolythic_epiphytic_algae,Labridae,Cetoscarus bicolor,,0,50,0
+endolythic_epiphytic_algae,Labridae,Hipposcarus harid,,0,50,1
+endolythic_epiphytic_algae,Labridae,Bolbometopon muricatum,,0,50,0
+corralivore,Chaetodontidae,Chaetodon trifasciatus,,0.85,75,0
+corralivore,Chaetodontidae,Chaetodon reticulatus,,0.98,44,0
+corralivore,Chaetodontidae,Chaetodon ornatissimus,,0.88,25,0
+corralivore,Chaetodontidae,Chaetodon meyeri,,0.95,20,0
+corralivore,Chaetodontidae,Chaetodon trifascialis,,0.67,9,0
+corralivore,Chaetodontidae,Chaetodon baronessa,,0.67,9,0
+corralivore,Chaetodontidae,Chaetodon unimaculatus,,0,20,0
+corralivore,Pomacentridae,Plectroglyphidodon dickii,,0.05,39,1
